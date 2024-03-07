@@ -1,33 +1,33 @@
 ﻿using Game.Engine.Components;
-using PGK2.Engine.Core;
+using PGK2.Engine.SceneSystem;
 
-namespace PGK2.Engine.Main
+namespace PGK2.Engine.Core
 {
     public class GameObject
     {
-        public TagsContainer RenderTags { get; private set; }
-        public string name;
+		[SerializeField] public TagsContainer RenderTags { get; private set; }
+		[SerializeField] public string name;
         private bool _isdestroyed = false;
         public bool isDestroyed { get => _isdestroyed; }
-        public GameObjectComponents components;
-        public TransformComponent transform;
-        public TagsContainer Tags { get; private set; }
-        public bool isActiveSelf { get; private set; } = true;
-        public bool isActive
+		[SerializeField] public GameObjectComponents Components;
+		[SerializeField] public TransformComponent transform;
+		[SerializeField] public TagsContainer Tags { get; private set; }
+		[SerializeField] public bool IsActiveSelf { get; private set; } = true;
+        public bool IsActive
         {
             get
             {
-                return isActiveSelf && transform != null && (transform.Parent == null || transform.Parent.gameObject != null && transform.Parent.gameObject.isActive);
+                return IsActiveSelf && transform != null && (transform.Parent == null || transform.Parent.gameObject != null && transform.Parent.gameObject.IsActive);
             }
             set
             {
-                isActiveSelf = value;
+                IsActiveSelf = value;
             }
         }
         public GameObject() : this("GameObject") { }
         public GameObject(string name)
         {
-            components = new GameObjectComponents(this);
+            Components = new GameObjectComponents(this);
             transform = new TransformComponent();
             Tags = new();
             RenderTags = new();
@@ -35,8 +35,8 @@ namespace PGK2.Engine.Main
         }
         public void Destroy()
         {
-            if (_isdestroyed || components == null) return;
-            foreach (var component in components.All)
+            if (_isdestroyed || Components == null) return;
+            foreach (var component in Components.All)
             {
                 component.gameObject = null;
             }
@@ -45,8 +45,8 @@ namespace PGK2.Engine.Main
     }
     public class GameObjectComponents
     {
-        public GameObject gameObject;
-        public List<Component> All { get; private set; }
+		[SerializeField] public GameObject gameObject;
+		[SerializeField] public List<Component> All { get; private set; }
 
         public GameObjectComponents(GameObject gObj)
         {

@@ -1,8 +1,7 @@
 ﻿using OpenTK;
 using OpenTK.Mathematics;
 using PGK2.Engine.Core;
-using PGK2.Engine.Main;
-using System.Collections.Generic;
+using PGK2.Engine.SceneSystem;
 
 namespace Game.Engine.Components
 {
@@ -36,22 +35,22 @@ namespace Game.Engine.Components
 		/// <summary>
 		/// Gets or sets whether the camera uses an orthographic projection.
 		/// </summary>
-		public bool IsOrthographic { get; set; }
+		[SerializeField] public bool IsOrthographic { get; set; }
 
 		/// <summary>
 		/// Gets or sets the field of view for perspective projection (in degrees).
 		/// </summary>
-		public float FieldOfView { get; set; }
+		[SerializeField] public float FieldOfView { get; set; }
 
 		/// <summary>
 		/// Gets or sets the background color of the camera.
 		/// </summary>
-		public Color4 BackgroundColor { get; set; }
+		[SerializeField] public Color4 BackgroundColor { get; set; }
 
 		/// <summary>
 		/// Gets or sets the tags that the camera should render.
 		/// </summary>
-		public TagsContainer RenderTags { get; private set; }
+		[SerializeField] public TagsContainer RenderTags { get; private set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CameraComponent"/> class with default values.
@@ -73,19 +72,19 @@ namespace Game.Engine.Components
 		/// <param name="aspectRatio">The aspect ratio of the camera (width / height).</param>
 		public void Update()
 		{
-			if (Engine.Instance == null || Engine.Instance.window == null)
+			if (EngineInstance.Instance == null || EngineInstance.Instance.window == null)
 			{
 				throw new Exception("[CAMERA] NO GAME ENGINE INSTANCE OR WINDOW REGISTERED");
 			}
 			gameObject.transform.Position += Vector3.One * (float)Time.deltaTime * 10f;
 			Console.WriteLine($"POS: {gameObject.transform.Position}");
-			if (activeCamera == null && enabled)
+			if (activeCamera == null && Enabled)
 			{
 				activeCamera = this;
 			}
 			if (gameObject != null && gameObject.transform != null)
 			{
-				float aspectRatio = Engine.Instance.window.aspectRatio;
+				float aspectRatio = EngineInstance.Instance.window.aspectRatio;
 				Vector3 eye = gameObject.transform.Position;
 				Vector3 target = eye + gameObject.transform.Forward;
 				Vector3 up = gameObject.transform.Up;

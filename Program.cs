@@ -1,11 +1,12 @@
 ﻿
 
 using Game.Engine;
+using PGK2.Engine.Core;
 
 class Program
 {
 	static void Main()
 	{
-		Engine.CreateInstance();
+		EngineInstance.CreateInstance();
 	}
 }

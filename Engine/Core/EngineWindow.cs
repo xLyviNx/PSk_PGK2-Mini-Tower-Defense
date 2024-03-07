@@ -3,7 +3,8 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
-using PGK2.Engine.Main;
+using PGK2.Engine.SceneSystem;
+
 namespace PGK2.Engine.Core
 {
     public class EngineWindow : GameWindow
@@ -32,8 +33,11 @@ namespace PGK2.Engine.Core
 			//Code goes here
 			shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
 
-			GameObject newObject = new();
-			newObject.components.Add<CameraComponent>();
+			Scene scene = new Scene();
+			GameObject newObject = new("TEST OBJECT");
+			newObject.Components.Add<CameraComponent>();
+			scene.GameObjects.Add(newObject);
+			SceneManager.SaveSceneToFile(scene, "SCENE.lscn");
 
 		}
 		protected override void OnRenderFrame(FrameEventArgs e)
@@ -42,12 +46,11 @@ namespace PGK2.Engine.Core
 			aspectRatio = (float)ClientSize.X / ClientSize.Y;
 			GL.Clear(ClearBufferMask.ColorBufferBit);
 			Console.WriteLine($"CAMERA: {(activeCamera != null ? activeCamera.gameObject.name : "NULL")}");
+			shader.Use();
+
 			if (activeCamera != null)
 			{
 				activeCamera.Update();
-				shader.Use();
-
-				// Ustaw macierze w shaderze
 				int viewLocation = GL.GetUniformLocation(shader.Handle, "view");
 				Matrix4 viewMatrix = activeCamera.ViewMatrix;
 				GL.UniformMatrix4(viewLocation, false, ref viewMatrix);

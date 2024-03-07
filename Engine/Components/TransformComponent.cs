@@ -1,18 +1,19 @@
 ﻿using OpenTK;
 using OpenTK.Mathematics;
+using PGK2.Engine.Core;
+using PGK2.Engine.SceneSystem;
 
 namespace Game.Engine.Components
 {
-	/// <summary>
-	/// Represents a component that manages the position, rotation, and scale of an object in 3D space.
-	/// </summary>
-	public class TransformComponent : Component
+    /// <summary>
+    /// Represents a component that manages the position, rotation, and scale of an object in 3D space.
+    /// </summary>
+    public class TransformComponent : Component
 	{
-		private Vector3 localPosition;
-		private Quaternion localRotation;
-		private Vector3 localScale;
-
-		private TransformComponent? parent;
+		[SerializeField] private Vector3 localPosition = Vector3.Zero;
+		[SerializeField] private Quaternion localRotation = Quaternion.Identity;
+		[SerializeField] private Vector3 localScale = Vector3.One;
+		[SerializeField] private TransformComponent? parent = null;
 
 		/// <summary>
 		/// Gets or sets the global position of the object.

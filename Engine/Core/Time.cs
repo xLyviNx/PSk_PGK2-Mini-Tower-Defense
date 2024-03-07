@@ -1,4 +1,4 @@
-﻿namespace PGK2.Engine.Main
+﻿namespace PGK2.Engine.Core
 {
     public class Time
     {

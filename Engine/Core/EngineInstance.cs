@@ -1,15 +1,15 @@
 ﻿namespace PGK2.Engine.Core
 {
-	public sealed class Engine
+	public sealed class EngineInstance
 	{
-		public static Engine? Instance { get; private set; }
+		public static EngineInstance? Instance { get; private set; }
 		public EngineWindow? window;
 
 		public static void CreateInstance()
 		{
 			if (Instance == null) 
 			{
-				Instance = new Engine();
+				Instance = new EngineInstance();
 				Instance.Init();
 			}
 		}
