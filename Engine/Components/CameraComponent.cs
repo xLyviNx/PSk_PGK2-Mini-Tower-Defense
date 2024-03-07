@@ -1,13 +1,14 @@
 ﻿using OpenTK;
 using OpenTK.Mathematics;
+using PGK2.Engine.Core;
 using System.Collections.Generic;
 
 namespace Game.Engine.Components
 {
-	/// <summary>
-	/// Represents a camera component that defines the view and projection matrices for rendering scenes.
-	/// </summary>
-	public class CameraComponent : Component
+    /// <summary>
+    /// Represents a camera component that defines the view and projection matrices for rendering scenes.
+    /// </summary>
+    public class CameraComponent : Component
 	{
 		private Matrix4 viewMatrix;
 		private Matrix4 projectionMatrix;

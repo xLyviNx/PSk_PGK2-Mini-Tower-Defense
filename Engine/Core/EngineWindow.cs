@@ -3,11 +3,10 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
-using System.Drawing;
-
-namespace Game.Engine
+using PGK2.Engine.Main;
+namespace PGK2.Engine.Core
 {
-	public class EngineWindow : GameWindow
+    public class EngineWindow : GameWindow
 	{
 		Queue<int> frameQueue = new Queue<int>();
 		double secTimer = 0d;
