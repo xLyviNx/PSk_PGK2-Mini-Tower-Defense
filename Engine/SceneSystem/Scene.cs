@@ -1,13 +1,15 @@
 ﻿using PGK2.Engine.Core;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace PGK2.Engine.SceneSystem
 {
+	[Serializable]
 	public class Scene
 	{
-		[SerializeField] public string SceneName = "Unnamed Scene";
-		[SerializeField] public List<GameObject> GameObjects { get; private set; }
-
+		public string SceneName = "Unnamed Scene";
+		public List<GameObject> GameObjects { get;  set; }
+		
 		public Scene()
 		{
 			GameObjects = new List<GameObject>();

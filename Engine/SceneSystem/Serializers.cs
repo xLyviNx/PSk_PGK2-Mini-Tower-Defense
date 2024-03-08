@@ -1,104 +1,42 @@
-﻿using Newtonsoft.Json;
-using OpenTK.Mathematics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
+using System.Xml.Serialization;
+using System.Xml;
 
-namespace PGK2.Engine.SceneSystem
+public class XmlSerializableFieldWriter
 {
-	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-	public class SerializeFieldAttribute : Attribute
+	public static void WriteXmlSerializableFields(XmlWriter writer, object obj)
 	{
-	}
-	public class Matrix4Converter : JsonConverter<Matrix4>
-	{
-		public override Matrix4 ReadJson(JsonReader reader, Type objectType, Matrix4 existingValue, bool hasExistingValue, JsonSerializer serializer)
-		{
-			// Implement the deserialization logic for Matrix4
-			throw new NotImplementedException();
-		}
+		Type type = obj.GetType();
 
-		public override void WriteJson(JsonWriter writer, Matrix4 value, JsonSerializer serializer)
+		foreach (var propertyInfo in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
 		{
-			writer.WriteStartObject();
-			for (int i = 0; i < 4; i++)
-			{
-				for (int j = 0; j < 4; j++)
-				{
-					writer.WritePropertyName($"M{i}{j}");
-					writer.WriteValue(value[i, j]);
-				}
-			}
-			writer.WriteEndObject();
+			object value = propertyInfo.GetValue(obj);
+			writer.WriteStartElement(propertyInfo.Name);
+			WriteXmlSerializableValue(writer, value);
+			writer.WriteEndElement();
 		}
 	}
 
-	public class Vector4Converter : JsonConverter<Vector4>
+	private static void WriteXmlSerializableValue(XmlWriter writer, object value)
 	{
-		public override Vector4 ReadJson(JsonReader reader, Type objectType, Vector4 existingValue, bool hasExistingValue, JsonSerializer serializer)
-		{
-			// Implement the deserialization logic for Vector4
-			throw new NotImplementedException();
-		}
+		Type type = value.GetType();
 
-		public override void WriteJson(JsonWriter writer, Vector4 value, JsonSerializer serializer)
+		if (type.IsPrimitive || type == typeof(string) || type == typeof(decimal) || type.IsEnum)
 		{
-			writer.WriteStartObject();
-			writer.WritePropertyName("X");
-			writer.WriteValue(value.X);
-			writer.WritePropertyName("Y");
-			writer.WriteValue(value.Y);
-			writer.WritePropertyName("Z");
-			writer.WriteValue(value.Z);
-			writer.WritePropertyName("W");
-			writer.WriteValue(value.W);
-			writer.WriteEndObject();
+			writer.WriteString(value.ToString());
 		}
-	}
-
-	public class Vector3Converter : JsonConverter<Vector3>
-	{
-		public override Vector3 ReadJson(JsonReader reader, Type objectType, Vector3 existingValue, bool hasExistingValue, JsonSerializer serializer)
+		else if (type == typeof(DateTime))
 		{
-			// Implement the deserialization logic for Vector3
-			throw new NotImplementedException();
+			writer.WriteString(XmlConvert.ToString((DateTime)value, XmlDateTimeSerializationMode.RoundtripKind));
 		}
-
-		public override void WriteJson(JsonWriter writer, Vector3 value, JsonSerializer serializer)
+		else if (type == typeof(Guid))
 		{
-			writer.WriteStartObject();
-			writer.WritePropertyName("X");
-			writer.WriteValue(value.X);
-			writer.WritePropertyName("Y");
-			writer.WriteValue(value.Y);
-			writer.WritePropertyName("Z");
-			writer.WriteValue(value.Z);
-			writer.WriteEndObject();
+			writer.WriteString(value.ToString());
 		}
-	}
-
-	public class QuaternionConverter : JsonConverter<Quaternion>
-	{
-		public override Quaternion ReadJson(JsonReader reader, Type objectType, Quaternion existingValue, bool hasExistingValue, JsonSerializer serializer)
+		else
 		{
-			// Implement the deserialization logic for Quaternion
-			throw new NotImplementedException();
-		}
-
-		public override void WriteJson(JsonWriter writer, Quaternion value, JsonSerializer serializer)
-		{
-			writer.WriteStartObject();
-			writer.WritePropertyName("X");
-			writer.WriteValue(value.X);
-			writer.WritePropertyName("Y");
-			writer.WriteValue(value.Y);
-			writer.WritePropertyName("Z");
-			writer.WriteValue(value.Z);
-			writer.WritePropertyName("W");
-			writer.WriteValue(value.W);
-			writer.WriteEndObject();
+			XmlSerializer serializer = new XmlSerializer(type);
+			serializer.Serialize(writer, value);
 		}
 	}
 }

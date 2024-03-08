@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System.Xml.Serialization;
+
 namespace PGK2.Engine.SceneSystem
 {
 	public class SceneManager
 	{
-
 		private List<Scene> scenes = new List<Scene>();
 		private Scene? activeScene;
 
@@ -45,30 +45,38 @@ namespace PGK2.Engine.SceneSystem
 
 		public static void SaveSceneToFile(Scene scene, string filePath)
 		{
-			using (StreamWriter sw = new StreamWriter(filePath))
-			using (JsonWriter writer = new JsonTextWriter(sw))
+			try
 			{
-				JsonSerializer serializer = new JsonSerializer
+				using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
 				{
-					ContractResolver = new SceneContractResolver(),
-					Formatting = Formatting.Indented,
-					ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-				};
-
-				serializer.Serialize(writer, scene);
+					XmlSerializer xmlSerializer = new XmlSerializer(typeof(Scene));
+					xmlSerializer.Serialize(fileStream, scene);
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine("Failed to serialize. Reason: " + e.Message + $"\n {e.InnerException.Message}");
 			}
 		}
 
-
-	public static Scene? LoadSceneFromFile(string filePath)
+		public static Scene? LoadSceneFromFile(string filePath)
 		{
-			string json = File.ReadAllText(filePath);
-			JsonSerializerSettings settings = new JsonSerializerSettings
-			{
-				ContractResolver = new SceneContractResolver()
-			};
+			Scene? loadedScene = null;
 
-			return JsonConvert.DeserializeObject<Scene>(json, settings);
+			try
+			{
+				using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
+				{
+					XmlSerializer xmlSerializer = new XmlSerializer(typeof(Scene));
+					loadedScene = (Scene)xmlSerializer.Deserialize(fileStream);
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine("Failed to deserialize. Reason: " + e.Message + '\n' + e.StackTrace);
+			}
+
+			return loadedScene;
 		}
 	}
 }

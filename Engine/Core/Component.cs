@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace PGK2.Engine.Core
 {
-    public abstract class Component
+    [Serializable]
+	public abstract class Component
     {
 		public GameObject gameObject;
-		[SerializeField] private bool _enabledSelf = true;
+		private bool _enabledSelf = true;
         public bool Enabled
         {
             get

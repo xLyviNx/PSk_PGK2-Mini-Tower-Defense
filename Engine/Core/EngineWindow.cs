@@ -45,7 +45,7 @@ namespace PGK2.Engine.Core
 			base.OnRenderFrame(e);
 			aspectRatio = (float)ClientSize.X / ClientSize.Y;
 			GL.Clear(ClearBufferMask.ColorBufferBit);
-			Console.WriteLine($"CAMERA: {(activeCamera != null ? activeCamera.gameObject.name : "NULL")}");
+			//Console.WriteLine($"CAMERA: {(activeCamera != null ? activeCamera.gameObject.name : "NULL")}");
 			shader.Use();
 
 			if (activeCamera != null)

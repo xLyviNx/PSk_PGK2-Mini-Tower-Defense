@@ -1,19 +1,23 @@
 ﻿using Game.Engine.Components;
 using PGK2.Engine.SceneSystem;
+using System.Xml.Serialization;
 
 namespace PGK2.Engine.Core
 {
+    [Serializable]
     public class GameObject
     {
-		[SerializeField] public TagsContainer RenderTags { get; private set; }
-		[SerializeField] public string name;
+        public Guid Id;
+		public TagsContainer RenderTags { get; private set; }
+		public string name;
+		public string Test = "wtf";
         private bool _isdestroyed = false;
-        public bool isDestroyed { get => _isdestroyed; }
-		[SerializeField] public GameObjectComponents Components;
-		[SerializeField] public TransformComponent transform;
-		[SerializeField] public TagsContainer Tags { get; private set; }
-		[SerializeField] public bool IsActiveSelf { get; private set; } = true;
-        public bool IsActive
+        [XmlIgnore] public bool isDestroyed { get => _isdestroyed; }
+		public GameObjectComponents Components;
+		public TransformComponent transform;
+		public TagsContainer Tags { get; private set; }
+		public bool IsActiveSelf { get; private set; } = true;
+		[XmlIgnore] public bool IsActive
         {
             get
             {
@@ -32,8 +36,9 @@ namespace PGK2.Engine.Core
             Tags = new();
             RenderTags = new();
             this.name = name;
-        }
-        public void Destroy()
+			Id = Guid.NewGuid();
+		}
+		public void Destroy()
         {
             if (_isdestroyed || Components == null) return;
             foreach (var component in Components.All)
@@ -45,8 +50,8 @@ namespace PGK2.Engine.Core
     }
     public class GameObjectComponents
     {
-		[SerializeField] public GameObject gameObject;
-		[SerializeField] public List<Component> All { get; private set; }
+		private GameObject gameObject;
+		public List<Component> All { get; private set; }
 
         public GameObjectComponents(GameObject gObj)
         {

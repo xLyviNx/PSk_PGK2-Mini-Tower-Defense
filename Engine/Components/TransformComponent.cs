@@ -10,10 +10,10 @@ namespace Game.Engine.Components
     /// </summary>
     public class TransformComponent : Component
 	{
-		[SerializeField] private Vector3 localPosition = Vector3.Zero;
-		[SerializeField] private Quaternion localRotation = Quaternion.Identity;
-		[SerializeField] private Vector3 localScale = Vector3.One;
-		[SerializeField] private TransformComponent? parent = null;
+		public Vector3 localPosition = Vector3.Zero;
+		public Quaternion localRotation = Quaternion.Identity;
+		public Vector3 localScale = Vector3.One;
+		private TransformComponent? parent = null;
 
 		/// <summary>
 		/// Gets or sets the global position of the object.

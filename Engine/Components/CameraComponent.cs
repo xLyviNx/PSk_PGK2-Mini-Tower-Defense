@@ -5,10 +5,11 @@ using PGK2.Engine.SceneSystem;
 
 namespace Game.Engine.Components
 {
-    /// <summary>
-    /// Represents a camera component that defines the view and projection matrices for rendering scenes.
-    /// </summary>
-    public class CameraComponent : Component
+	/// <summary>
+	/// Represents a camera component that defines the view and projection matrices for rendering scenes.
+	/// </summary>
+	/// 
+	public class CameraComponent : Component
 	{
 		private Matrix4 viewMatrix;
 		private Matrix4 projectionMatrix;
@@ -35,22 +36,22 @@ namespace Game.Engine.Components
 		/// <summary>
 		/// Gets or sets whether the camera uses an orthographic projection.
 		/// </summary>
-		[SerializeField] public bool IsOrthographic { get; set; }
+		public bool IsOrthographic { get; set; }
 
 		/// <summary>
 		/// Gets or sets the field of view for perspective projection (in degrees).
 		/// </summary>
-		[SerializeField] public float FieldOfView { get; set; }
+		public float FieldOfView { get; set; }
 
 		/// <summary>
 		/// Gets or sets the background color of the camera.
 		/// </summary>
-		[SerializeField] public Color4 BackgroundColor { get; set; }
+		public Color4 BackgroundColor { get; set; }
 
 		/// <summary>
 		/// Gets or sets the tags that the camera should render.
 		/// </summary>
-		[SerializeField] public TagsContainer RenderTags { get; private set; }
+		public TagsContainer RenderTags { get; private set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CameraComponent"/> class with default values.
