@@ -1,4 +1,5 @@
 ﻿using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 
 public class Shader : IDisposable
 {
@@ -76,7 +77,43 @@ public class Shader : IDisposable
 		}
 	}
 
+	public void SetInt(string name, int value)
+	{
+		int location = GL.GetUniformLocation(Handle, name);
+		if (location != -1)
+		{
+			GL.Uniform1(location, value);
+		}
+		else
+		{
+			Console.WriteLine($"Uniform {name} not found in shader.");
+		}
+	}
 
+	public void SetFloat(string name, float value)
+	{
+		int location = GL.GetUniformLocation(Handle, name);
+		if (location != -1)
+		{
+			GL.Uniform1(location, value);
+		}
+		else
+		{
+			Console.WriteLine($"Uniform {name} not found in shader.");
+		}
+	}
+	public void SetVector3(string name, Vector3 value)
+	{
+		int location = GL.GetUniformLocation(Handle, name);
+		if (location != -1)
+		{
+			GL.Uniform3(location, value.X, value.Y, value.Z);
+		}
+		else
+		{
+			Console.WriteLine($"Uniform {name} not found in shader.");
+		}
+	}
 	public void Dispose()
 	{
 		Dispose(true);
