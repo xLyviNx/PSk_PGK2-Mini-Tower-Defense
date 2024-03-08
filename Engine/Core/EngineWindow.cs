@@ -3,6 +3,7 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
+using PGK2.Engine.Components;
 using PGK2.Engine.SceneSystem;
 
 namespace PGK2.Engine.Core
@@ -14,9 +15,16 @@ namespace PGK2.Engine.Core
 		long frames = 0;
 		float fps;
 		int VertexBufferObject;
+		int VertexArrayObject;
+
 		Shader shader;
 		public float aspectRatio { get; private set; }
 		public CameraComponent? activeCamera {get=>CameraComponent.activeCamera; }
+		float[] vertices = {
+				-0.5f, -0.5f, 0.0f, //Bottom-left vertex
+				 0.5f, -0.5f, 0.0f, //Bottom-right vertex
+				 0.0f,  0.5f, 0.0f  //Top vertex
+			};
 		public EngineWindow(int width, int height, string title) : base(GameWindowSettings.Default, new NativeWindowSettings()
 			{ ClientSize = (width, height), Title = title })
 		{
@@ -26,19 +34,32 @@ namespace PGK2.Engine.Core
 		protected override void OnLoad()
 		{
 			base.OnLoad();
-
 			GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 			VertexBufferObject = GL.GenBuffer();
 
 			//Code goes here
 			shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+			VertexArrayObject = GL.GenVertexArray();
+			VertexBufferObject = GL.GenBuffer();
 
+			//SceneTest();
+
+		}
+		void SceneTest()
+		{
 			Scene scene = new Scene();
 			GameObject newObject = new("TEST OBJECT");
 			newObject.Components.Add<CameraComponent>();
+			newObject.Components.Add<TestComponent>();
 			scene.GameObjects.Add(newObject);
-			SceneManager.SaveSceneToFile(scene, "SCENE.lscn");
 
+
+			GameObject newObject2 = new("CHILD OBJECT");
+			newObject2.Components.Add<TestComponent>();
+			newObject2.transform.Parent = newObject.transform;
+			scene.GameObjects.Add(newObject2);
+
+			SceneManager.SaveSceneToFile(scene, "SCENE.lscn");
 		}
 		protected override void OnRenderFrame(FrameEventArgs e)
 		{
@@ -66,32 +87,24 @@ namespace PGK2.Engine.Core
 		}
 		private void DrawTest()
 		{
-			float[] vertices = {
-				-0.5f, -0.5f, 0.0f, //Bottom-left vertex
-				 0.5f, -0.5f, 0.0f, //Bottom-right vertex
-				 0.0f,  0.5f, 0.0f  //Top vertex
-			};
-			GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
-			GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
-			int VertexArrayObject = GL.GenVertexArray();
 			GL.BindVertexArray(VertexArrayObject);
-			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
-			GL.EnableVertexAttribArray(0);
 			GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
+
+			// BufferData only needs to be called once, assuming vertices don't change
 			GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
 
 			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
 			GL.EnableVertexAttribArray(0);
 
-			GL.BindVertexArray(VertexArrayObject);
 			GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
-
 		}
 
 		protected override void OnUnload()
 		{
 			base.OnUnload();
 			shader.Dispose();
+			GL.DeleteVertexArray(VertexArrayObject);
+			GL.DeleteBuffer(VertexBufferObject);
 		}
 
 		protected override void OnResize(ResizeEventArgs e)

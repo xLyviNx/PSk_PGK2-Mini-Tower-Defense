@@ -2,6 +2,8 @@
 using OpenTK.Mathematics;
 using PGK2.Engine.Core;
 using PGK2.Engine.SceneSystem;
+using PGK2.Engine.Serialization.Converters;
+using System.Text.Json.Serialization;
 
 namespace Game.Engine.Components
 {
@@ -9,15 +11,17 @@ namespace Game.Engine.Components
 	/// Represents a camera component that defines the view and projection matrices for rendering scenes.
 	/// </summary>
 	/// 
+	[Serializable]
 	public class CameraComponent : Component
 	{
 		private Matrix4 viewMatrix;
 		private Matrix4 projectionMatrix;
-		public static CameraComponent? activeCamera;
+		[JsonIgnore] public static CameraComponent? activeCamera;
 
 		/// <summary>
 		/// Gets or sets the view matrix of the camera.
 		/// </summary>
+		[JsonIgnore]
 		public Matrix4 ViewMatrix
 		{
 			get { return viewMatrix; }
@@ -27,6 +31,7 @@ namespace Game.Engine.Components
 		/// <summary>
 		/// Gets or sets the projection matrix of the camera.
 		/// </summary>
+		[JsonIgnore]
 		public Matrix4 ProjectionMatrix
 		{
 			get { return projectionMatrix; }

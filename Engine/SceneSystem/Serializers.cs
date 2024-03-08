@@ -1,42 +1,197 @@
-﻿using System.Reflection;
-using System.Xml.Serialization;
-using System.Xml;
+﻿using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using OpenTK.Mathematics;
+using PGK2.Engine.Core;
 
-public class XmlSerializableFieldWriter
+namespace PGK2.Engine.Serialization.Converters
 {
-	public static void WriteXmlSerializableFields(XmlWriter writer, object obj)
+	public class Vector3Converter : JsonConverter<Vector3>
 	{
-		Type type = obj.GetType();
-
-		foreach (var propertyInfo in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+		public override Vector3 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			object value = propertyInfo.GetValue(obj);
-			writer.WriteStartElement(propertyInfo.Name);
-			WriteXmlSerializableValue(writer, value);
-			writer.WriteEndElement();
+			if (reader.TokenType != JsonTokenType.StartObject)
+			{
+				throw new JsonException("Expected StartObject token.");
+			}
+
+			float x = 0, y = 0, z = 0;
+
+			while (reader.Read())
+			{
+				if (reader.TokenType == JsonTokenType.EndObject)
+				{
+					break;
+				}
+
+				if (reader.TokenType == JsonTokenType.PropertyName)
+				{
+					var propertyName = reader.GetString();
+					reader.Read(); // Move to the property value
+
+					switch (propertyName)
+					{
+						case "X":
+							x = reader.GetSingle();
+							break;
+						case "Y":
+							y = reader.GetSingle();
+							break;
+						case "Z":
+							z = reader.GetSingle();
+							break;
+							// Add more cases for other properties if needed
+					}
+				}
+			}
+
+			return new Vector3(x, y, z);
+		}
+
+		public override void Write(Utf8JsonWriter writer, Vector3 value, JsonSerializerOptions options)
+		{
+			writer.WriteStartObject();
+			writer.WriteNumber("X", value.X);
+			writer.WriteNumber("Y", value.Y);
+			writer.WriteNumber("Z", value.Z);
+			writer.WriteEndObject();
 		}
 	}
-
-	private static void WriteXmlSerializableValue(XmlWriter writer, object value)
+	public class QuaternionConverter : JsonConverter<Quaternion>
 	{
-		Type type = value.GetType();
+		public override Quaternion Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			if (reader.TokenType != JsonTokenType.StartObject)
+			{
+				throw new JsonException("Expected StartObject token.");
+			}
 
-		if (type.IsPrimitive || type == typeof(string) || type == typeof(decimal) || type.IsEnum)
-		{
-			writer.WriteString(value.ToString());
+			float x = 0, y = 0, z = 0, w = 1;
+
+			while (reader.Read())
+			{
+				if (reader.TokenType == JsonTokenType.EndObject)
+				{
+					break;
+				}
+
+				if (reader.TokenType == JsonTokenType.PropertyName)
+				{
+					var propertyName = reader.GetString();
+					reader.Read(); // Move to the property value
+
+					switch (propertyName)
+					{
+						case "X":
+							x = reader.GetSingle();
+							break;
+						case "Y":
+							y = reader.GetSingle();
+							break;
+						case "Z":
+							z = reader.GetSingle();
+							break;
+						case "W":
+							w = reader.GetSingle();
+							break;
+							// Add more cases for other properties if needed
+					}
+				}
+			}
+
+			return new Quaternion(x, y, z, w);
 		}
-		else if (type == typeof(DateTime))
+
+		public override void Write(Utf8JsonWriter writer, Quaternion value, JsonSerializerOptions options)
 		{
-			writer.WriteString(XmlConvert.ToString((DateTime)value, XmlDateTimeSerializationMode.RoundtripKind));
+			writer.WriteStartObject();
+			writer.WriteNumber("X", value.X);
+			writer.WriteNumber("Y", value.Y);
+			writer.WriteNumber("Z", value.Z);
+			writer.WriteNumber("W", value.W);
+			writer.WriteEndObject();
 		}
-		else if (type == typeof(Guid))
+	}
+	public class ComponentListConverter : JsonConverter<List<Component>>
+	{
+		public override List<Component> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			writer.WriteString(value.ToString());
+			throw new NotImplementedException(); // Implement this if needed
 		}
-		else
+
+		public override void Write(Utf8JsonWriter writer, List<Component> value, JsonSerializerOptions options)
 		{
-			XmlSerializer serializer = new XmlSerializer(type);
-			serializer.Serialize(writer, value);
+			writer.WriteStartArray();
+			foreach (var component in value)
+			{
+				writer.WriteStartObject();
+
+				// Write component type
+				writer.WritePropertyName("Type");
+				writer.WriteStringValue(component.GetType().FullName);
+				// Write component properties
+				JsonSerializer.Serialize(writer, component, component.GetType(), options);
+				writer.WriteEndObject();
+			}
+
+			writer.WriteEndArray();
+		}
+	}
+	public static class Utf8JsonWriterExtensions
+	{
+		public static void WriteGuid(this Utf8JsonWriter writer, string propertyName, Guid value)
+		{
+			writer.WriteStartObject(propertyName);
+			writer.WriteString("Id", value.ToString());
+			writer.WriteEndObject();
+		}
+	}
+	public class GameObjectConverter : JsonConverter<GameObject>
+	{
+		public override GameObject Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			// Implement deserialization logic if needed
+			throw new NotImplementedException();
+		}
+
+		public override void Write(Utf8JsonWriter writer, GameObject value, JsonSerializerOptions options)
+		{
+			if (value != null)
+			{
+				writer.WriteStartObject();
+
+				// Serialize GameObject.Id instead of the entire GameObject
+				writer.WriteGuid("Id", value.Id);
+
+				writer.WriteEndObject();
+			}
+			else
+			{
+				writer.WriteNullValue();
+			}
+		}
+	}
+	public class GameObjectListConverter : JsonConverter<List<GameObject>>
+	{
+		public override List<GameObject> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			throw new NotImplementedException(); // Implement this if needed
+		}
+
+		public override void Write(Utf8JsonWriter writer, List<GameObject> value, JsonSerializerOptions options)
+		{
+			writer.WriteStartArray();
+			foreach (var gameObject in value)
+			{
+				writer.WriteStartObject();
+				writer.WritePropertyName(gameObject.name);
+				// Serialize GameObject properties
+				JsonSerializer.Serialize(writer, gameObject, options);
+
+				writer.WriteEndObject();
+			}
+
+			writer.WriteEndArray();
 		}
 	}
 }

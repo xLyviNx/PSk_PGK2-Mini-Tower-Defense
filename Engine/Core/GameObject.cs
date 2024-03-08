@@ -1,23 +1,22 @@
 ﻿using Game.Engine.Components;
-using PGK2.Engine.SceneSystem;
-using System.Xml.Serialization;
+using PGK2.Engine.Serialization.Converters;
+using System.Text.Json.Serialization;
 
 namespace PGK2.Engine.Core
 {
     [Serializable]
     public class GameObject
     {
-        public Guid Id;
+        [JsonInclude] public Guid Id;
 		public TagsContainer RenderTags { get; private set; }
-		public string name;
-		public string Test = "wtf";
+		[JsonIgnore] public string name;
         private bool _isdestroyed = false;
-        [XmlIgnore] public bool isDestroyed { get => _isdestroyed; }
+        [JsonIgnore] public bool isDestroyed { get => _isdestroyed; }
 		public GameObjectComponents Components;
 		public TransformComponent transform;
 		public TagsContainer Tags { get; private set; }
 		public bool IsActiveSelf { get; private set; } = true;
-		[XmlIgnore] public bool IsActive
+		[JsonIgnore] public bool IsActive
         {
             get
             {
@@ -31,8 +30,9 @@ namespace PGK2.Engine.Core
         public GameObject() : this("GameObject") { }
         public GameObject(string name)
         {
+            Console.WriteLine("MADE OBJECT");
             Components = new GameObjectComponents(this);
-            transform = new TransformComponent();
+            transform = new TransformComponent(this);
             Tags = new();
             RenderTags = new();
             this.name = name;
@@ -48,9 +48,11 @@ namespace PGK2.Engine.Core
             _isdestroyed = true;
         }
     }
+    [Serializable]
     public class GameObjectComponents
     {
 		private GameObject gameObject;
+		[JsonConverter(typeof(ComponentListConverter))]
 		public List<Component> All { get; private set; }
 
         public GameObjectComponents(GameObject gObj)

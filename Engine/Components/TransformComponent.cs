@@ -2,18 +2,22 @@
 using OpenTK.Mathematics;
 using PGK2.Engine.Core;
 using PGK2.Engine.SceneSystem;
+using System.Text.Json.Serialization;
 
 namespace Game.Engine.Components
 {
-    /// <summary>
-    /// Represents a component that manages the position, rotation, and scale of an object in 3D space.
-    /// </summary>
+	/// <summary>
+	/// Represents a component that manages the position, rotation, and scale of an object in 3D space.
+	/// </summary>
+	[Serializable]
     public class TransformComponent : Component
 	{
 		public Vector3 localPosition = Vector3.Zero;
 		public Quaternion localRotation = Quaternion.Identity;
 		public Vector3 localScale = Vector3.One;
 		private TransformComponent? parent = null;
+		public ChildrenContainer children { get; private set; }
+		public Guid parentId => (parent != null && parent.gameObject!=null ? parent.gameObject.Id : Guid.Empty);
 
 		/// <summary>
 		/// Gets or sets the global position of the object.
@@ -45,6 +49,7 @@ namespace Game.Engine.Components
 		/// <summary>
 		/// Gets the forward direction of the object in world space.
 		/// </summary>
+		[JsonIgnore]
 		public Vector3 Forward
 		{
 			get { return Vector3.Transform(Vector3.UnitZ, Rotation); }
@@ -53,6 +58,7 @@ namespace Game.Engine.Components
 		/// <summary>
 		/// Gets the up direction of the object in world space.
 		/// </summary>
+		[JsonIgnore]
 		public Vector3 Up
 		{
 			get { return Vector3.Transform(Vector3.UnitY, Rotation); }
@@ -61,6 +67,7 @@ namespace Game.Engine.Components
 		/// <summary>
 		/// Gets the right direction of the object in world space.
 		/// </summary>
+		[JsonIgnore]
 		public Vector3 Right
 		{
 			get { return Vector3.Cross(Forward, Up); }
@@ -69,20 +76,33 @@ namespace Game.Engine.Components
 		/// <summary>
 		/// Gets or sets the parent (or null if no parent) of the object.
 		/// </summary>
+		[JsonIgnore]
 		public TransformComponent? Parent
 		{
 			get { return parent; }
-			set { parent = value; }
+			set {
+				if (parent!=null)
+				{
+					parent.children.Remove(this);
+				}
+				parent = value;
+				if (parent!=null)
+				{
+					parent.children.Add(this);
+				}
+			}
 		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="TransformComponent"/> class with default values.
 		/// </summary>
-		public TransformComponent()
+		public TransformComponent(GameObject attachedTo)
 		{
+			gameObject = attachedTo;
 			localPosition = Vector3.Zero;
 			localRotation = Quaternion.Identity;
 			localScale = Vector3.One;
+			children = new();
 		}
 
 		/// <summary>
@@ -156,6 +176,46 @@ namespace Game.Engine.Components
 		public Vector3 InverseTransformVector(Vector3 worldVector)
 		{
 			return Vector3.Transform(worldVector / Scale, Quaternion.Invert(Rotation));
+		}
+	}
+	[Serializable]
+	public class ChildrenContainer
+	{
+		[JsonIgnore] public List<TransformComponent> _all;
+		[JsonInclude]
+		public List<Guid> All
+		{
+			get
+			{
+				List<Guid> guids = new();
+				foreach (TransformComponent transform in _all)
+				{
+					Console.WriteLine($"{transform.gameObject}");
+					guids.Add(transform.gameObject.Id);
+				}
+				return guids;
+			}
+		}
+
+		public bool Remove(TransformComponent child)
+		{
+			if (!Has(child)) return false;
+			_all.Remove(child);
+			return true;
+		}
+		public bool Add(TransformComponent child)
+		{
+			if (Has(child)) return false;
+			_all.Add(child);
+			return true;
+		}
+		public bool Has(TransformComponent child)
+		{
+			return _all.Contains(child);
+		}
+		public ChildrenContainer()
+		{
+			_all = new();
 		}
 	}
 }

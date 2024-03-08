@@ -1,4 +1,6 @@
-﻿using System.Xml.Serialization;
+﻿using PGK2.Engine.Serialization.Converters;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace PGK2.Engine.SceneSystem
 {
@@ -49,13 +51,21 @@ namespace PGK2.Engine.SceneSystem
 			{
 				using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
 				{
-					XmlSerializer xmlSerializer = new XmlSerializer(typeof(Scene));
-					xmlSerializer.Serialize(fileStream, scene);
+					JsonSerializerOptions options= new JsonSerializerOptions();
+					options.Converters.Add(new Vector3Converter());					
+					options.Converters.Add(new QuaternionConverter());
+					options.Converters.Add(new ComponentListConverter());
+					options.Converters.Add(new GameObjectListConverter());  // Dodaj nowy konwerter GameObjectList
+
+					options.WriteIndented = true;
+					options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+					options.IncludeFields = true;
+					JsonSerializer.Serialize(fileStream, scene, options);
 				}
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine("Failed to serialize. Reason: " + e.Message + $"\n {e.InnerException.Message}");
+				Console.WriteLine("Failed to serialize. Reason: " + e.Message);
 			}
 		}
 
@@ -67,8 +77,8 @@ namespace PGK2.Engine.SceneSystem
 			{
 				using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
 				{
-					XmlSerializer xmlSerializer = new XmlSerializer(typeof(Scene));
-					loadedScene = (Scene)xmlSerializer.Deserialize(fileStream);
+					//XmlSerializer xmlSerializer = new XmlSerializer(typeof(Scene));
+					//loadedScene = (Scene)xmlSerializer.Deserialize(fileStream);
 				}
 			}
 			catch (Exception e)
