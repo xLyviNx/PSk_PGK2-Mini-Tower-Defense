@@ -10,11 +10,11 @@ namespace PGK2.Engine.Core
 	[Serializable]
 	public class Renderer : Component
 	{
-		public Material[] Materials { get; set; }
+		public List<Material> Materials { get; set; }
 
 		public Renderer()
 		{
-			Materials = new Material[1]; // Default material
+			Materials = new();
 		}
 
 		public virtual void Render(Matrix4 viewMatrix, Matrix4 projectionMatrix)

@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace PGK2.Engine.Core
 {
+	[Serializable]
 	public class Material
 	{
+		
 	}
+
 }
