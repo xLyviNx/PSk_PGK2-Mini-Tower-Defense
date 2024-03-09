@@ -1,4 +1,5 @@
 ﻿using Game.Engine.Components;
+using PGK2.Engine.SceneSystem;
 using PGK2.Engine.Serialization.Converters;
 using System.Text.Json.Serialization;
 
@@ -8,7 +9,6 @@ namespace PGK2.Engine.Core
     public class GameObject
     {
         [JsonInclude] public Guid Id;
-		public TagsContainer RenderTags { get; private set; }
 		[JsonIgnore] public string name;
         private bool _isdestroyed = false;
         [JsonIgnore] public bool isDestroyed { get => _isdestroyed; }
@@ -34,16 +34,33 @@ namespace PGK2.Engine.Core
             Components = new GameObjectComponents(this);
             transform = new TransformComponent(this);
             Tags = new();
-            RenderTags = new();
             this.name = name;
 			Id = Guid.NewGuid();
 		}
+        public void Update()
+        {
+            if (!IsActive) return;
+            foreach(Component c in Components.All)
+            {
+                if (!c.Enabled) continue;
+                c.Update();
+            }
+        }
 		public void Destroy()
         {
             if (_isdestroyed || Components == null) return;
             foreach (var component in Components.All)
             {
-                component.gameObject = null;
+                component.OnDestroy();
+            }
+            Components.All.Clear();
+            if (SceneManager.ActiveScene!=null)
+            {
+                SceneManager.ActiveScene.GameObjects.Remove(this);
+            }
+            foreach(TransformComponent child in transform.children.AllObjects)
+            {
+                child.gameObject.Destroy();
             }
             _isdestroyed = true;
         }

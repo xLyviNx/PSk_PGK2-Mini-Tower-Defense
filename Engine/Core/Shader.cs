@@ -53,10 +53,12 @@ public class Shader : IDisposable
 		GL.DeleteShader(FragmentShader);
 		GL.DeleteShader(VertexShader);
 	}
+
 	public void Use()
 	{
 		GL.UseProgram(Handle);
 	}
+
 	private bool disposedValue = false;
 
 	protected virtual void Dispose(bool disposing)
@@ -102,6 +104,7 @@ public class Shader : IDisposable
 			Console.WriteLine($"Uniform {name} not found in shader.");
 		}
 	}
+
 	public void SetVector3(string name, Vector3 value)
 	{
 		int location = GL.GetUniformLocation(Handle, name);
@@ -114,9 +117,38 @@ public class Shader : IDisposable
 			Console.WriteLine($"Uniform {name} not found in shader.");
 		}
 	}
+
+	public void SetVector4(string name, Vector4 value)
+	{
+		int location = GL.GetUniformLocation(Handle, name);
+		if (location != -1)
+		{
+			GL.Uniform4(location, value.X, value.Y, value.Z, value.W);
+		}
+		else
+		{
+			Console.WriteLine($"Uniform {name} not found in shader.");
+		}
+	}
+	public void SetMatrix4(string name, Matrix4 value)
+	{
+		int location = GL.GetUniformLocation(Handle, name);
+		if (location != -1)
+		{
+			GL.UniformMatrix4(location, false, ref value);
+		}
+		else
+		{
+			Console.WriteLine($"Uniform {name} not found in shader.");
+		}
+	}
 	public void Dispose()
 	{
 		Dispose(true);
 		GC.SuppressFinalize(this);
+	}
+	public void Unuse()
+	{
+		GL.UseProgram(0);
 	}
 }

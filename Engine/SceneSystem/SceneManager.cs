@@ -6,15 +6,15 @@ namespace PGK2.Engine.SceneSystem
 {
 	public class SceneManager
 	{
-		private List<Scene> scenes = new List<Scene>();
-		private Scene? activeScene;
+		private static List<Scene> scenes = new List<Scene>();
+		private static Scene? activeScene;
 
-		public Scene? ActiveScene
+		public static Scene? ActiveScene
 		{
 			get { return activeScene; }
 		}
 
-		public void LoadScene(Scene scene)
+		public static void LoadScene(Scene scene)
 		{
 			if (!scenes.Contains(scene))
 			{
@@ -24,7 +24,7 @@ namespace PGK2.Engine.SceneSystem
 			SetActiveScene(scene);
 		}
 
-		public void UnloadScene(Scene scene)
+		public static void UnloadScene(Scene scene)
 		{
 			if (scenes.Contains(scene))
 			{
@@ -37,7 +37,7 @@ namespace PGK2.Engine.SceneSystem
 			}
 		}
 
-		private void SetActiveScene(Scene? scene)
+		private static void SetActiveScene(Scene? scene)
 		{
 			if (scenes.Contains(scene) || scene == null)
 			{

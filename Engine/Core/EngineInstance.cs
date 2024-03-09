@@ -18,6 +18,7 @@
 		{
 			using (window = new EngineWindow(1280, 720, "Application"))
 			{
+				window.VSync = OpenTK.Windowing.Common.VSyncMode.On;
 				window.Run();
 			}
 		}

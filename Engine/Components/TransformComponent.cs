@@ -13,7 +13,7 @@ namespace Game.Engine.Components
     public class TransformComponent : Component
 	{
 		public Vector3 localPosition = Vector3.Zero;
-		public Quaternion localRotation = Quaternion.Identity;
+		public Quaternion localRotation = Quaternion.FromEulerAngles(0, 0, 0);
 		public Vector3 localScale = Vector3.One;
 		private TransformComponent? parent = null;
 		public ChildrenContainer children { get; private set; }
@@ -81,6 +81,12 @@ namespace Game.Engine.Components
 		{
 			get { return parent; }
 			set {
+
+				if(parent != null && children.AllObjects.Contains(parent))
+				{
+					throw new Exception("Tried making child a parent object.");
+				}
+
 				if (parent!=null)
 				{
 					parent.children.Remove(this);
@@ -100,7 +106,7 @@ namespace Game.Engine.Components
 		{
 			gameObject = attachedTo;
 			localPosition = Vector3.Zero;
-			localRotation = Quaternion.Identity;
+			localRotation = Quaternion.FromEulerAngles(0,0,0);
 			localScale = Vector3.One;
 			children = new();
 		}
@@ -135,8 +141,12 @@ namespace Game.Engine.Components
 		public Vector3 InverseTransformPoint(Vector3 point)
 		{
 			Vector3 invertedScale = new Vector3(1.0f / Scale.X, 1.0f / Scale.Y, 1.0f / Scale.Z);
-			return Vector3.Transform(point - Position, Quaternion.Invert(Rotation)) / invertedScale;
+			Quaternion invertedRotation = Quaternion.Invert(Rotation);
+
+			// Poprawienie kolejności operacji i dodanie skalowania
+			return Vector3.Transform(point - Position, invertedRotation) * invertedScale;
 		}
+
 
 		/// <summary>
 		/// Transforms a local rotation to global space.
@@ -181,14 +191,14 @@ namespace Game.Engine.Components
 	[Serializable]
 	public class ChildrenContainer
 	{
-		[JsonIgnore] public List<TransformComponent> _all;
+		[JsonIgnore] public List<TransformComponent> AllObjects;
 		[JsonInclude]
 		public List<Guid> All
 		{
 			get
 			{
 				List<Guid> guids = new();
-				foreach (TransformComponent transform in _all)
+				foreach (TransformComponent transform in AllObjects)
 				{
 					Console.WriteLine($"{transform.gameObject}");
 					guids.Add(transform.gameObject.Id);
@@ -200,22 +210,22 @@ namespace Game.Engine.Components
 		public bool Remove(TransformComponent child)
 		{
 			if (!Has(child)) return false;
-			_all.Remove(child);
+			AllObjects.Remove(child);
 			return true;
 		}
 		public bool Add(TransformComponent child)
 		{
 			if (Has(child)) return false;
-			_all.Add(child);
+			AllObjects.Add(child);
 			return true;
 		}
 		public bool Has(TransformComponent child)
 		{
-			return _all.Contains(child);
+			return AllObjects.Contains(child);
 		}
 		public ChildrenContainer()
 		{
-			_all = new();
+			AllObjects = new();
 		}
 	}
 }

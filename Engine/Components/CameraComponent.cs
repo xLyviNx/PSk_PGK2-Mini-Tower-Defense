@@ -1,8 +1,11 @@
 ﻿using OpenTK;
+using OpenTK.Graphics.ES11;
 using OpenTK.Mathematics;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using PGK2.Engine.Core;
 using PGK2.Engine.SceneSystem;
 using PGK2.Engine.Serialization.Converters;
+using System.Drawing;
 using System.Text.Json.Serialization;
 
 namespace Game.Engine.Components
@@ -16,6 +19,10 @@ namespace Game.Engine.Components
 	{
 		private Matrix4 viewMatrix;
 		private Matrix4 projectionMatrix;
+		public byte Priority = 0;
+		public float OrthoSize = 10f;
+		public float NearClip = 0.1f;
+		public float FarClip = 1000f;
 		[JsonIgnore] public static CameraComponent? activeCamera;
 
 		/// <summary>
@@ -70,20 +77,79 @@ namespace Game.Engine.Components
 			BackgroundColor = Color4.Black;
 			RenderTags = new TagsContainer();
 			Console.WriteLine("CAMERA CREATED");
+
+			if (SceneManager.ActiveScene != null)
+			{
+				SceneManager.ActiveScene.Cameras.Add(this);
+				SceneManager.ActiveScene.Cameras.Sort((x, y) => x.Priority.CompareTo(y.Priority));
+			}
+			transform.Position = new Vector3(0.0f, 0.0f, 3.0f);
 		}
-		
+		public override void OnDestroy()
+		{
+			base.OnDestroy();
+			if (SceneManager.ActiveScene != null)
+			{
+				SceneManager.ActiveScene.Cameras.Add(this);
+				SceneManager.ActiveScene.Cameras.Sort((x, y) => x.Priority.CompareTo(y.Priority));
+			}
+			if (activeCamera == this)
+				activeCamera = null;
+		}
+		public override void Update()
+		{
+			base.Update();
+			//double tempX = Time.deltaTime;
+			//Console.WriteLine($"TEMP X: {Time.deltaTime}");
+			//tempX += Time.deltaTime;
+			//Console.WriteLine($"NOW TEMP X: {tempX}");
+
+			//gameObject.transform.Position -= transform.Forward * 0.5f;
+			//transform.Rotation = Quaternion.FromEulerAngles(transform.Rotation.ToEulerAngles() + new Vector3(0,1f,0f));
+
+			KeyboardState input = EngineInstance.Instance.window.KeyboardState;
+			if (input.IsKeyDown(Keys.W))
+			{
+				transform.Position += transform.Forward * 1f * (float)Time.deltaTime; //Forward 
+			}
+
+			if (input.IsKeyDown(Keys.S))
+			{
+				transform.Position -= transform.Forward * 5f * (float)Time.deltaTime; //Backwards
+			}
+
+			if (input.IsKeyDown(Keys.A))
+			{
+				transform.Position -= Vector3.Normalize(Vector3.Cross(transform.Forward, transform.Up)) * 5f * (float)Time.deltaTime; //Left
+			}
+
+			if (input.IsKeyDown(Keys.D))
+			{
+				transform.Position += Vector3.Normalize(Vector3.Cross(transform.Forward, transform.Up)) * 5f * (float)Time.deltaTime; //Right
+			}
+
+			if (input.IsKeyDown(Keys.Space))
+			{
+				transform.Position += transform.Up * 5f * (float)Time.deltaTime; //Up 
+			}
+
+			if (input.IsKeyDown(Keys.LeftShift))
+			{
+				transform.Position -= transform.Up * 5f * (float)Time.deltaTime; //Down
+			}
+			Console.WriteLine($"POS: {gameObject.transform.Position}");
+
+		}
 		/// <summary>
 		/// Updates the camera's view and projection matrices based on its transform component.
 		/// </summary>
 		/// <param name="aspectRatio">The aspect ratio of the camera (width / height).</param>
-		public void Update()
+		public void RenderUpdate()
 		{
 			if (EngineInstance.Instance == null || EngineInstance.Instance.window == null)
 			{
 				throw new Exception("[CAMERA] NO GAME ENGINE INSTANCE OR WINDOW REGISTERED");
 			}
-			gameObject.transform.Position += Vector3.One * (float)Time.deltaTime * 10f;
-			Console.WriteLine($"POS: {gameObject.transform.Position}");
 			if (activeCamera == null && Enabled)
 			{
 				activeCamera = this;
@@ -97,13 +163,12 @@ namespace Game.Engine.Components
 
 				if (IsOrthographic)
 				{
-					float orthoSize = 10.0f; // You may adjust this value based on your scene size
 
-					projectionMatrix = Matrix4.CreateOrthographic(orthoSize * aspectRatio, orthoSize, 0.1f, 1000.0f);
+					projectionMatrix = Matrix4.CreateOrthographic(OrthoSize * aspectRatio, OrthoSize, NearClip, FarClip);
 				}
 				else
 				{
-					projectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(FieldOfView), aspectRatio, 0.1f, 1000.0f);
+					projectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(FieldOfView), aspectRatio, NearClip, FarClip);
 				}
 
 				viewMatrix = Matrix4.LookAt(eye, target, up);

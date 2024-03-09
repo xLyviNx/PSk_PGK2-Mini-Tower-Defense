@@ -62,23 +62,22 @@ namespace PGK2.Engine.Core
 				// Przetwórz informacje o meshu, takie jak wierzchołki, indeksy itd.
 				for (int i = 0; i < mesh.Vertices.Count; i++)
 				{
-					loadedMesh.Vertices.Add(new MeshVertex
-					{
-						Position = new Vector3(mesh.Vertices[i].X, mesh.Vertices[i].Y, mesh.Vertices[i].Z),
-						Normal = new Vector3(mesh.Normals[i].X, mesh.Normals[i].Y, mesh.Normals[i].Z),
-						TexCoord = mesh.HasTextureCoords(0) ? new Vector2(mesh.TextureCoordinateChannels[0][i].X, mesh.TextureCoordinateChannels[0][i].Y) : Vector2.Zero
-					});
+					loadedMesh.Vertices.Add(new MeshVertex(
+
+						new Vector3(mesh.Vertices[i].X, mesh.Vertices[i].Y, mesh.Vertices[i].Z),
+						new Vector3(mesh.Normals[i].X, mesh.Normals[i].Y, mesh.Normals[i].Z),
+						mesh.HasTextureCoords(0) ? new Vector2(mesh.TextureCoordinateChannels[0][i].X, mesh.TextureCoordinateChannels[0][i].Y) : Vector2.Zero
+					));
 				}
 			}
 
 			// Przetwórz materiały z sceny, jeśli są dostępne.
 			if (scene.Materials.Count > 0)
 			{
-				loadedMesh.LoadedMaterials = new Material[scene.Materials.Count];
-				for (int i = 0; i < scene.Materials.Count; i++)
+				loadedMesh.LoadedMaterials = new();
+				foreach(var material in scene.Materials)
 				{
-					// Przetwórz informacje o materiale, takie jak kolor, tekstury itd.
-					// Utwórz obiekty Material i dodaj je do loadedMesh.LoadedMaterials.
+					loadedMesh.LoadedMaterials.Add(new Material(material));
 				}
 			}
 
@@ -91,12 +90,45 @@ namespace PGK2.Engine.Core
 
 			return loadedMesh;
 		}
+		public void Render()
+		{
+			GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
+
+			// Ustawienia atrybutów dla wierzchołków (position, normal, texCoord)
+			int positionLocation = 0; // Przyjmujemy, że atrybuty w shaderze są ustawione na lokalizacjach 0, 1 i 2
+			GL.EnableVertexAttribArray(positionLocation);
+			GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, Marshal.SizeOf<MeshVertex>(), 0);
+
+			int normalLocation = 1;
+			GL.EnableVertexAttribArray(normalLocation);
+			GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, Marshal.SizeOf<MeshVertex>(), Vector3.SizeInBytes);
+
+			int texCoordLocation = 2;
+			GL.EnableVertexAttribArray(texCoordLocation);
+			GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, Marshal.SizeOf<MeshVertex>(), Vector3.SizeInBytes * 2);
+
+			// Renderowanie
+			GL.DrawArrays(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles, 0, Vertices.Count);
+
+			// Wyłączenie atrybutów po renderowaniu
+			GL.DisableVertexAttribArray(positionLocation);
+			GL.DisableVertexAttribArray(normalLocation);
+			GL.DisableVertexAttribArray(texCoordLocation);
+		}
+
 	}
 
-	public class MeshVertex
+	public struct MeshVertex
 	{
-		public Vector3 Position { get; set; }
-		public Vector3 Normal { get; set; }
-		public Vector2 TexCoord { get; set; }
+		public Vector3 Position { get; }
+		public Vector3 Normal { get; }
+		public Vector2 TexCoord { get; }
+
+		public MeshVertex(Vector3 position, Vector3 normal, Vector2 texCoord)
+		{
+			Position = position;
+			Normal = normal;
+			TexCoord = texCoord;
+		}
 	}
 }
