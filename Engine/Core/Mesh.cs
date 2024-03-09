@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Assimp.Configs;
 using Assimp;
-using Assimp.Configs;
-using OpenTK.Graphics.OpenGL4;
-using OpenTK.Mathematics;
 using System.Runtime.InteropServices;
+using OpenTK.Mathematics;
+using OpenTK.Graphics.OpenGL4;
 
 namespace PGK2.Engine.Core
 {
 	public class Mesh
 	{
 		private static Dictionary<string, Mesh> LoadedMeshes = new();
+		private Dictionary<int, List<MeshVertex>> MaterialParts = new Dictionary<int, List<MeshVertex>>();
 
 		// Bufor OpenGL dla wierzchołków
 		private int VertexBufferObject;
 
 		public List<Material> LoadedMaterials { get; private set; }
-		public List<MeshVertex> Vertices { get; private set; } 
+		public List<MeshVertex> Vertices { get; private set; }
 
 		public Mesh()
 		{
@@ -62,12 +61,20 @@ namespace PGK2.Engine.Core
 				// Przetwórz informacje o meshu, takie jak wierzchołki, indeksy itd.
 				for (int i = 0; i < mesh.Vertices.Count; i++)
 				{
-					loadedMesh.Vertices.Add(new MeshVertex(
-
+					MeshVertex vertex = new MeshVertex(
 						new Vector3(mesh.Vertices[i].X, mesh.Vertices[i].Y, mesh.Vertices[i].Z),
 						new Vector3(mesh.Normals[i].X, mesh.Normals[i].Y, mesh.Normals[i].Z),
 						mesh.HasTextureCoords(0) ? new Vector2(mesh.TextureCoordinateChannels[0][i].X, mesh.TextureCoordinateChannels[0][i].Y) : Vector2.Zero
-					));
+					);
+
+					loadedMesh.Vertices.Add(vertex);
+
+					// Podziel wierzchołki na części w zależności od materiału
+					int materialIndex = mesh.MaterialIndex;
+					if (!loadedMesh.MaterialParts.ContainsKey(materialIndex))
+						loadedMesh.MaterialParts[materialIndex] = new List<MeshVertex>();
+
+					loadedMesh.MaterialParts[materialIndex].Add(vertex);
 				}
 			}
 
@@ -75,7 +82,7 @@ namespace PGK2.Engine.Core
 			if (scene.Materials.Count > 0)
 			{
 				loadedMesh.LoadedMaterials = new();
-				foreach(var material in scene.Materials)
+				foreach (var material in scene.Materials)
 				{
 					loadedMesh.LoadedMaterials.Add(new Material(material));
 				}
@@ -90,8 +97,12 @@ namespace PGK2.Engine.Core
 
 			return loadedMesh;
 		}
-		public void Render()
+
+		public void Render(int materialIndex)
 		{
+			if (!MaterialParts.ContainsKey(materialIndex))
+				return;
+
 			GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
 
 			// Ustawienia atrybutów dla wierzchołków (position, normal, texCoord)
@@ -108,16 +119,14 @@ namespace PGK2.Engine.Core
 			GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, Marshal.SizeOf<MeshVertex>(), Vector3.SizeInBytes * 2);
 
 			// Renderowanie
-			GL.DrawArrays(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles, 0, Vertices.Count);
+			GL.DrawArrays(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles, 0, MaterialParts[materialIndex].Count);
 
 			// Wyłączenie atrybutów po renderowaniu
 			GL.DisableVertexAttribArray(positionLocation);
 			GL.DisableVertexAttribArray(normalLocation);
 			GL.DisableVertexAttribArray(texCoordLocation);
 		}
-
 	}
-
 	public struct MeshVertex
 	{
 		public Vector3 Position { get; }

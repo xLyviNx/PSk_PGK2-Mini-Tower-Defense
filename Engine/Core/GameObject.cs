@@ -80,8 +80,8 @@ namespace PGK2.Engine.Core
 
         public T Add<T>() where T : Component, new()
         {
+            Component.assigningComponentTo = gameObject;
             T newComponent = new T();
-            newComponent.gameObject = gameObject;
             All.Add(newComponent);
             return newComponent;
         }

@@ -1,4 +1,4 @@
-﻿using Game.Engine.Components;
+﻿using PGK2.Engine.Components;
 using PGK2.Engine.Core;
 using System.Text.Json.Serialization;
 
@@ -10,7 +10,8 @@ namespace PGK2.Engine.SceneSystem
 		public string SceneName = "Unnamed Scene";
 		public List<GameObject> GameObjects { get;  set; }
 		[JsonIgnore] public List<CameraComponent> Cameras { get; set; }
-		[JsonInclude]
+		[JsonIgnore] public List<Renderer> Renderers { get; set; }
+		/*[JsonInclude]
 		public List<Guid> CameraObjects
 		{
 			get
@@ -23,12 +24,13 @@ namespace PGK2.Engine.SceneSystem
 				}
 				return list;
 			}
-		}
+		}*/
 		
 		public Scene()
 		{
 			GameObjects = new List<GameObject>();
 			Cameras = new();
+			Renderers = new();
 		}
 
 		public T? FindObjectOfType<T>(bool onlyActive = true) where T : Component

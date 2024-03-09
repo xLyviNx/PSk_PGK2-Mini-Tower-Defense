@@ -10,8 +10,9 @@ namespace PGK2.Engine.Core
 
 	public abstract class Component
     {
-		[JsonIgnore] public GameObject gameObject;
-		[JsonIgnore] public TransformComponent transform => gameObject.transform;
+        [JsonIgnore] public static GameObject? assigningComponentTo;
+		[JsonIgnore] public GameObject? gameObject;
+		[JsonIgnore] public TransformComponent? transform => gameObject?.transform;
 		private bool _enabledSelf = true;
         public bool Enabled
         {
@@ -23,7 +24,11 @@ namespace PGK2.Engine.Core
         }
         public Component()
         {
-
+            if (assigningComponentTo != null)
+                gameObject = assigningComponentTo;
+            else
+                gameObject = null;
+            assigningComponentTo = null;
         }
         public virtual void Update()
         {

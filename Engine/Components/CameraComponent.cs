@@ -8,7 +8,7 @@ using PGK2.Engine.Serialization.Converters;
 using System.Drawing;
 using System.Text.Json.Serialization;
 
-namespace Game.Engine.Components
+namespace PGK2.Engine.Components
 {
 	/// <summary>
 	/// Represents a camera component that defines the view and projection matrices for rendering scenes.
@@ -68,7 +68,7 @@ namespace Game.Engine.Components
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CameraComponent"/> class with default values.
 		/// </summary>
-		public CameraComponent()
+		public CameraComponent() : base()
 		{
 			viewMatrix = Matrix4.Identity;
 			projectionMatrix = Matrix4.Identity;
@@ -90,7 +90,7 @@ namespace Game.Engine.Components
 			base.OnDestroy();
 			if (SceneManager.ActiveScene != null)
 			{
-				SceneManager.ActiveScene.Cameras.Add(this);
+				SceneManager.ActiveScene.Cameras.Remove(this);
 				SceneManager.ActiveScene.Cameras.Sort((x, y) => x.Priority.CompareTo(y.Priority));
 			}
 			if (activeCamera == this)
@@ -137,7 +137,7 @@ namespace Game.Engine.Components
 			{
 				transform.Position -= transform.Up * 5f * (float)Time.deltaTime; //Down
 			}
-			Console.WriteLine($"POS: {gameObject.transform.Position}");
+			//Console.WriteLine($"POS: {gameObject.transform.Position}");
 
 		}
 		/// <summary>

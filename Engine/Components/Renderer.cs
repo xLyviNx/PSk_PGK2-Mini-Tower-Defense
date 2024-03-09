@@ -1,7 +1,10 @@
-﻿using Game.Engine.Components;
+﻿using Assimp;
+using Game.Engine.Components;
 using OpenTK;
 using OpenTK.Mathematics;
 using PGK2.Engine.Core;
+using PGK2.Engine.SceneSystem;
+using System.Text.Json.Serialization;
 
 namespace PGK2.Engine.Components
 {
@@ -12,8 +15,19 @@ namespace PGK2.Engine.Components
 		protected Renderer()
 		{
 			RenderTags = new();
+			if (SceneManager.ActiveScene != null)
+			{
+				SceneManager.ActiveScene.Renderers.Add(this);
+			}
 		}
-
+		public override void OnDestroy()
+		{
+			base.OnDestroy();
+			if (SceneManager.ActiveScene != null)
+			{
+				SceneManager.ActiveScene.Renderers.Remove(this);
+			}
+		}
 		public void CallRender(CameraComponent camera)
 		{
 			if (camera == null || !camera.Enabled)
@@ -33,13 +47,34 @@ namespace PGK2.Engine.Components
 	[Serializable]
 	public class MeshRenderer : Renderer
 	{
-		public Mesh Mesh { get; set; }
-		public List<Material> Materials { get; set; }
+		private Core.Mesh? _mesh;
+		[JsonIgnore] public Core.Mesh? Mesh { get => _mesh; set
+			{
+				Console.WriteLine("1 Setting Mesh to " + (value != null ? value.ToString() : "NULL"));
+				SetMesh(value);
+			}
+		}
+		public List<Core.Material> Materials { get; set; }
 
-		public MeshRenderer(Mesh mesh, Material[] materials)
+		public MeshRenderer()
 		{
-			Mesh = mesh;
+			_mesh = null;
 			Materials = new();
+		}
+		public void SetMesh(Core.Mesh? mesh)
+		{
+			Console.WriteLine("Setting Mesh to " + (mesh != null? mesh.ToString() : "NULL"));
+			_mesh = mesh;
+			Materials.Clear();
+			if (mesh != null)
+			{
+				foreach (Core.Material mat in mesh.LoadedMaterials)
+				{
+					Console.WriteLine($"MATERIAL");
+					mat.Shader = EngineWindow.shader;
+					Materials.Add(mat);
+				}
+			}
 		}
 
 		protected override void Render(CameraComponent camera)
@@ -51,16 +86,16 @@ namespace PGK2.Engine.Components
 			Matrix4 viewMatrix = camera.ViewMatrix;
 			Matrix4 projectionMatrix = camera.ProjectionMatrix;
 
-			foreach (Material material in Materials)
+			for (int i = 0; i < Materials.Count; i++)
 			{
-				// Ustaw macierze w materiale
+				Core.Material material = Materials[i];
 				material.Shader.SetMatrix4("model", modelMatrix);
 				material.Shader.SetMatrix4("view", viewMatrix);
 				material.Shader.SetMatrix4("projection", projectionMatrix);
 
 				// Renderuj mesh z użyciem danego materiału
 				material.Use();
-				Mesh.Render();
+				Mesh.Render(i);
 				material.Unuse();
 			}
 		}

@@ -15,11 +15,9 @@ namespace PGK2.Engine.Core
 		Queue<int> frameQueue = new Queue<int>();
 		double secTimer = 0d;
 		long frames = 0;
-		float fps;
 		int VertexBufferObject;
 		int VertexArrayObject;
-		KeyboardState keyboardState;
-		Shader shader;
+		public static Shader shader;
 		public float aspectRatio { get; private set; }
 		public CameraComponent? activeCamera {get=>CameraComponent.activeCamera; }
 		float[] vertices = {
@@ -37,13 +35,21 @@ namespace PGK2.Engine.Core
 		{
 			base.OnLoad();
 			GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+			GL.Enable(EnableCap.DepthTest);
 			VertexBufferObject = GL.GenBuffer();
 
 			//Code goes here
 			shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+			var vertexLocation = shader.GetAttribLocation("aPosition");
+			GL.EnableVertexAttribArray(vertexLocation);
+			GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
+
+			var texCoordLocation = shader.GetAttribLocation("aTexCoord");
+			GL.EnableVertexAttribArray(texCoordLocation);
+			GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
+
 			VertexArrayObject = GL.GenVertexArray();
 			VertexBufferObject = GL.GenBuffer();
-
 			SceneTest();
 
 		}
@@ -56,11 +62,15 @@ namespace PGK2.Engine.Core
 			newObject.Components.Add<TestComponent>();
 			scene.GameObjects.Add(newObject);
 
+			Mesh mesh = Mesh.LoadFromFile("Models/cube.fbx");
+			Console.WriteLine($"Loaded Mesh: {mesh.Vertices.Count} VERTS");
 
-			/*GameObject newObject2 = new("CHILD OBJECT");
+			GameObject newObject2 = new("RENDER OBJECT");
 			newObject2.Components.Add<TestComponent>();
-			newObject2.transform.Parent = newObject.transform;
-			scene.GameObjects.Add(newObject2);*/
+			newObject2.Components.Add<MeshRenderer>();
+			newObject2.Components.Get<MeshRenderer>().Mesh = mesh;
+			Console.WriteLine("MATERIALS : " + newObject2.Components.Get<MeshRenderer>().Materials.Count);
+			scene.GameObjects.Add(newObject2);
 
 			SceneManager.SaveSceneToFile(scene, "SCENE.lscn");
 		}
@@ -68,7 +78,7 @@ namespace PGK2.Engine.Core
 		{
 			base.OnRenderFrame(e);
 			aspectRatio = (float)ClientSize.X / ClientSize.Y;
-			GL.Clear(ClearBufferMask.ColorBufferBit);
+			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);          
 			//Console.WriteLine($"CAMERA: {(activeCamera != null ? activeCamera.gameObject.name : "NULL")}");
 
 			if (SceneManager.ActiveScene != null)
@@ -87,14 +97,16 @@ namespace PGK2.Engine.Core
 						cam.RenderUpdate();
 					}
 				} while (interrupted);
+				if (activeCamera != null)
+				{
+					foreach (Renderer r in SceneManager.ActiveScene.Renderers)
+					{
+						r.CallRender(activeCamera);
+					}
+				}
+			}
 
-			}
-			if (activeCamera != null)
-			{
-				//shader.SetMatrix4("view", CameraComponent.activeCamera.ViewMatrix);
-				//shader.SetMatrix4("projection", CameraComponent.activeCamera.ProjectionMatrix);
-				shader.Use();
-			}
+			shader.Use();
 			DrawTest();
 
 			SwapBuffers();
@@ -131,10 +143,6 @@ namespace PGK2.Engine.Core
 			base.OnUpdateFrame(e);
 
 			frames++;
-			/*long now = DateTime.Now.Ticks;
-			double dT = (now - Time.lastTime) / 10_000_000f;
-			Time.lastTime = now;
-			Time.deltaTime = dT;*/
 			Time.deltaTime = e.Time;
 			if (secTimer < 1f)
 			{
