@@ -6,14 +6,14 @@ using System.Text.Json.Serialization;
 
 namespace Game.Engine.Components
 {
-	/// <summary>
-	/// Represents a component that manages the position, rotation, and scale of an object in 3D space.
-	/// </summary>
-	[Serializable]
+    /// <summary>
+    /// Represents a component that manages the position, rotation, and scale of an object in 3D space.
+    /// </summary>
+    [Serializable]
     public class TransformComponent : Component
 	{
 		public Vector3 localPosition = Vector3.Zero;
-		public Quaternion localRotation = Quaternion.FromEulerAngles(0, 0, 0);
+		public QuaternionRotation localRotation = new QuaternionRotation();
 		public Vector3 localScale = Vector3.One;
 		private TransformComponent? parent = null;
 		public ChildrenContainer children { get; private set; }
@@ -27,16 +27,14 @@ namespace Game.Engine.Components
 			get { return (parent != null) ? parent.TransformPoint(localPosition) : localPosition; }
 			set { localPosition = (parent != null) ? parent.InverseTransformPoint(value) : value; }
 		}
-
 		/// <summary>
 		/// Gets or sets the global rotation of the object.
 		/// </summary>
-		public Quaternion Rotation
+		public QuaternionRotation Rotation
 		{
 			get { return (parent != null) ? parent.TransformRotation(localRotation) : localRotation; }
 			set { localRotation = (parent != null) ? parent.InverseTransformRotation(value) : value; }
 		}
-
 		/// <summary>
 		/// Gets or sets the global scale of the object.
 		/// </summary>
@@ -52,7 +50,7 @@ namespace Game.Engine.Components
 		[JsonIgnore]
 		public Vector3 Forward
 		{
-			get { return Vector3.Transform(Vector3.UnitZ, Rotation); }
+			get { return Vector3.Transform(Vector3.UnitZ, Rotation.Quaternion); }
 		}
 
 		/// <summary>
@@ -61,7 +59,7 @@ namespace Game.Engine.Components
 		[JsonIgnore]
 		public Vector3 Up
 		{
-			get { return Vector3.Transform(Vector3.UnitY, Rotation); }
+			get { return Vector3.Transform(Vector3.UnitY, Rotation.Quaternion); }
 		}
 
 		/// <summary>
@@ -106,7 +104,7 @@ namespace Game.Engine.Components
 		{
 			gameObject = attachedTo;
 			localPosition = Vector3.Zero;
-			localRotation = Quaternion.FromEulerAngles(0,0,0);
+			localRotation = new();
 			localScale = Vector3.One;
 			children = new();
 		}
@@ -117,7 +115,7 @@ namespace Game.Engine.Components
 		public Matrix4 GetModelMatrix()
 		{
 			Matrix4 translationMatrix = Matrix4.CreateTranslation(Position);
-			Matrix4 rotationMatrix = Matrix4.CreateFromQuaternion(Rotation);
+			Matrix4 rotationMatrix = Matrix4.CreateFromQuaternion(Rotation.Quaternion);
 			Matrix4 scaleMatrix = Matrix4.CreateScale(Scale);
 
 			return scaleMatrix * rotationMatrix * translationMatrix;
@@ -130,7 +128,7 @@ namespace Game.Engine.Components
 		/// <returns>The point in global space.</returns>
 		public Vector3 TransformPoint(Vector3 point)
 		{
-			return Vector3.Transform(point, Rotation) * Scale + Position;
+			return Vector3.Transform(point, Rotation.Quaternion) * Scale + Position;
 		}
 
 		/// <summary>
@@ -141,7 +139,7 @@ namespace Game.Engine.Components
 		public Vector3 InverseTransformPoint(Vector3 point)
 		{
 			Vector3 invertedScale = new Vector3(1.0f / Scale.X, 1.0f / Scale.Y, 1.0f / Scale.Z);
-			Quaternion invertedRotation = Quaternion.Invert(Rotation);
+			Quaternion invertedRotation = Rotation.Invert;
 
 			// Poprawienie kolejności operacji i dodanie skalowania
 			return Vector3.Transform(point - Position, invertedRotation) * invertedScale;
@@ -153,9 +151,11 @@ namespace Game.Engine.Components
 		/// </summary>
 		/// <param name="localRotation">The local rotation to transform.</param>
 		/// <returns>The rotation in global space.</returns>
-		public Quaternion TransformRotation(Quaternion localRotation)
+		public QuaternionRotation TransformRotation(QuaternionRotation localRotation)
 		{
-			return Rotation * localRotation;
+			QuaternionRotation qr = new();
+			qr.Quaternion = localRotation.Quaternion * Rotation.Quaternion;
+			return qr;
 		}
 
 		/// <summary>
@@ -163,9 +163,9 @@ namespace Game.Engine.Components
 		/// </summary>
 		/// <param name="worldRotation">The global rotation to transform.</param>
 		/// <returns>The rotation in local space.</returns>
-		public Quaternion InverseTransformRotation(Quaternion worldRotation)
+		public QuaternionRotation InverseTransformRotation(QuaternionRotation worldRotation)
 		{
-			return Quaternion.Invert(Rotation) * worldRotation;
+			return new QuaternionRotation(Quaternion.Invert(Rotation.Quaternion) * worldRotation.Quaternion);
 		}
 
 		/// <summary>
@@ -175,9 +175,8 @@ namespace Game.Engine.Components
 		/// <returns>The vector in global space.</returns>
 		public Vector3 TransformVector(Vector3 localVector)
 		{
-			return Vector3.Transform(localVector, Rotation) * Scale;
+			return Vector3.Transform(localVector, Rotation.Quaternion) * Scale;
 		}
-
 		/// <summary>
 		/// Transforms a global vector to local space.
 		/// </summary>
@@ -185,7 +184,7 @@ namespace Game.Engine.Components
 		/// <returns>The vector in local space.</returns>
 		public Vector3 InverseTransformVector(Vector3 worldVector)
 		{
-			return Vector3.Transform(worldVector / Scale, Quaternion.Invert(Rotation));
+			return Vector3.Transform(worldVector / Scale, Rotation.Invert);
 		}
 	}
 	[Serializable]

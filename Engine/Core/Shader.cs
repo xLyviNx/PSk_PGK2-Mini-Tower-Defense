@@ -102,11 +102,11 @@ namespace PGK2.Engine.Core
 			GL.LinkProgram(program);
 
 			// Check for linking errors
-			GL.GetProgram(program, GetProgramParameterName.LinkStatus, out var code);
-			if (code != (int)All.True)
+			GL.GetProgram(program, GetProgramParameterName.LinkStatus, out int linkStatus);
+			if (linkStatus == 0)
 			{
-				// We can use `GL.GetProgramInfoLog(program)` to get information about the error.
-				throw new Exception($"Error occurred whilst linking Program({program})");
+				GL.GetProgramInfoLog(program, out string infoLog);
+				Console.WriteLine($"Error linking shader program:\n{infoLog}");
 			}
 		}
 

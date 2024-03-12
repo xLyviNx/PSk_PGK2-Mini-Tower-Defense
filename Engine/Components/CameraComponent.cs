@@ -1,6 +1,8 @@
-﻿using OpenTK;
+﻿using Game.Engine.Components;
+using OpenTK;
 using OpenTK.Graphics.ES11;
 using OpenTK.Mathematics;
+using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using PGK2.Engine.Core;
 using PGK2.Engine.SceneSystem;
@@ -24,6 +26,7 @@ namespace PGK2.Engine.Components
 		public float NearClip = 0.1f;
 		public float FarClip = 1000f;
 		[JsonIgnore] public static CameraComponent? activeCamera;
+		Vector3 oldrot;
 
 		/// <summary>
 		/// Gets or sets the view matrix of the camera.
@@ -110,22 +113,22 @@ namespace PGK2.Engine.Components
 			KeyboardState input = EngineInstance.Instance.window.KeyboardState;
 			if (input.IsKeyDown(Keys.W))
 			{
-				transform.Position += transform.Forward * 1f * (float)Time.deltaTime; //Forward 
+				transform.Position += transform.Forward * 2f * (float)Time.deltaTime; //Forward 
 			}
 
 			if (input.IsKeyDown(Keys.S))
 			{
-				transform.Position -= transform.Forward * 5f * (float)Time.deltaTime; //Backwards
+				transform.Position -= transform.Forward * 2f * (float)Time.deltaTime; //Backwards
 			}
 
 			if (input.IsKeyDown(Keys.A))
 			{
-				transform.Position -= Vector3.Normalize(Vector3.Cross(transform.Forward, transform.Up)) * 5f * (float)Time.deltaTime; //Left
+				transform.Position -= transform.Right * 2f * (float)Time.deltaTime; //Left
 			}
 
 			if (input.IsKeyDown(Keys.D))
 			{
-				transform.Position += Vector3.Normalize(Vector3.Cross(transform.Forward, transform.Up)) * 5f * (float)Time.deltaTime; //Right
+				transform.Position += transform.Right * 2f * (float)Time.deltaTime; //Right
 			}
 
 			if (input.IsKeyDown(Keys.Space))
@@ -137,8 +140,26 @@ namespace PGK2.Engine.Components
 			{
 				transform.Position -= transform.Up * 5f * (float)Time.deltaTime; //Down
 			}
-			//Console.WriteLine($"POS: {gameObject.transform.Position}");
 
+			if(input.IsKeyDown(Keys.Left))
+			{
+				transform.Rotation += new Vector3(0, 50, 0) * (float)Time.deltaTime;
+			}
+			if (input.IsKeyDown(Keys.Right))
+			{
+				transform.Rotation += new Vector3(0, -50, 0) * (float)Time.deltaTime;
+			}
+			if (input.IsKeyDown(Keys.Down))
+			{
+				transform.Rotation += new Vector3(50, 0, 0) * (float)Time.deltaTime;
+			}
+			if (input.IsKeyDown(Keys.Up))
+			{
+				transform.Rotation += new Vector3(-50, 0, 0) * (float)Time.deltaTime;
+			}
+			if (oldrot != transform.Position) 
+				Console.WriteLine($"POS: {gameObject.transform.Position}");
+			oldrot = transform.Position;
 		}
 		/// <summary>
 		/// Updates the camera's view and projection matrices based on its transform component.
@@ -163,13 +184,17 @@ namespace PGK2.Engine.Components
 
 				if (IsOrthographic)
 				{
-
-					projectionMatrix = Matrix4.CreateOrthographic(OrthoSize * aspectRatio, OrthoSize, NearClip, FarClip);
+					projectionMatrix = Matrix4.CreateOrthographicOffCenter(
+						-OrthoSize * aspectRatio, OrthoSize * aspectRatio,
+						-OrthoSize, OrthoSize,
+						NearClip, FarClip);
 				}
 				else
 				{
-					projectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(FieldOfView), aspectRatio, NearClip, FarClip);
+					projectionMatrix = Matrix4.CreatePerspectiveFieldOfView(
+						MathHelper.DegreesToRadians(FieldOfView), aspectRatio, NearClip, FarClip);
 				}
+
 
 				viewMatrix = Matrix4.LookAt(eye, target, up);
 			}

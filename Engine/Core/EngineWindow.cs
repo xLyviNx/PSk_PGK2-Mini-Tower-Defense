@@ -18,6 +18,7 @@ namespace PGK2.Engine.Core
 		int VertexBufferObject;
 		int VertexArrayObject;
 		public static Shader shader;
+		Renderer test;
 		public float aspectRatio { get; private set; }
 		public CameraComponent? activeCamera {get=>CameraComponent.activeCamera; }
 		float[] vertices = {
@@ -67,9 +68,9 @@ namespace PGK2.Engine.Core
 
 			GameObject newObject2 = new("RENDER OBJECT");
 			newObject2.Components.Add<TestComponent>();
-			newObject2.Components.Add<MeshRenderer>();
-			newObject2.Components.Get<MeshRenderer>().Mesh = mesh;
-			Console.WriteLine("MATERIALS : " + newObject2.Components.Get<MeshRenderer>().Materials.Count);
+			test = newObject2.Components.Add<MeshRenderer>();
+			//newObject2.Components.Get<MeshRenderer>().Mesh = mesh;
+			//Console.WriteLine("MATERIALS : " + newObject2.Components.Get<MeshRenderer>().Materials.Count);
 			scene.GameObjects.Add(newObject2);
 
 			SceneManager.SaveSceneToFile(scene, "SCENE.lscn");
@@ -105,8 +106,11 @@ namespace PGK2.Engine.Core
 					}
 				}
 			}
-
 			shader.Use();
+
+			shader.SetMatrix4("model", test.transform.GetModelMatrix());
+			shader.SetMatrix4("view", activeCamera.ViewMatrix);
+			shader.SetMatrix4("projection", activeCamera.ProjectionMatrix);
 			DrawTest();
 
 			SwapBuffers();
@@ -136,7 +140,8 @@ namespace PGK2.Engine.Core
 		protected override void OnResize(ResizeEventArgs e)
 		{
 			base.OnResize(e);
-			//GL.Viewport(0, 0, e.Width, e.Height);
+			
+			GL.Viewport(0, 0, e.Width, e.Height);
 		}
 		protected override void OnUpdateFrame(FrameEventArgs e)
 		{

@@ -7,12 +7,13 @@ namespace PGK2.Engine.Core
 {
     [Serializable]
 	[JsonDerivedType(typeof(CameraComponent))]
+	[JsonDerivedType(typeof(SpinTest))]
 
 	public abstract class Component
     {
         [JsonIgnore] public static GameObject? assigningComponentTo;
 		[JsonIgnore] public GameObject? gameObject;
-		[JsonIgnore] public TransformComponent? transform => gameObject?.transform;
+		[JsonIgnore] public TransformComponent transform => gameObject.transform;
 		private bool _enabledSelf = true;
         public bool Enabled
         {
