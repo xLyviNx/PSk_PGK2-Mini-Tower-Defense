@@ -63,8 +63,8 @@ namespace PGK2.Engine.Core
 			newObject.Components.Add<TestComponent>();
 			scene.GameObjects.Add(newObject);
 
-			Mesh mesh = Mesh.LoadFromFile("Models/cube.fbx");
-			Console.WriteLine($"Loaded Mesh: {mesh.Vertices.Count} VERTS");
+			//Mesh mesh = Mesh.LoadFromFile("Models/cube.fbx");
+			//Console.WriteLine($"Loaded Mesh: {mesh.Vertices.Count} VERTS");
 
 			GameObject newObject2 = new("RENDER OBJECT");
 			newObject2.Components.Add<TestComponent>();
