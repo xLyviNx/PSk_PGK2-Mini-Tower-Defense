@@ -7,6 +7,7 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using PGK2.Engine.Components;
 using PGK2.Engine.SceneSystem;
+using System.Reflection;
 
 namespace PGK2.Engine.Core
 {
@@ -106,11 +107,18 @@ namespace PGK2.Engine.Core
 					}
 				}
 			}
-			shader.Use();
+			Matrix4 model = Matrix4.Identity;
+			Matrix4 view = activeCamera.ViewMatrix;
+			Matrix4 projection = activeCamera.ProjectionMatrix;
 
-			shader.SetMatrix4("model", test.transform.GetModelMatrix());
-			shader.SetMatrix4("view", activeCamera.ViewMatrix);
-			shader.SetMatrix4("projection", activeCamera.ProjectionMatrix);
+			int modelLocation = GL.GetUniformLocation(shader.Handle, "model");
+			GL.UniformMatrix4(modelLocation, false, ref model);
+			int viewLocation = GL.GetUniformLocation(shader.Handle, "view");
+			GL.UniformMatrix4(viewLocation, false, ref view);
+			int projectionLocation = GL.GetUniformLocation(shader.Handle, "projection");
+			GL.UniformMatrix4(projectionLocation, false, ref projection);
+
+			shader.Use();
 			DrawTest();
 
 			SwapBuffers();

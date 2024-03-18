@@ -82,7 +82,7 @@ namespace PGK2.Engine.Core
 
 			// Multiply the current rotation by the delta quaternion
 			rotation.Quaternion = deltaQuaternion * rotation.Quaternion;
-
+			Console.WriteLine(rotation.EulerAngles);
 			return rotation;
 		}
 		public override string ToString()
