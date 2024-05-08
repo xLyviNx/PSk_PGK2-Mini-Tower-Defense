@@ -60,7 +60,7 @@ namespace PGK2.Engine.Core
             {
                 SceneManager.ActiveScene.GameObjects.Remove(this);
             }
-            foreach(TransformComponent child in transform.children.AllObjects)
+            foreach(TransformComponent child in transform.Children.AllObjects)
             {
                 child.gameObject.Destroy();
             }

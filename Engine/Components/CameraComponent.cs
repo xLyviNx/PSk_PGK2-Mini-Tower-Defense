@@ -99,68 +99,6 @@ namespace PGK2.Engine.Components
 			if (activeCamera == this)
 				activeCamera = null;
 		}
-		public override void Update()
-		{
-			base.Update();
-			//double tempX = Time.deltaTime;
-			//Console.WriteLine($"TEMP X: {Time.deltaTime}");
-			//tempX += Time.deltaTime;
-			//Console.WriteLine($"NOW TEMP X: {tempX}");
-
-			//gameObject.transform.Position -= transform.Forward * 0.5f;
-			//transform.Rotation = Quaternion.FromEulerAngles(transform.Rotation.ToEulerAngles() + new Vector3(0,1f,0f));
-
-			KeyboardState input = EngineInstance.Instance.window.KeyboardState;
-			if (input.IsKeyDown(Keys.W))
-			{
-				transform.Position += transform.Forward * 2f * (float)Time.deltaTime; //Forward 
-			}
-
-			if (input.IsKeyDown(Keys.S))
-			{
-				transform.Position -= transform.Forward * 2f * (float)Time.deltaTime; //Backwards
-			}
-
-			if (input.IsKeyDown(Keys.A))
-			{
-				transform.Position -= transform.Right * 2f * (float)Time.deltaTime; //Left
-			}
-
-			if (input.IsKeyDown(Keys.D))
-			{
-				transform.Position += transform.Right * 2f * (float)Time.deltaTime; //Right
-			}
-
-			if (input.IsKeyDown(Keys.Space))
-			{
-				transform.Position += transform.Up * 5f * (float)Time.deltaTime; //Up 
-			}
-
-			if (input.IsKeyDown(Keys.LeftShift))
-			{
-				transform.Position -= transform.Up * 5f * (float)Time.deltaTime; //Down
-			}
-
-			if(input.IsKeyDown(Keys.Left))
-			{
-				transform.Rotation += new Vector3(0, 50, 0) * (float)Time.deltaTime;
-			}
-			if (input.IsKeyDown(Keys.Right))
-			{
-				transform.Rotation += new Vector3(0, -50, 0) * (float)Time.deltaTime;
-			}
-			if (input.IsKeyDown(Keys.Down))
-			{
-				transform.Rotation += new Vector3(50, 0, 0) * (float)Time.deltaTime;
-			}
-			if (input.IsKeyDown(Keys.Up))
-			{
-				transform.Rotation += new Vector3(-50, 0, 0) * (float)Time.deltaTime;
-			}
-			if (oldrot != transform.Position) 
-				Console.WriteLine($"POS: {gameObject.transform.Position}");
-			oldrot = transform.Position;
-		}
 		/// <summary>
 		/// Updates the camera's view and projection matrices based on its transform component.
 		/// </summary>
@@ -180,7 +118,7 @@ namespace PGK2.Engine.Components
 				float aspectRatio = EngineInstance.Instance.window.aspectRatio;
 				Vector3 eye = gameObject.transform.Position;
 				Vector3 target = eye + gameObject.transform.Forward;
-				Vector3 up = gameObject.transform.Up;
+				Vector3 up = transform.Up;
 
 				if (IsOrthographic)
 				{
