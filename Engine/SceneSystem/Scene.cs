@@ -1,10 +1,10 @@
-﻿using PGK2.Engine.Components;
+﻿using PGK2.Engine.Components.Base;
 using PGK2.Engine.Core;
 using System.Text.Json.Serialization;
-
+using PGK2.Engine.Components;
 namespace PGK2.Engine.SceneSystem
 {
-	[Serializable]
+    [Serializable]
 	public class Scene
 	{
 		public string SceneName = "Unnamed Scene";

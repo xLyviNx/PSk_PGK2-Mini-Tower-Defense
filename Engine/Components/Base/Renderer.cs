@@ -1,5 +1,5 @@
 ﻿using Assimp;
-using Game.Engine.Components;
+using PGK2.Engine.Components.Base;
 using OpenTK;
 using OpenTK.Mathematics;
 using PGK2.Engine.Core;

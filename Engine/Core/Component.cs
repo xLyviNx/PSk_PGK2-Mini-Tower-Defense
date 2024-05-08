@@ -1,5 +1,5 @@
-﻿using Game.Engine.Components;
-using PGK2.Engine.Components;
+﻿using PGK2.Engine.Components;
+using PGK2.Engine.Components.Base;
 using PGK2.Engine.SceneSystem;
 using System.Text.Json.Serialization;
 
@@ -12,7 +12,7 @@ namespace PGK2.Engine.Core
 	public abstract class Component
     {
         [JsonIgnore] public static GameObject? assigningComponentTo;
-		[JsonIgnore] public GameObject? gameObject;
+		[JsonIgnore] public GameObject gameObject;
 		[JsonIgnore] public TransformComponent transform => gameObject.transform;
 		private bool _enabledSelf = true;
         public bool Enabled

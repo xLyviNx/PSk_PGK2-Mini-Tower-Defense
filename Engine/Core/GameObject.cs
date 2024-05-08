@@ -1,4 +1,4 @@
-﻿using Game.Engine.Components;
+﻿using PGK2.Engine.Components.Base;
 using PGK2.Engine.SceneSystem;
 using PGK2.Engine.Serialization.Converters;
 using System.Text.Json.Serialization;
