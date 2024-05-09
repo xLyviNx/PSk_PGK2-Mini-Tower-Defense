@@ -99,7 +99,7 @@ namespace PGK2.Engine.Components.Base
             Matrix4 pitchMatrix = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(Pitch));
             Matrix4 yawMatrix = Matrix4.CreateRotationY(MathHelper.DegreesToRadians(Yaw));
 
-            return rollMatrix * pitchMatrix * yawMatrix; // adjust order of multiplication as needed
+            return rollMatrix * pitchMatrix * yawMatrix;
         }
 
         public Vector3 TransformPoint(Vector3 point)

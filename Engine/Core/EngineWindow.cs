@@ -131,12 +131,10 @@ namespace PGK2.Engine.Core
 			int projectionLocation = GL.GetUniformLocation(shader.Handle, "projection");
 			GL.UniformMatrix4(projectionLocation, false, ref projection);
 			shader.Use();
-				shader.SetVector3($"material.ambient", Vector3.One);
-				shader.SetVector3($"material.diffuse", Vector3.One);
-				shader.SetVector3($"material.specular", Vector3.One);
-				shader.SetVector3($"material.shininess", Vector3.One);
-
-			Console.WriteLine(shader.GetInt("numLights"));
+			shader.SetVector3($"material.ambient", Vector3.One);
+			shader.SetVector3($"material.diffuse", Vector3.One);
+			shader.SetVector3($"material.specular", Vector3.One);
+			shader.SetVector3($"material.shininess", Vector3.One);
 			shader.SetInt("numLights", lights.Length);
 			for (int i = 0; i < lights.Length; i++)
 			{
