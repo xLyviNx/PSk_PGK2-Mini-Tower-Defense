@@ -7,15 +7,6 @@ namespace PGK2.Engine.Core
 {
 	public class Mouse
 	{
-		private static Vector2i _frameMousePosition;
-		public static Vector2i FrameMousePosition
-		{
-			get => _frameMousePosition;
-			set
-			{
-				_frameMousePosition = value;
-			}
-		}
 		public static Vector2i MousePosition { get; set; }
 		public static bool _isLocked;
 		public static bool IsLocked
@@ -38,11 +29,19 @@ namespace PGK2.Engine.Core
 		}
 		public static Vector2i LockDelta { get; set; }
 		public static Vector2 Delta { get; set; }
+		private static Vector2i _lastscreensize;
+		private static Vector2i _lastscreencenter;
 		public static Vector2i ScreenCenter
 		{
 			get
 			{
-				return new Vector2i((int)(Math.Floor(EngineWindow.instance.Size.X / 2f)), (int)(Math.Floor(EngineWindow.instance.Size.Y / 2f)));
+				if (EngineWindow.instance == null) return Vector2i.Zero;
+				if (EngineWindow.instance.Size!=_lastscreensize)
+				{
+					_lastscreensize= EngineWindow.instance.Size;
+					_lastscreencenter = new Vector2i((int)(Math.Floor(EngineWindow.instance.Size.X / 2f)), (int)(Math.Floor(EngineWindow.instance.Size.Y / 2f)));
+				}
+				return _lastscreencenter;
 			}
 		}
 		public static void CenterIfLocked()
