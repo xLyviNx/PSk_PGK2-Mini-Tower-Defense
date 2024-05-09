@@ -13,47 +13,45 @@ namespace PGK2.Engine.Components
 	public class Freecam : PGK2.Engine.Core.Component
 	{
 		float MouseSens = 3f;
-		bool MouseLockButtonUp = true;
 		public override void Update()
 		{
 			base.Update();
 			if (EngineWindow.instance.IsFocused)
 			{
 				KeyboardState input = EngineInstance.Instance.window.KeyboardState;
-				if (input.IsKeyDown(Keys.D1))
+				if (input.IsKeyPressed(Keys.D1))
 				{
-					if (MouseLockButtonUp)
-						Mouse.IsLocked = !Mouse.IsLocked;
-					MouseLockButtonUp = false;
+					Mouse.IsLocked = !Mouse.IsLocked;
 				}
-				else if (!MouseLockButtonUp)
-					MouseLockButtonUp = true;
+				float speedmod = 1f;
+				if (input.IsKeyDown(Keys.LeftShift))
+					speedmod = 3f;
 				if (input.IsKeyDown(Keys.W))
 				{
-					transform.Position += transform.Forward * 2f * (float)Time.deltaTime; //Forward 
+					transform.Position += transform.Forward * 2f * (float)Time.deltaTime * speedmod; //Forward 
 				}
 
 				if (input.IsKeyDown(Keys.S))
 				{
-					transform.Position -= transform.Forward * 2f * (float)Time.deltaTime; //Backwards
+					transform.Position -= transform.Forward * 2f * (float)Time.deltaTime * speedmod; //Backwards
 				}
 
 				if (input.IsKeyDown(Keys.A))
 				{
-					transform.Position += transform.Right * 2f * (float)Time.deltaTime; //Left
+					transform.Position += transform.Right * 2f * (float)Time.deltaTime * speedmod; //Left
 				}
 
 				if (input.IsKeyDown(Keys.D))
 				{
-					transform.Position -= transform.Right * 2f * (float)Time.deltaTime; //Right
+					transform.Position -= transform.Right * 2f * (float)Time.deltaTime * speedmod; //Right
 				}
 
-				if (input.IsKeyDown(Keys.Space))
+				if (input.IsKeyDown(Keys.Q))
 				{
-					transform.Position += transform.Up * 5f * (float)Time.deltaTime; //Up 
+					transform.Position += transform.Up * 5f * (float)Time.deltaTime * speedmod; //Up 
 				}
 
-				if (input.IsKeyDown(Keys.LeftShift))
+				if (input.IsKeyDown(Keys.E))
 				{
 					transform.Position -= transform.Up * 5f * (float)Time.deltaTime; //Down
 				}
