@@ -1,11 +1,11 @@
 ﻿using Assimp;
-using Game.Engine.Components;
+using PGK2.Engine.Components;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using PGK2.Engine.Components;
+using PGK2.Engine.Components.Base;
 using PGK2.Engine.SceneSystem;
 using System.Reflection;
 
@@ -13,6 +13,7 @@ namespace PGK2.Engine.Core
 {
     public class EngineWindow : GameWindow
 	{
+		public static EngineWindow? instance;
 		Queue<int> frameQueue = new Queue<int>();
 		double secTimer = 0d;
 		long frames = 0;
@@ -20,6 +21,7 @@ namespace PGK2.Engine.Core
 		int VertexArrayObject;
 		public static Shader shader;
 		Renderer test;
+		private bool changedFocus;
 		public float aspectRatio { get; private set; }
 		public CameraComponent? activeCamera {get=>CameraComponent.activeCamera; }
 		float[] vertices = {
@@ -30,7 +32,7 @@ namespace PGK2.Engine.Core
 		public EngineWindow(int width, int height, string title) : base(GameWindowSettings.Default, new NativeWindowSettings()
 			{ ClientSize = (width, height), Title = title })
 		{
-		
+			instance = this;
 		}
 
 		protected override void OnLoad()
@@ -61,7 +63,7 @@ namespace PGK2.Engine.Core
 			SceneManager.LoadScene(scene);
 			GameObject newObject = new("TEST OBJECT");
 			newObject.Components.Add<CameraComponent>();
-			newObject.Components.Add<TestComponent>();
+			newObject.Components.Add<Freecam>();
 			scene.GameObjects.Add(newObject);
 
 			//Mesh mesh = Mesh.LoadFromFile("Models/cube.fbx");
@@ -120,7 +122,6 @@ namespace PGK2.Engine.Core
 
 			shader.Use();
 			DrawTest();
-
 			SwapBuffers();
 		}
 		private void DrawTest()
@@ -144,17 +145,41 @@ namespace PGK2.Engine.Core
 			GL.DeleteVertexArray(VertexArrayObject);
 			GL.DeleteBuffer(VertexBufferObject);
 		}
-
+		protected override void OnMouseMove(MouseMoveEventArgs e)
+		{
+			base.OnMouseMove(e);
+			Mouse.Delta = e.Delta;
+			Mouse.MousePosition = new Vector2i((int)Math.Floor(e.X), (int)Math.Floor(e.Y));
+		}
 		protected override void OnResize(ResizeEventArgs e)
 		{
 			base.OnResize(e);
 			
 			GL.Viewport(0, 0, e.Width, e.Height);
 		}
+		protected override void OnFocusedChanged(FocusedChangedEventArgs e)
+		{
+			base.OnFocusedChanged(e);
+			changedFocus = true;
+		}
 		protected override void OnUpdateFrame(FrameEventArgs e)
 		{
 			base.OnUpdateFrame(e);
-
+			CursorState = Mouse.IsLocked ? CursorState.Hidden : CursorState.Normal;
+			if (Mouse.IsLocked)
+			{
+				if (!changedFocus)
+				{
+					Mouse.LockDelta = Mouse.ScreenCenter - Mouse.MousePosition;
+					Console.WriteLine($"POS: {Mouse.MousePosition}, CENTER: {Mouse.ScreenCenter}, DELTA: {Mouse.LockDelta}");
+				}
+				else
+					changedFocus=false;
+			}
+			else
+			{
+				Mouse.LockDelta = Vector2i.Zero;
+			}
 			frames++;
 			Time.deltaTime = e.Time;
 			if (secTimer < 1f)
@@ -163,7 +188,7 @@ namespace PGK2.Engine.Core
 			}
 			else
 			{
-				Console.WriteLine($"FPS: {frames}");
+				//Console.WriteLine($"FPS: {frames}");
 				frames = 0;
 				secTimer = 0f;
 			}
@@ -176,7 +201,11 @@ namespace PGK2.Engine.Core
 					obj.Update();
 				}
 			}
-
+			Mouse.CenterIfLocked();
+		}
+		public bool IsPointInWindowBounds(Vector2i point)
+		{
+			return ClientRectangle.Contains(point, true);
 		}
 	}
 }
