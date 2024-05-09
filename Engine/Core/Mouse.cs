@@ -2,13 +2,15 @@
 using OpenTK.Input;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using System.Diagnostics;
 
 namespace PGK2.Engine.Core
 {
 	public class Mouse
 	{
-		public static Vector2i MousePosition { get; set; }
+		public static Vector2 MousePosition { get; set; }
 		public static bool _isLocked;
+		public static uint framesSinceLastMove = 0;
 		public static bool IsLocked
 		{
 			get 
@@ -20,14 +22,25 @@ namespace PGK2.Engine.Core
 			}
 			set
 			{
+				bool wasDiff = false; ;
 				if (value != IsLocked)
 				{
-					CenterMouse();
+					wasDiff = true;
 				}
 				_isLocked = value;
+				if(wasDiff)
+				{
+					CenterMouse();
+					IgnoreDelta = true;
+					unsafe
+					{
+						GLFW.SetInputMode(EngineWindow.instance.WindowPtr, CursorStateAttribute.Cursor, IsLocked? CursorModeValue.CursorDisabled : CursorModeValue.CursorNormal);
+					}
+				}
+				
 			}
 		}
-		public static Vector2i LockDelta { get; set; }
+		public static bool IgnoreDelta = false;
 		public static Vector2 Delta { get; set; }
 		private static Vector2i _lastscreensize;
 		private static Vector2i _lastscreencenter;
@@ -44,17 +57,6 @@ namespace PGK2.Engine.Core
 				return _lastscreencenter;
 			}
 		}
-		public static void CenterIfLocked()
-		{
-			if (!IsLocked) return;
-			if (EngineWindow.instance == null) return;
-			if (!EngineWindow.instance.IsFocused) return;
-			if (!EngineWindow.instance.IsVisible) return;
-			//if (!EngineWindow.instance.IsPointInWindowBounds(MousePosition)) return;
-			if (MousePosition == ScreenCenter) return;
-			CenterMouse();
-		}
-
 		private static void CenterMouse()
 		{
 			MoveMouse(ScreenCenter);

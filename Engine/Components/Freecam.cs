@@ -12,7 +12,7 @@ namespace PGK2.Engine.Components
 {
 	public class Freecam : PGK2.Engine.Core.Component
 	{
-		float MouseWeight = 5f;
+		float MouseSens = 50f;
 		bool MouseLockButtonUp = true;
 		public override void Update()
 		{
@@ -59,10 +59,10 @@ namespace PGK2.Engine.Components
 				}
 				if (Mouse.IsLocked)
 				{
-					if (Mouse.LockDelta.X != 0f)
-						transform.Rotation += new Vector3(0f, Mouse.LockDelta.X, 0f) * (float)Time.deltaTime * MouseWeight;
-					if (Mouse.LockDelta.Y != 0f)
-						transform.Rotation -= new Vector3(Mouse.LockDelta.Y, 0f, 0f) * (float)Time.deltaTime * MouseWeight;
+					if (Mouse.Delta.X != 0f)
+						transform.Rotation -= new Vector3(0f, Mouse.Delta.X, 0f) * Time.deltaTime *  MouseSens;
+					if (Mouse.Delta.Y != 0f)
+						transform.Rotation += new Vector3(Mouse.Delta.Y, 0f, 0f) * Time.deltaTime * MouseSens;
 
 					float x = Math.Clamp(transform.Rotation.X, -90f, 90f);
 

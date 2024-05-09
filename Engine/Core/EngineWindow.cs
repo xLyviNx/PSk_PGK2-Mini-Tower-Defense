@@ -82,9 +82,12 @@ namespace PGK2.Engine.Core
 		{
 			base.OnRenderFrame(e);
 			aspectRatio = (float)ClientSize.X / ClientSize.Y;
-			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);          
+			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			//Console.WriteLine($"CAMERA: {(activeCamera != null ? activeCamera.gameObject.name : "NULL")}");
-
+			if (Mouse.framesSinceLastMove>0)
+				Mouse.Delta = Vector2.Zero;
+			else
+				Mouse.framesSinceLastMove++;
 			if (SceneManager.ActiveScene != null)
 			{
 				bool interrupted = false;
@@ -119,7 +122,6 @@ namespace PGK2.Engine.Core
 			GL.UniformMatrix4(viewLocation, false, ref view);
 			int projectionLocation = GL.GetUniformLocation(shader.Handle, "projection");
 			GL.UniformMatrix4(projectionLocation, false, ref projection);
-
 			shader.Use();
 			DrawTest();
 			SwapBuffers();
@@ -148,8 +150,14 @@ namespace PGK2.Engine.Core
 		protected override void OnMouseMove(MouseMoveEventArgs e)
 		{
 			base.OnMouseMove(e);
+			if (Mouse.IgnoreDelta)
+			{
+				Mouse.IgnoreDelta = false;
+				return;
+			}
 			Mouse.Delta = e.Delta;
-			Mouse.MousePosition = new Vector2i((int)Math.Floor(e.X), (int)Math.Floor(e.Y));
+			Mouse.MousePosition = e.Position;
+			Mouse.framesSinceLastMove = 0;
 		}
 		protected override void OnResize(ResizeEventArgs e)
 		{
@@ -165,23 +173,23 @@ namespace PGK2.Engine.Core
 		protected override void OnUpdateFrame(FrameEventArgs e)
 		{
 			base.OnUpdateFrame(e);
-			CursorState = Mouse.IsLocked ? CursorState.Hidden : CursorState.Normal;
+			CursorState = Mouse.IsLocked ? CursorState.Grabbed : CursorState.Normal;
 			if (Mouse.IsLocked)
 			{
 				if (!changedFocus)
 				{
-					Mouse.LockDelta = Mouse.ScreenCenter - Mouse.MousePosition;
-					Console.WriteLine($"POS: {Mouse.MousePosition}, CENTER: {Mouse.ScreenCenter}, DELTA: {Mouse.LockDelta}");
+					unsafe
+					{
+						Cursor* cursor = GLFW.CreateStandardCursor(CursorShape.Arrow);
+					}
+					//Mouse.LockDelta = Mouse.ScreenCenter - Mouse.MousePosition;
+					//Console.WriteLine($"POS: {Mouse.MousePosition}, CENTER: {Mouse.ScreenCenter}, DELTA: {Mouse.Delta}");
 				}
 				else
 					changedFocus=false;
 			}
-			else
-			{
-				Mouse.LockDelta = Vector2i.Zero;
-			}
 			frames++;
-			Time.deltaTime = e.Time;
+			Time.doubleDeltaTime = e.Time;
 			if (secTimer < 1f)
 			{
 				secTimer += Time.deltaTime;
@@ -201,7 +209,6 @@ namespace PGK2.Engine.Core
 					obj.Update();
 				}
 			}
-			Mouse.CenterIfLocked();
 		}
 		public bool IsPointInWindowBounds(Vector2i point)
 		{
