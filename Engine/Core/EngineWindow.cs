@@ -11,9 +11,10 @@ using System.Reflection;
 
 namespace PGK2.Engine.Core
 {
-    public class EngineWindow : GameWindow
+	public class EngineWindow : GameWindow
 	{
 		public static EngineWindow? instance;
+		private Light[] lights;
 		Queue<int> frameQueue = new Queue<int>();
 		double secTimer = 0d;
 		long frames = 0;
@@ -33,6 +34,12 @@ namespace PGK2.Engine.Core
 			{ ClientSize = (width, height), Title = title })
 		{
 			instance = this;
+			lights = new Light[]
+			{
+				new Light(new Vector3(1.0f, 1.0f, 2.0f), new Vector3(1f, 0.2f, 0.2f), new Vector3(0.5f, 0.5f, 0.5f), new Vector3(1.0f, 1.0f, 1.0f)),
+				new Light(new Vector3(0, 2.0f, 1), new Vector3(1f, 0.2f, 0.2f), new Vector3(0.5f, 0.5f, 0.5f), new Vector3(1.0f, 1.0f, 1.0f)),
+				// Add more lights if needed
+			};
 		}
 
 		protected override void OnLoad()
@@ -40,6 +47,7 @@ namespace PGK2.Engine.Core
 			base.OnLoad();
 			GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 			GL.Enable(EnableCap.DepthTest);
+			GL.Enable(EnableCap.FragmentLightingSgix);
 			VertexBufferObject = GL.GenBuffer();
 
 			//Code goes here
@@ -123,6 +131,20 @@ namespace PGK2.Engine.Core
 			int projectionLocation = GL.GetUniformLocation(shader.Handle, "projection");
 			GL.UniformMatrix4(projectionLocation, false, ref projection);
 			shader.Use();
+				shader.SetVector3($"material.ambient", Vector3.One);
+				shader.SetVector3($"material.diffuse", Vector3.One);
+				shader.SetVector3($"material.specular", Vector3.One);
+				shader.SetVector3($"material.shininess", Vector3.One);
+
+			Console.WriteLine(shader.GetInt("numLights"));
+			shader.SetInt("numLights", lights.Length);
+			for (int i = 0; i < lights.Length; i++)
+			{
+				shader.SetVector3($"lights[{i}].position", lights[i].Position);
+				shader.SetVector3($"lights[{i}].ambient", lights[i].Ambient);
+				shader.SetVector3($"lights[{i}].diffuse", lights[i].Diffuse);
+				shader.SetVector3($"lights[{i}].specular", lights[i].Specular);
+			}
 			DrawTest();
 			SwapBuffers();
 		}
@@ -215,4 +237,5 @@ namespace PGK2.Engine.Core
 			return ClientRectangle.Contains(point, true);
 		}
 	}
+
 }

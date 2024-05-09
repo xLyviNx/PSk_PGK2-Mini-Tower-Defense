@@ -179,7 +179,23 @@ namespace PGK2.Engine.Core
 		{
 			GL.UseProgram(Handle);
 			GL.Uniform3(_uniformLocations[name], data);
-		}	
+		}
+		public Vector3 GetVector3(string name)
+		{
+			GL.UseProgram(Handle);
+			int location = _uniformLocations[name];
+			float[] values = new float[3];
+			GL.GetUniform(Handle, location, values);
+			return new Vector3(values[0], values[1], values[2]);
+		}
+		public int GetInt(string name)
+		{
+			GL.UseProgram(Handle);
+			int location = _uniformLocations[name];
+			int value;
+			GL.GetUniform(Handle, location, out value);
+			return value;
+		}
 		public void SetVector4(string name, Vector4 data)
 		{
 			GL.UseProgram(Handle);
