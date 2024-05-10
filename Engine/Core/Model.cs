@@ -12,10 +12,10 @@ namespace PGK2.Engine.Core
 		{
 			loadModel(path);
 		}
-		public void Draw(Matrix4 modelMatrix, Matrix4 viewMatrix, Matrix4 projectionMatrix)
+		public void Draw(Matrix4 modelMatrix, Matrix4 viewMatrix, Matrix4 projectionMatrix, List<Light> lights, CameraComponent camera)
 		{
 			foreach (var mesh in meshes)
-				mesh.Draw(modelMatrix,viewMatrix,projectionMatrix);
+				mesh.Draw(modelMatrix,viewMatrix,projectionMatrix, lights, camera);
 		}
 
 		public List<Mesh> meshes = new();
@@ -64,7 +64,6 @@ namespace PGK2.Engine.Core
 				vector.Z = mesh.Vertices[i].Z;
 				vertex.Position = vector;
 
-				vertices.Add(vertex);
 
 				vector.X = mesh.Normals[i].X;
 				vector.Y = mesh.Normals[i].Y;
@@ -80,6 +79,8 @@ namespace PGK2.Engine.Core
 				}
 				else
 					vertex.TexCoords = new Vector2(0.0f, 0.0f);
+
+				vertices.Add(vertex);
 			}
 			for (int i = 0; i < mesh.FaceCount; i++)
 			{

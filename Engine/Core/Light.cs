@@ -6,7 +6,7 @@ namespace PGK2.Engine.Core
 {
 	public class Light : Core.Component
 	{
-		public Vector3 Position;
+		public Vector3 Position => transform.Position;
 		public Vector3 Ambient;
 		public Vector3 Diffuse;
 		public Vector3 Specular;
@@ -18,7 +18,7 @@ namespace PGK2.Engine.Core
 			OnSceneTransfer += sceneTransfer;
 		}
 
-		private void sceneTransfer(SceneSystem.Scene OldScene)
+		private void sceneTransfer(SceneSystem.Scene? OldScene)
 		{
 			if(OldScene!=null)
 			{
@@ -35,9 +35,8 @@ namespace PGK2.Engine.Core
 			base.OnDestroy();
 
 		}
-		public Light(Vector3 position, Vector3 ambient, Vector3 diffuse, Vector3 specular) : this()
+		public Light(Vector3 ambient, Vector3 diffuse, Vector3 specular) : this()
 		{
-			Position = position;
 			Ambient = ambient;
 			Diffuse = diffuse;
 			Specular = specular;

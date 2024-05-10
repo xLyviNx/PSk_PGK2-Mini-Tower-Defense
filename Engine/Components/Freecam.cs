@@ -1,5 +1,6 @@
 ﻿using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using PGK2.Engine.Components.Base;
 using PGK2.Engine.Core;
 using PGK2.Engine.SceneSystem;
 using System;
@@ -14,6 +15,12 @@ namespace PGK2.Engine.Components
 	public class Freecam : PGK2.Engine.Core.Component
 	{
 		float MouseSens = 3f;
+		bool movinglight;
+		public override void Start()
+		{
+			base.Start();
+			transform.Position=new Vector3(0,0,-1.5f);
+		}
 		public override void Update()
 		{
 			base.Update();
@@ -23,38 +30,43 @@ namespace PGK2.Engine.Components
 				if (input.IsKeyPressed(Keys.D1))
 				{
 					Mouse.IsLocked = !Mouse.IsLocked;
+				}				
+				if (input.IsKeyPressed(Keys.D2))
+				{
+					movinglight = !movinglight;
 				}
+				TransformComponent target = movinglight ? MyScene.Lights[0].transform : transform;
 				float speedmod = 1f;
 				if (input.IsKeyDown(Keys.LeftShift))
 					speedmod = 3f;
 				if (input.IsKeyDown(Keys.W))
 				{
-					transform.Position += transform.Forward * 2f * (float)Time.deltaTime * speedmod; //Forward 
+					target.Position += transform.Forward * 2f * (float)Time.deltaTime * speedmod; //Forward 
 				}
 
 				if (input.IsKeyDown(Keys.S))
 				{
-					transform.Position -= transform.Forward * 2f * (float)Time.deltaTime * speedmod; //Backwards
+					target.Position -= transform.Forward * 2f * (float)Time.deltaTime * speedmod; //Backwards
 				}
 
 				if (input.IsKeyDown(Keys.A))
 				{
-					transform.Position += transform.Right * 2f * (float)Time.deltaTime * speedmod; //Left
+					target.Position += transform.Right * 2f * (float)Time.deltaTime * speedmod; //Left
 				}
 
 				if (input.IsKeyDown(Keys.D))
 				{
-					transform.Position -= transform.Right * 2f * (float)Time.deltaTime * speedmod; //Right
+					target.Position -= transform.Right * 2f * (float)Time.deltaTime * speedmod; //Right
 				}
 
 				if (input.IsKeyDown(Keys.Q))
 				{
-					transform.Position += transform.Up * 5f * (float)Time.deltaTime * speedmod; //Up 
+					target.Position += transform.Up * 5f * (float)Time.deltaTime * speedmod; //Up 
 				}
 
 				if (input.IsKeyDown(Keys.E))
 				{
-					transform.Position -= transform.Up * 5f * (float)Time.deltaTime; //Down
+					target.Position -= transform.Up * 5f * (float)Time.deltaTime; //Down
 				}
 				if (Mouse.IsLocked)
 				{

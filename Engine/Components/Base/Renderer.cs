@@ -74,7 +74,8 @@ namespace PGK2.Engine.Components
 			Matrix4 modelMatrix = gameObject.transform.GetModelMatrix();
 			Matrix4 viewMatrix = camera.ViewMatrix;
 			Matrix4 projectionMatrix = camera.ProjectionMatrix;
-			Model.Draw(modelMatrix, viewMatrix, projectionMatrix);
+
+			Model.Draw(modelMatrix, viewMatrix, projectionMatrix, gameObject.MyScene.Lights, camera);
 		}
 	}
 }

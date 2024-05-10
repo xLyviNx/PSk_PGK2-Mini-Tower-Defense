@@ -59,14 +59,24 @@ namespace PGK2.Engine.Core
 			rend.Model = new Model("Models/cube.fbx");
 			if (rend.Model != null)
 			{
-				rend.transform.Scale=Vector3.One*0.005f;
+				rend.transform.Scale = Vector3.One * 0.005f;
 				Console.WriteLine($"Loaded Model: {rend.Model.meshes.Count} MESHES");
-				//newObject2.transform.Scale = Vector3.One * 0.01f;
+				rend.Model.meshes[0].Material.Vector3Values["material.diffuse"] = new Vector3(1f, 1f,1f);
+				rend.Model.meshes[0].Material.Vector3Values["material.specular"] = new Vector3(1f, 1f, 1f);
+				rend.Model.meshes[0].Material.FloatValues["material.shininess"] =256f;
 			}
 			GameObject lightObj = scene.CreateSceneObject("Light Object");
 			Light light = lightObj.Components.Add<Light>();
 			lightObj.transform.Position = new Vector3(1.5f, 1f, 1f);
-			light.Diffuse = new Vector3(1f, 1f, 1f);
+			light.Diffuse = new Vector3(0f, 0.1f, 1f);
+			light.Specular = new Vector3(1f,1f,1f);
+
+
+			GameObject lightObj2 = scene.CreateSceneObject("Light Object 2");
+			Light light2 = lightObj2.Components.Add<Light>();
+			lightObj2.transform.Position = new Vector3(-1.5f, 1f, -1f);
+			light2.Diffuse = new Vector3(1f, 0, 1f);
+			light2.Specular = new Vector3(1f, 1f, 1f);
 
 			SceneManager.SaveSceneToFile(scene, "SCENE.lscn");
 			foreach(var obj in scene.GameObjects)

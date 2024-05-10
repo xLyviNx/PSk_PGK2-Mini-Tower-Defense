@@ -10,7 +10,7 @@ namespace PGK2.Engine.Core
 	{
         [JsonInclude] public Guid Id;
 		[JsonIgnore] public string name;
-        [JsonIgnore] private SceneSystem.Scene _myscene;
+        [JsonIgnore] private SceneSystem.Scene? _myscene;
 		[JsonIgnore]
         public SceneSystem.Scene? MyScene
         {
@@ -34,7 +34,7 @@ namespace PGK2.Engine.Core
 			}
 		}
 		private bool _isdestroyed = false;
-		[JsonIgnore] public Action<SceneSystem.Scene> OnSceneTransfer = delegate { };
+		[JsonIgnore] public Action<SceneSystem.Scene?> OnSceneTransfer = delegate { };
 		[JsonIgnore] public bool isDestroyed { get => _isdestroyed; }
 		public GameObjectComponents Components;
 		public TransformComponent transform;

@@ -22,12 +22,26 @@ namespace PGK2.Engine.Core
 			Console.WriteLine($"INIT MESH: {vertices.Count}, {indices.Count}, {textures.Count}");
 			setupMesh();
 		}
-		public void Draw(Matrix4 modelMatrix, Matrix4 viewMatrix, Matrix4 projectionMatrix)
+		public void Draw(Matrix4 modelMatrix, Matrix4 viewMatrix, Matrix4 projectionMatrix, List<Light> Lights, CameraComponent camera)
 		{
-			Console.WriteLine($"MESH {VAO}, {VBO}, {EBO}, VERTS: {vertices.Count}, INDICES: {indices.Count}");
+			//Console.WriteLine($"MESH {VAO}, {VBO}, {EBO}, VERTS: {vertices.Count}, INDICES: {indices.Count}");
 			Material.Shader.SetMatrix4("model", modelMatrix);
 			Material.Shader.SetMatrix4("view", viewMatrix);
 			Material.Shader.SetMatrix4("projection", projectionMatrix);
+			if (Material.Shader != EngineWindow.lightShader)
+			{
+				int lightsnum = (int)MathF.Min(8, Lights.Count);
+				for (int i = 0; i < lightsnum; i++)
+				{
+					Light l = Lights[i];
+					Material.Shader.SetVector3($"lights[{i}].position", l.Position);
+					Material.Shader.SetVector3($"lights[{i}].ambient", l.Ambient);
+					Material.Shader.SetVector3($"lights[{i}].diffuse", l.Diffuse);
+					Material.Shader.SetVector3($"lights[{i}].specular", l.Specular);
+				}
+				Material.Shader.SetInt("numLights", lightsnum);
+				Material.Shader.SetVector3($"viewPos", camera.transform.Position);
+			}
 			Material.Use();
 			GL.BindVertexArray(VAO);
 			GL.DrawElements(BeginMode.Triangles, indices.Count, DrawElementsType.UnsignedInt, 0);
@@ -49,7 +63,6 @@ namespace PGK2.Engine.Core
 				N.Add(vert.Normal.X);
 				N.Add(vert.Normal.Y);
 				N.Add(vert.Normal.Z);
-
 
 				TC.Add(vert.TexCoords.X);
 				TC.Add(vert.TexCoords.Y);
@@ -80,7 +93,6 @@ namespace PGK2.Engine.Core
 			// vertex normals
 			GL.EnableVertexAttribArray(1);
 			GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, MeshVertex.SizeInBytes, Vector3.SizeInBytes);
-
 			// vertex texture coords
 			GL.EnableVertexAttribArray(2);
 			GL.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, MeshVertex.SizeInBytes, Vector3.SizeInBytes * 2);
