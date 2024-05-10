@@ -24,20 +24,21 @@ namespace PGK2.Engine.Core
 		Renderer test;
 		private bool changedFocus;
 		public float aspectRatio { get; private set; }
+		GameObject gobj;
+
 		public CameraComponent? activeCamera {get=>CameraComponent.activeCamera; }
 		float[] vertices = {
 				-0.5f, -0.5f, 0.0f, //Bottom-left vertex
 				 0.5f, -0.5f, 0.0f, //Bottom-right vertex
 				 0.0f,  0.5f, 0.0f  //Top vertex
 			};
-		public EngineWindow(int width, int height, string title) : base(GameWindowSettings.Default, new NativeWindowSettings()
-			{ ClientSize = (width, height), Title = title })
+		public EngineWindow(GameWindowSettings gws, NativeWindowSettings nws) : base(gws,nws)
 		{
 			instance = this;
 			lights = new Light[]
 			{
-				new Light(new Vector3(1.0f, 1.0f, 2.0f), new Vector3(1f, 0.2f, 0.2f), new Vector3(0.5f, 0.5f, 0.5f), new Vector3(1.0f, 1.0f, 1.0f)),
-				new Light(new Vector3(0, 2.0f, 1), new Vector3(1f, 0.2f, 0.2f), new Vector3(0.5f, 0.5f, 0.5f), new Vector3(1.0f, 1.0f, 1.0f)),
+				new Light(new Vector3(1.0f, 1.0f, 2.0f), new Vector3(0f, 0.1f, 0.0f), new Vector3(0.0f, 0.00f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f)),
+				//new Light(new Vector3(0, 2.0f, 1), new Vector3(1f, 0.2f, 0.2f), new Vector3(0.5f, 0.5f, 0.5f), new Vector3(1.0f, 1.0f, 1.0f)),
 				// Add more lights if needed
 			};
 		}
@@ -74,15 +75,19 @@ namespace PGK2.Engine.Core
 			newObject.Components.Add<Freecam>();
 			scene.GameObjects.Add(newObject);
 
-			//Mesh mesh = Mesh.LoadFromFile("Models/cube.fbx");
-			//Console.WriteLine($"Loaded Mesh: {mesh.Vertices.Count} VERTS");
-
 			GameObject newObject2 = new("RENDER OBJECT");
-			newObject2.Components.Add<TestComponent>();
 			test = newObject2.Components.Add<MeshRenderer>();
-			//newObject2.Components.Get<MeshRenderer>().Mesh = mesh;
-			//Console.WriteLine("MATERIALS : " + newObject2.Components.Get<MeshRenderer>().Materials.Count);
+			Mesh mesh = Mesh.LoadFromFile("Models/niewiemcoto.fbx");
+			if (mesh != null)
+			{
+				Console.WriteLine($"Loaded Mesh: {mesh.Vertices.Count} VERTS");
+				newObject2.Components.Get<MeshRenderer>().Mesh = mesh;
+				//newObject2.transform.Scale = Vector3.One * 0.01f;
+			}
+			Console.WriteLine("MATERIALS : " + newObject2.Components.Get<MeshRenderer>().Materials.Count);
 			scene.GameObjects.Add(newObject2);
+			gobj = new GameObject();
+
 
 			SceneManager.SaveSceneToFile(scene, "SCENE.lscn");
 		}
@@ -120,17 +125,14 @@ namespace PGK2.Engine.Core
 					}
 				}
 			}
-			Matrix4 model = Matrix4.Identity;
+			/*Matrix4 model = gobj.transform.GetModelMatrix();
 			Matrix4 view = activeCamera.ViewMatrix;
 			Matrix4 projection = activeCamera.ProjectionMatrix;
-
-			int modelLocation = GL.GetUniformLocation(shader.Handle, "model");
-			GL.UniformMatrix4(modelLocation, false, ref model);
-			int viewLocation = GL.GetUniformLocation(shader.Handle, "view");
-			GL.UniformMatrix4(viewLocation, false, ref view);
-			int projectionLocation = GL.GetUniformLocation(shader.Handle, "projection");
-			GL.UniformMatrix4(projectionLocation, false, ref projection);
 			shader.Use();
+
+			shader.SetMatrix4("model", model);
+			shader.SetMatrix4("view", view);
+			shader.SetMatrix4("projection", projection);
 			shader.SetVector3($"material.ambient", Vector3.One);
 			shader.SetVector3($"material.diffuse", Vector3.One);
 			shader.SetVector3($"material.specular", Vector3.One);
@@ -143,7 +145,7 @@ namespace PGK2.Engine.Core
 				shader.SetVector3($"lights[{i}].diffuse", lights[i].Diffuse);
 				shader.SetVector3($"lights[{i}].specular", lights[i].Specular);
 			}
-			DrawTest();
+			DrawTest();*/
 			SwapBuffers();
 		}
 		private void DrawTest()
@@ -154,7 +156,7 @@ namespace PGK2.Engine.Core
 			// BufferData only needs to be called once, assuming vertices don't change
 			GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
 
-			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
 			GL.EnableVertexAttribArray(0);
 
 			GL.DrawArrays(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles, 0, 3);

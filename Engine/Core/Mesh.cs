@@ -13,6 +13,7 @@ namespace PGK2.Engine.Core
 
 		// Bufor OpenGL dla wierzchołków
 		private int VertexBufferObject;
+		private int VertexArrayObject;
 
 		public List<Material> LoadedMaterials { get; private set; }
 		public List<MeshVertex> Vertices { get; private set; }
@@ -23,7 +24,17 @@ namespace PGK2.Engine.Core
 			VertexBufferObject = 0;
 			LoadedMaterials = new();
 		}
-
+		public float[] ExtractVerts()
+		{
+			List<float> vertsList = new();
+			foreach (var v in Vertices)
+			{
+				vertsList.Add(v.Position.X);
+				vertsList.Add(v.Position.Y);
+				vertsList.Add(v.Position.Z);
+			};
+			return vertsList.ToArray();
+		}
 		public void Unload()
 		{
 			if (VertexBufferObject != 0)
@@ -58,9 +69,11 @@ namespace PGK2.Engine.Core
 
 			foreach (var mesh in scene.Meshes)
 			{
+
 				// Przetwórz informacje o meshu, takie jak wierzchołki, indeksy itd.
 				for (int i = 0; i < mesh.Vertices.Count; i++)
 				{
+
 					MeshVertex vertex = new MeshVertex(
 						new Vector3(mesh.Vertices[i].X, mesh.Vertices[i].Y, mesh.Vertices[i].Z),
 						new Vector3(mesh.Normals[i].X, mesh.Normals[i].Y, mesh.Normals[i].Z),
@@ -68,6 +81,7 @@ namespace PGK2.Engine.Core
 					);
 
 					loadedMesh.Vertices.Add(vertex);
+
 
 					// Podziel wierzchołki na części w zależności od materiału
 					int materialIndex = mesh.MaterialIndex;
@@ -82,30 +96,38 @@ namespace PGK2.Engine.Core
 			if (scene.Materials.Count > 0)
 			{
 				loadedMesh.LoadedMaterials = new();
+
 				foreach (var material in scene.Materials)
 				{
 					loadedMesh.LoadedMaterials.Add(new Material(material));
+
 				}
 			}
 
 			// Utwórz bufor OpenGL dla wierzchołków
-			GL.GenBuffers(1, out loadedMesh.VertexBufferObject);
+			loadedMesh.VertexArrayObject = GL.GenVertexArray();
+			loadedMesh.VertexBufferObject = GL.GenBuffer();
 			GL.BindBuffer(BufferTarget.ArrayBuffer, loadedMesh.VertexBufferObject);
-			GL.BufferData(BufferTarget.ArrayBuffer, loadedMesh.Vertices.Count * Marshal.SizeOf(typeof(MeshVertex)), loadedMesh.Vertices.ToArray(), BufferUsageHint.StaticDraw);
+			float[] verts = loadedMesh.ExtractVerts();
+			GL.BufferData(BufferTarget.ArrayBuffer, verts.Length * sizeof(float), verts, BufferUsageHint.StaticDraw);
+
+			GL.BindVertexArray(loadedMesh.VertexArrayObject);
+			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
+			GL.EnableVertexArrayAttrib(loadedMesh.VertexArrayObject, 0);
+
 
 			LoadedMeshes[filePath] = loadedMesh;
-
+			GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+			GL.BindVertexArray(0);
 			return loadedMesh;
 		}
-
+		
 		public void Render(int materialIndex)
 		{
 			if (!MaterialParts.ContainsKey(materialIndex))
 				return;
-
-			GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
-
-			// Ustawienia atrybutów dla wierzchołków (position, normal, texCoord)
+			GL.BindVertexArray(VertexArrayObject);
+			/*// Ustawienia atrybutów dla wierzchołków (position, normal, texCoord)
 			int positionLocation = 0; // Przyjmujemy, że atrybuty w shaderze są ustawione na lokalizacjach 0, 1 i 2
 			GL.EnableVertexAttribArray(positionLocation);
 			GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, Marshal.SizeOf<MeshVertex>(), 0);
@@ -114,17 +136,17 @@ namespace PGK2.Engine.Core
 			GL.EnableVertexAttribArray(normalLocation);
 			GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, Marshal.SizeOf<MeshVertex>(), Vector3.SizeInBytes);
 
-			int texCoordLocation = 2;
-			GL.EnableVertexAttribArray(texCoordLocation);
+			/*int texCoordLocation = 2;
+			*GL.EnableVertexAttribArray(texCoordLocation);
 			GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, Marshal.SizeOf<MeshVertex>(), Vector3.SizeInBytes * 2);
-
+			*/
 			// Renderowanie
-			GL.DrawArrays(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles, 0, MaterialParts[materialIndex].Count);
+			GL.DrawArrays(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles, 0, Vertices.Count);
 
 			// Wyłączenie atrybutów po renderowaniu
-			GL.DisableVertexAttribArray(positionLocation);
-			GL.DisableVertexAttribArray(normalLocation);
-			GL.DisableVertexAttribArray(texCoordLocation);
+			//GL.DisableVertexAttribArray(positionLocation);
+			//GL.DisableVertexAttribArray(normalLocation);
+			//GL.DisableVertexAttribArray(texCoordLocation);
 		}
 	}
 	public struct MeshVertex

@@ -32,6 +32,7 @@ namespace PGK2.Engine.Components
 		{
 			if (camera == null || !camera.Enabled)
 				return;
+
 			if (!Enabled) return;
 			bool pass = camera.RenderTags.isEmpty || camera.RenderTags.HasAny(RenderTags);
 			if(pass)
@@ -79,6 +80,7 @@ namespace PGK2.Engine.Components
 
 		protected override void Render(CameraComponent camera)
 		{
+
 			if (Mesh == null) return;
 			if (Mesh.Vertices.Count<=1) return;
 			base.Render(camera);
@@ -86,16 +88,19 @@ namespace PGK2.Engine.Components
 			Matrix4 viewMatrix = camera.ViewMatrix;
 			Matrix4 projectionMatrix = camera.ProjectionMatrix;
 
+
 			for (int i = 0; i < Materials.Count; i++)
 			{
 				Core.Material material = Materials[i];
+
 				material.Shader.SetMatrix4("model", modelMatrix);
 				material.Shader.SetMatrix4("view", viewMatrix);
 				material.Shader.SetMatrix4("projection", projectionMatrix);
-
 				// Renderuj mesh z użyciem danego materiału
 				material.Use();
 				Mesh.Render(i);
+				return;
+
 				material.Unuse();
 			}
 		}

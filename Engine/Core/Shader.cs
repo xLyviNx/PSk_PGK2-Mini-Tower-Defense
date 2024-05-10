@@ -167,7 +167,8 @@ namespace PGK2.Engine.Core
 		public void SetMatrix4(string name, Matrix4 data)
 		{
 			GL.UseProgram(Handle);
-			GL.UniformMatrix4(_uniformLocations[name], true, ref data);
+			int location = _uniformLocations[name];
+			GL.UniformMatrix4(location, false, ref data);
 		}
 
 		/// <summary>

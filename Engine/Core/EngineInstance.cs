@@ -1,4 +1,6 @@
-﻿namespace PGK2.Engine.Core
+﻿using OpenTK.Windowing.Desktop;
+
+namespace PGK2.Engine.Core
 {
 	public sealed class EngineInstance
 	{
@@ -16,9 +18,15 @@
 
 		private void Init()
 		{
-			using (window = new EngineWindow(1280, 720, "Application"))
+			NativeWindowSettings nWS = new NativeWindowSettings() ;
+			GameWindowSettings gWS = GameWindowSettings.Default;
+			nWS.ClientSize = new(1280, 720);
+			nWS.Title = "Application";
+			nWS.APIVersion = System.Version.Parse("4.1");
+			using (window = new EngineWindow(gWS, nWS))
 			{
 				window.VSync = OpenTK.Windowing.Common.VSyncMode.On;
+
 				window.Run();
 			}
 		}
