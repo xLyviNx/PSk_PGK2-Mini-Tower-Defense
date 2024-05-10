@@ -82,7 +82,7 @@ namespace PGK2.Engine.Components
 		{
 
 			if (Mesh == null) return;
-			if (Mesh.Vertices.Count<=1) return;
+			if (Mesh.vertices.Count<=1) return;
 			base.Render(camera);
 			Matrix4 modelMatrix = gameObject.transform.GetModelMatrix();
 			Matrix4 viewMatrix = camera.ViewMatrix;

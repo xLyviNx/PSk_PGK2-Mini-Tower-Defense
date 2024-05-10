@@ -34,7 +34,7 @@ namespace PGK2.Engine.Core
 			foreach (var kvp in Textures)
 			{
 				GL.ActiveTexture(TextureUnit.Texture0 + textureUnit);
-				GL.BindTexture(TextureTarget.Texture2D, kvp.Value.Handle);
+				GL.BindTexture(TextureTarget.Texture2D, kvp.Value.id);
 				Shader.SetInt(kvp.Key, textureUnit);
 				textureUnit++;
 			}

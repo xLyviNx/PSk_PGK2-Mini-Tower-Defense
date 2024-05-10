@@ -1,29 +1,9 @@
-﻿
-using System.Runtime.InteropServices;
-using OpenTK.Mathematics;
+﻿using System.Runtime.InteropServices;
 using OpenTK.Graphics.OpenGL4;
 using PGK2.Engine.Components.Base;
 
 namespace PGK2.Engine.Core
 {
-	public struct MeshVertex
-	{
-		public Vector3 Position { get; set;  }
-		public Vector3 Normal { get; set; }
-		public Vector2 TexCoords { get; set; }
-
-		public MeshVertex(Vector3 position, Vector3 normal, Vector2 texCoord)
-		{
-			Position = position;
-			Normal = normal;
-			TexCoords = texCoord;
-		}
-	}
-	public struct Texture
-	{
-		uint id;
-		string type;
-	};
 	public class Mesh
 	{
 		private uint VAO, VBO, EBO;

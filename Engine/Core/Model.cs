@@ -2,8 +2,6 @@
 using PGK2.Engine.Components.Base;
 using Assimp.Configs;
 using OpenTK.Mathematics;
-using Assimp.Unmanaged;
-using System.Numerics;
 
 namespace PGK2.Engine.Core
 {
@@ -16,7 +14,7 @@ namespace PGK2.Engine.Core
 		}
 		public void Draw(ref CameraComponent camera)
 		{
-			foreach(var mesh in meshes)
+			foreach (var mesh in meshes)
 				mesh.Draw(ref camera);
 		}
 
@@ -53,8 +51,8 @@ namespace PGK2.Engine.Core
 		private Mesh processMesh(Assimp.Mesh mesh, in Assimp.Scene scene)
 		{
 			List<MeshVertex> vertices = new();
-			List<uint> indices=new();
-			List<Texture> textures=new();
+			List<uint> indices = new();
+			List<Texture> textures = new();
 
 			for (int i = 0; i < mesh.VertexCount; i++)
 			{
@@ -109,12 +107,10 @@ namespace PGK2.Engine.Core
 			{
 				TextureSlot textureSlot;
 				mat.GetMaterialTexture(type, i, out textureSlot);
-				Texture texture = new Texture();
-				texture.Id = TextureFromFile(textureSlot.FilePath, directory);
-				texture.Type = typeName;
-				texture.Path = textureSlot.FilePath;
+				Texture texture = Texture.LoadFromFile(textureSlot.FilePath, directory);
 				textures.Add(texture);
 			}
 			return textures;
 		}
 	}
+}
