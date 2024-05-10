@@ -76,15 +76,14 @@ namespace PGK2.Engine.Core
 			scene.GameObjects.Add(newObject);
 
 			GameObject newObject2 = new("RENDER OBJECT");
-			test = newObject2.Components.Add<MeshRenderer>();
-			Mesh mesh = Mesh.LoadFromFile("Models/niewiemcoto.fbx");
-			if (mesh != null)
+			var rend = newObject2.Components.Add<ModelRenderer>();
+			rend.Model = new Model("Models/cube.fbx");
+			if (rend.Model != null)
 			{
-				Console.WriteLine($"Loaded Mesh: {mesh.Vertices.Count} VERTS");
-				newObject2.Components.Get<MeshRenderer>().Mesh = mesh;
+				rend.transform.Scale=Vector3.One*0.01f;
+				Console.WriteLine($"Loaded Model: {rend.Model.meshes.Count} MESHES");
 				//newObject2.transform.Scale = Vector3.One * 0.01f;
 			}
-			Console.WriteLine("MATERIALS : " + newObject2.Components.Get<MeshRenderer>().Materials.Count);
 			scene.GameObjects.Add(newObject2);
 			gobj = new GameObject();
 
@@ -125,11 +124,11 @@ namespace PGK2.Engine.Core
 					}
 				}
 			}
-			/*Matrix4 model = gobj.transform.GetModelMatrix();
+			Matrix4 model = gobj.transform.GetModelMatrix();
 			Matrix4 view = activeCamera.ViewMatrix;
 			Matrix4 projection = activeCamera.ProjectionMatrix;
-			shader.Use();
 
+			shader.Use();
 			shader.SetMatrix4("model", model);
 			shader.SetMatrix4("view", view);
 			shader.SetMatrix4("projection", projection);
@@ -145,7 +144,7 @@ namespace PGK2.Engine.Core
 				shader.SetVector3($"lights[{i}].diffuse", lights[i].Diffuse);
 				shader.SetVector3($"lights[{i}].specular", lights[i].Specular);
 			}
-			DrawTest();*/
+			DrawTest();
 			SwapBuffers();
 		}
 		private void DrawTest()

@@ -20,9 +20,18 @@ namespace PGK2.Engine.Core
 			Shader = shader;
 		}
 
+		public static Vector3 AssimpColorToVec3(Assimp.Color4D col)
+		{
+			return new Vector3(col.R, col.G, col.B);
+		}
 		public Material(Assimp.Material material)
 		{
-			// Implementacja przekształcania Assimp.Material na Material
+			Shader = EngineWindow.shader;
+
+			this.Vector3Values.Add("material.ambient", material.HasColorAmbient? AssimpColorToVec3(material.ColorAmbient) : Vector3.Zero);
+			this.Vector3Values.Add("material.diffuse", material.HasColorDiffuse? AssimpColorToVec3(material.ColorDiffuse) : Vector3.Zero);
+			this.Vector3Values.Add("material.specular", material.HasColorSpecular? AssimpColorToVec3(material.ColorSpecular) : Vector3.Zero);
+			this.FloatValues.Add("material.shininess", material.HasShininess? material.Shininess : 0f);
 		}
 
 		public void Use()

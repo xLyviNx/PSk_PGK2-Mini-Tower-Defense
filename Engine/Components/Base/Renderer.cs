@@ -9,7 +9,7 @@ using System.Text.Json.Serialization;
 namespace PGK2.Engine.Components
 {
 	[Serializable]
-    public abstract class Renderer : Component
+	public abstract class Renderer : Component
 	{
 		public TagsContainer RenderTags { get; private set; }
 		protected Renderer()
@@ -35,74 +35,46 @@ namespace PGK2.Engine.Components
 
 			if (!Enabled) return;
 			bool pass = camera.RenderTags.isEmpty || camera.RenderTags.HasAny(RenderTags);
-			if(pass)
+			if (pass)
 			{
 				Render(camera);
 			}
 		}
 		protected virtual void Render(CameraComponent camera)
 		{
-			
+
 		}
 	}
 	[Serializable]
-	public class MeshRenderer : Renderer
+	public class ModelRenderer : Renderer
 	{
-		private Core.Mesh? _mesh;
-		[JsonIgnore] public Core.Mesh? Mesh { get => _mesh; set
+		private Core.Model? _model;
+		[JsonIgnore]
+		public Core.Model? Model
+		{
+			get => _model; set
 			{
-				Console.WriteLine("1 Setting Mesh to " + (value != null ? value.ToString() : "NULL"));
-				SetMesh(value);
+				SetModel(value);
 			}
 		}
-		public List<Core.Material> Materials { get; set; }
-
-		public MeshRenderer()
+		public ModelRenderer()
 		{
-			_mesh = null;
-			Materials = new();
+			_model = null;
 		}
-		public void SetMesh(Core.Mesh? mesh)
+		public void SetModel(Core.Model? model)
 		{
-			Console.WriteLine("Setting Mesh to " + (mesh != null? mesh.ToString() : "NULL"));
-			_mesh = mesh;
-			Materials.Clear();
-			if (mesh != null)
-			{
-				foreach (Core.Material mat in mesh.LoadedMaterials)
-				{
-					Console.WriteLine($"MATERIAL");
-					mat.Shader = EngineWindow.shader;
-					Materials.Add(mat);
-				}
-			}
+			Console.WriteLine("Setting MODEL to " + (model != null ? model.ToString() : "NULL"));
+			_model = model;
 		}
 
 		protected override void Render(CameraComponent camera)
 		{
-
-			if (Mesh == null) return;
-			if (Mesh.vertices.Count<=1) return;
+			if (Model == null) return;
 			base.Render(camera);
 			Matrix4 modelMatrix = gameObject.transform.GetModelMatrix();
 			Matrix4 viewMatrix = camera.ViewMatrix;
 			Matrix4 projectionMatrix = camera.ProjectionMatrix;
-
-
-			for (int i = 0; i < Materials.Count; i++)
-			{
-				Core.Material material = Materials[i];
-
-				material.Shader.SetMatrix4("model", modelMatrix);
-				material.Shader.SetMatrix4("view", viewMatrix);
-				material.Shader.SetMatrix4("projection", projectionMatrix);
-				// Renderuj mesh z użyciem danego materiału
-				material.Use();
-				Mesh.Render(i);
-				return;
-
-				material.Unuse();
-			}
+			Model.Draw(modelMatrix, viewMatrix, projectionMatrix);
 		}
 	}
 }

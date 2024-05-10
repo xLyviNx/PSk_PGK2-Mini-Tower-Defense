@@ -12,13 +12,13 @@ namespace PGK2.Engine.Core
 		{
 			loadModel(path);
 		}
-		public void Draw(ref CameraComponent camera)
+		public void Draw(Matrix4 modelMatrix, Matrix4 viewMatrix, Matrix4 projectionMatrix)
 		{
 			foreach (var mesh in meshes)
-				mesh.Draw(ref camera);
+				mesh.Draw(modelMatrix,viewMatrix,projectionMatrix);
 		}
 
-		private List<Mesh> meshes;
+		public List<Mesh> meshes = new();
 		private string directory;
 
 		private void loadModel(string path)
@@ -88,6 +88,7 @@ namespace PGK2.Engine.Core
 					indices.Add((uint)face.Indices[j]);
 			}
 			// process material
+			Material mat = new(EngineWindow.shader);
 			if (mesh.MaterialIndex >= 0)
 			{
 				Assimp.Material material = scene.Materials[mesh.MaterialIndex];
@@ -97,8 +98,11 @@ namespace PGK2.Engine.Core
 				List<Texture> specularMaps = LoadMaterialTextures(material,
 													TextureType.Specular, "texture_specular");
 				textures.AddRange(specularMaps);
+
+				mat = new(material);
+				
 			}
-			return new Mesh(vertices, indices, textures);
+			return new Mesh(vertices, indices, textures, mat);
 		}
 		List<Texture> LoadMaterialTextures(Assimp.Material mat, TextureType type, string typeName)
 		{
