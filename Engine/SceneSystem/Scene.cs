@@ -8,9 +8,10 @@ namespace PGK2.Engine.SceneSystem
 	public class Scene
 	{
 		public string SceneName = "Unnamed Scene";
-		public List<GameObject> GameObjects { get;  set; }
+		public List<GameObject> GameObjects { get; set; }
 		[JsonIgnore] public List<CameraComponent> Cameras { get; set; }
 		[JsonIgnore] public List<Renderer> Renderers { get; set; }
+		[JsonIgnore] public List<Light> Lights { get; set; }
 		/*[JsonInclude]
 		public List<Guid> CameraObjects
 		{
@@ -31,8 +32,23 @@ namespace PGK2.Engine.SceneSystem
 			GameObjects = new List<GameObject>();
 			Cameras = new();
 			Renderers = new();
+			Lights = new();
 		}
+		public static GameObject CreateObject(string ObjectName = "GameObject")
+		{
+			if(SceneManager.ActiveScene!=null)
+			{
+				SceneManager.ActiveScene.CreateSceneObject(ObjectName);
+			}
+			throw new Exception("Scene not set");
+		}
+		public GameObject CreateSceneObject(string ObjectName = "GameObject")
+		{
+			GameObject gameObject = new GameObject(ObjectName);
+			gameObject.MyScene = this;
 
+			return gameObject;
+		}
 		public T? FindObjectOfType<T>(bool onlyActive = true) where T : Component
 		{
 			foreach (var gameObject in GameObjects)

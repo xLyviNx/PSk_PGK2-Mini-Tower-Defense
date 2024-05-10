@@ -13,6 +13,8 @@ namespace PGK2.Engine.Core
     {
         [JsonIgnore] public static GameObject? assigningComponentTo;
 		[JsonIgnore] public GameObject gameObject;
+        [JsonIgnore] public SceneSystem.Scene MyScene => gameObject.MyScene;
+		[JsonIgnore] public GameObjectComponents Components => gameObject.Components;
 		[JsonIgnore] public TransformComponent transform => gameObject.transform;
 		private bool _enabledSelf = true;
         public bool Enabled
@@ -23,13 +25,18 @@ namespace PGK2.Engine.Core
             }
             set { _enabledSelf = value; }
         }
+        [JsonIgnore] public Action<SceneSystem.Scene?> OnSceneTransfer = delegate { };
         public Component()
         {
-            if (assigningComponentTo != null)
+            Console.WriteLine($"OBJ: '{assigningComponentTo}'");
+            if (assigningComponentTo == null)
+                Console.WriteLine("IS NULL");
+			if (assigningComponentTo != null)
                 gameObject = assigningComponentTo;
             else
                 gameObject = null;
-            assigningComponentTo = null;
+			gameObject.OnSceneTransfer += OnSceneTransfer;
+			assigningComponentTo = null;
         }
         public virtual void Update()
         {

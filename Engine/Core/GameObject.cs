@@ -10,8 +10,32 @@ namespace PGK2.Engine.Core
 	{
         [JsonInclude] public Guid Id;
 		[JsonIgnore] public string name;
-        private bool _isdestroyed = false;
-        [JsonIgnore] public bool isDestroyed { get => _isdestroyed; }
+        [JsonIgnore] private SceneSystem.Scene _myscene;
+		[JsonIgnore]
+        public SceneSystem.Scene? MyScene
+        {
+            get => _myscene;
+            set
+            {
+                if(ReferenceEquals(_myscene, value) == false)
+                {
+                    if(_myscene!=null)
+                    {
+                        _myscene.GameObjects.Remove(this);
+                    }
+					OnSceneTransfer.Invoke(_myscene);
+                    if (value != null)
+                        if (!value.GameObjects.Contains(this))
+                        {
+                            value.GameObjects.Add(this);
+                        }
+					_myscene = value;
+				}
+			}
+		}
+		private bool _isdestroyed = false;
+		[JsonIgnore] public Action<SceneSystem.Scene> OnSceneTransfer = delegate { };
+		[JsonIgnore] public bool isDestroyed { get => _isdestroyed; }
 		public GameObjectComponents Components;
 		public TransformComponent transform;
 		public TagsContainer Tags { get; private set; }
@@ -33,10 +57,12 @@ namespace PGK2.Engine.Core
         {
             Console.WriteLine("MADE OBJECT");
             Components = new GameObjectComponents(this);
-            transform = new TransformComponent(this);
+            transform = Components.Add<TransformComponent>();
             Tags = new();
             this.name = name;
 			Id = Guid.NewGuid();
+            if (MyScene == null)
+                MyScene = SceneManager.ActiveScene;
 		}
         public void Update()
         {
@@ -56,9 +82,9 @@ namespace PGK2.Engine.Core
                 component.OnDestroy();
             }
             Components.All.Clear();
-            if (SceneManager.ActiveScene!=null)
+            if (MyScene != null)
             {
-                SceneManager.ActiveScene.GameObjects.Remove(this);
+				MyScene.GameObjects.Remove(this);
             }
             foreach(TransformComponent child in transform.Children.AllObjects)
             {
@@ -139,10 +165,13 @@ namespace PGK2.Engine.Core
 
         public T Add<T>() where T : Component, new()
         {
+            Console.WriteLine("Setting component container to '" + gameObject + "'");
             Component.assigningComponentTo = gameObject;
-            T newComponent = new T();
-            All.Add(newComponent);
-            return newComponent;
+			T newComponent = new T();
+			All.Add(newComponent);
+            newComponent.OnSceneTransfer?.Invoke(null);
+			EngineWindow.StartQueue.Enqueue(newComponent);
+			return newComponent;
         }
 
         public T? Get<T>() where T : Component

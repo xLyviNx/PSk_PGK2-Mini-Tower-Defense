@@ -1,6 +1,7 @@
 ﻿using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using PGK2.Engine.Core;
+using PGK2.Engine.SceneSystem;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -65,6 +66,10 @@ namespace PGK2.Engine.Components
 					float x = Math.Clamp(transform.Rotation.X, -90f, 90f);
 
 					transform.Rotation = new Vector3(x, transform.Rotation.Y, transform.Rotation.Z);
+				}
+				if (input.IsKeyPressed(Keys.F12))
+				{
+					SceneManager.UnloadScene(SceneManager.ActiveScene);
 				}
 			}
 			else

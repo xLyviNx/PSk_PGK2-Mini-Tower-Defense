@@ -14,18 +14,16 @@ namespace PGK2.Engine.Core
 	public class EngineWindow : GameWindow
 	{
 		public static EngineWindow? instance;
-		private Light[] lights;
 		Queue<int> frameQueue = new Queue<int>();
 		double secTimer = 0d;
 		long frames = 0;
-		int VertexBufferObject;
-		int VertexArrayObject;
 		public static Shader shader;
+		public static Shader lightShader;
 		Renderer test;
 		private bool changedFocus;
 		public float aspectRatio { get; private set; }
 		GameObject gobj;
-
+		public static Queue<Component> StartQueue = new();
 		public CameraComponent? activeCamera {get=>CameraComponent.activeCamera; }
 		float[] vertices = {
 				-0.5f, -0.5f, 0.0f, //Bottom-left vertex
@@ -35,12 +33,6 @@ namespace PGK2.Engine.Core
 		public EngineWindow(GameWindowSettings gws, NativeWindowSettings nws) : base(gws,nws)
 		{
 			instance = this;
-			lights = new Light[]
-			{
-				new Light(new Vector3(1.0f, 1.0f, 2.0f), new Vector3(0f, 0.1f, 0.0f), new Vector3(0.0f, 0.00f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f)),
-				//new Light(new Vector3(0, 2.0f, 1), new Vector3(1f, 0.2f, 0.2f), new Vector3(0.5f, 0.5f, 0.5f), new Vector3(1.0f, 1.0f, 1.0f)),
-				// Add more lights if needed
-			};
 		}
 
 		protected override void OnLoad()
@@ -49,20 +41,8 @@ namespace PGK2.Engine.Core
 			GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 			GL.Enable(EnableCap.DepthTest);
 			GL.Enable(EnableCap.FragmentLightingSgix);
-			VertexBufferObject = GL.GenBuffer();
-
-			//Code goes here
 			shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
-			var vertexLocation = shader.GetAttribLocation("aPosition");
-			GL.EnableVertexAttribArray(vertexLocation);
-			GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
-
-			var texCoordLocation = shader.GetAttribLocation("aTexCoord");
-			GL.EnableVertexAttribArray(texCoordLocation);
-			GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
-
-			VertexArrayObject = GL.GenVertexArray();
-			VertexBufferObject = GL.GenBuffer();
+			lightShader = new Shader("Shaders/lightShader.vert", "Shaders/lightShader.frag");
 			SceneTest();
 
 		}
@@ -70,32 +50,37 @@ namespace PGK2.Engine.Core
 		{
 			SceneSystem.Scene scene = new();
 			SceneManager.LoadScene(scene);
-			GameObject newObject = new("TEST OBJECT");
+			GameObject newObject = scene.CreateSceneObject("CAMERA OBJECT");
 			newObject.Components.Add<CameraComponent>();
 			newObject.Components.Add<Freecam>();
-			scene.GameObjects.Add(newObject);
 
-			GameObject newObject2 = new("RENDER OBJECT");
+			GameObject newObject2 = scene.CreateSceneObject("RENDER OBJECT");
 			var rend = newObject2.Components.Add<ModelRenderer>();
 			rend.Model = new Model("Models/cube.fbx");
 			if (rend.Model != null)
 			{
-				rend.transform.Scale=Vector3.One*0.01f;
+				rend.transform.Scale=Vector3.One*0.005f;
 				Console.WriteLine($"Loaded Model: {rend.Model.meshes.Count} MESHES");
 				//newObject2.transform.Scale = Vector3.One * 0.01f;
 			}
-			scene.GameObjects.Add(newObject2);
-			gobj = new GameObject();
-
+			GameObject lightObj = scene.CreateSceneObject("Light Object");
+			Light light = lightObj.Components.Add<Light>();
+			lightObj.transform.Position = new Vector3(1.5f, 1f, 1f);
+			light.Diffuse = new Vector3(1f, 1f, 1f);
 
 			SceneManager.SaveSceneToFile(scene, "SCENE.lscn");
+			foreach(var obj in scene.GameObjects)
+			{
+				Console.WriteLine(obj.name);
+			}
+
+			SceneManager.LoadScene(scene);
 		}
 		protected override void OnRenderFrame(FrameEventArgs e)
 		{
 			base.OnRenderFrame(e);
 			aspectRatio = (float)ClientSize.X / ClientSize.Y;
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-			//Console.WriteLine($"CAMERA: {(activeCamera != null ? activeCamera.gameObject.name : "NULL")}");
 			if (Mouse.framesSinceLastMove>0)
 				Mouse.Delta = Vector2.Zero;
 			else
@@ -124,49 +109,12 @@ namespace PGK2.Engine.Core
 					}
 				}
 			}
-			Matrix4 model = gobj.transform.GetModelMatrix();
-			Matrix4 view = activeCamera.ViewMatrix;
-			Matrix4 projection = activeCamera.ProjectionMatrix;
-
-			shader.Use();
-			shader.SetMatrix4("model", model);
-			shader.SetMatrix4("view", view);
-			shader.SetMatrix4("projection", projection);
-			shader.SetVector3($"material.ambient", Vector3.One);
-			shader.SetVector3($"material.diffuse", Vector3.One);
-			shader.SetVector3($"material.specular", Vector3.One);
-			shader.SetVector3($"material.shininess", Vector3.One);
-			shader.SetInt("numLights", lights.Length);
-			for (int i = 0; i < lights.Length; i++)
-			{
-				shader.SetVector3($"lights[{i}].position", lights[i].Position);
-				shader.SetVector3($"lights[{i}].ambient", lights[i].Ambient);
-				shader.SetVector3($"lights[{i}].diffuse", lights[i].Diffuse);
-				shader.SetVector3($"lights[{i}].specular", lights[i].Specular);
-			}
-			DrawTest();
 			SwapBuffers();
 		}
-		private void DrawTest()
-		{
-			GL.BindVertexArray(VertexArrayObject);
-			GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
-
-			// BufferData only needs to be called once, assuming vertices don't change
-			GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
-
-			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
-			GL.EnableVertexAttribArray(0);
-
-			GL.DrawArrays(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles, 0, 3);
-		}
-
 		protected override void OnUnload()
 		{
 			base.OnUnload();
 			shader.Dispose();
-			GL.DeleteVertexArray(VertexArrayObject);
-			GL.DeleteBuffer(VertexBufferObject);
 		}
 		protected override void OnMouseMove(MouseMoveEventArgs e)
 		{
@@ -222,6 +170,10 @@ namespace PGK2.Engine.Core
 				secTimer = 0f;
 			}
 
+			while(StartQueue.Count > 0)
+			{
+				StartQueue.Dequeue().Start();
+			}
 
 			if(SceneManager.ActiveScene!=null)
 			{

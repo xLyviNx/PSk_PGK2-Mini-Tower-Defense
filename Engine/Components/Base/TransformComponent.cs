@@ -75,9 +75,9 @@ namespace PGK2.Engine.Components.Base
             }
         }
 
-        public TransformComponent(GameObject attachedTo)
+        public TransformComponent()
         {
-            gameObject = attachedTo;
+            //gameObject = attachedTo;
             LocalPosition = Vector3.Zero;
             Pitch = Yaw = Roll = 0f;
             LocalScale = Vector3.One;

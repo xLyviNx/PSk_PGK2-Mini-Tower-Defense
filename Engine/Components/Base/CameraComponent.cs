@@ -7,6 +7,7 @@ using PGK2.Engine.Core;
 using PGK2.Engine.SceneSystem;
 using PGK2.Engine.Serialization.Converters;
 using System.Drawing;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace PGK2.Engine.Components.Base
@@ -78,23 +79,28 @@ namespace PGK2.Engine.Components.Base
             BackgroundColor = Color4.Black;
             RenderTags = new TagsContainer();
             Console.WriteLine("CAMERA CREATED");
-
-            if (SceneManager.ActiveScene != null)
-            {
-                SceneManager.ActiveScene.Cameras.Add(this);
-                SceneManager.ActiveScene.Cameras.Sort((x, y) => x.Priority.CompareTo(y.Priority));
-            }
             transform.Position = new Vector3(0.0f, 0.0f, 3.0f);
-        }
-        public override void OnDestroy()
+			OnSceneTransfer += sceneTransfer;
+		}
+
+		private void sceneTransfer(SceneSystem.Scene OldScene)
+		{
+            Console.WriteLine("SCENE TRANSFER");
+			if (OldScene != null)
+			{
+				OldScene.Cameras.Remove(this);
+			}
+			if (MyScene != null && !MyScene.Cameras.Contains(this))
+			{
+				MyScene.Cameras.Add(this);
+			}
+			MyScene?.Cameras.Sort((x, y) => x.Priority.CompareTo(y.Priority));
+		}
+		public override void OnDestroy()
         {
             base.OnDestroy();
-            if (SceneManager.ActiveScene != null)
-            {
-                SceneManager.ActiveScene.Cameras.Remove(this);
-                SceneManager.ActiveScene.Cameras.Sort((x, y) => x.Priority.CompareTo(y.Priority));
-            }
-            if (activeCamera == this)
+			gameObject.MyScene = null;
+			if (activeCamera == this)
                 activeCamera = null;
         }
         /// <summary>
