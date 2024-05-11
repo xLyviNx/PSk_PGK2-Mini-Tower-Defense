@@ -19,6 +19,7 @@ namespace PGK2.Engine.Core
 		long frames = 0;
 		public static Shader shader;
 		public static Shader lightShader;
+		public static Shader OutlineShader;
 		Renderer test;
 		private bool changedFocus;
 		public float aspectRatio { get; private set; }
@@ -40,9 +41,15 @@ namespace PGK2.Engine.Core
 			base.OnLoad();
 			GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 			GL.Enable(EnableCap.DepthTest);
+			GL.Enable(EnableCap.Blend);
+			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+			GL.Enable(EnableCap.StencilTest);
 			GL.Enable(EnableCap.FragmentLightingSgix);
+			GL.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Replace);
+			GL.StencilFunc(StencilFunction.Notequal, 1, 0xFF);
 			shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
 			lightShader = new Shader("Shaders/lightShader.vert", "Shaders/lightShader.frag");
+			OutlineShader = new Shader("Shaders/outline.vert", "Shaders/outline.frag");
 			SceneTest();
 
 		}
@@ -57,6 +64,7 @@ namespace PGK2.Engine.Core
 			GameObject newObject2 = scene.CreateSceneObject("RENDER OBJECT");
 			var rend = newObject2.Components.Add<ModelRenderer>();
 			rend.Model = new Model("Models/cube.fbx");
+			rend.OutlineColor = Color4.Aqua;
 			if (rend.Model != null)
 			{
 				rend.transform.Scale = Vector3.One * 0.005f;
@@ -64,6 +72,21 @@ namespace PGK2.Engine.Core
 				rend.Model.meshes[0].Material.Vector3Values["material.diffuse"] = new Vector3(1f, 1f,1f);
 				rend.Model.meshes[0].Material.Vector3Values["material.specular"] = new Vector3(1f, 1f, 1f);
 				rend.Model.meshes[0].Material.FloatValues["material.shininess"] =256f;
+				rend.Model.meshes[0].Material.FloatValues["material.transparency"] = 1;
+			}
+
+			GameObject newObject3 = scene.CreateSceneObject("TRANSPARENT");
+			var rend2 = newObject3.Components.Add<ModelRenderer>();
+			rend2.Model = new Model("Models/cube.fbx");
+			rend2.OutlineColor = Color4.Yellow;
+			if (rend2.Model != null)
+			{
+				rend2.transform.Scale = Vector3.One * 0.005f;
+				rend2.transform.Position = new Vector3(-0.5f,-0.5f,-0.5f);
+				rend2.Model.meshes[0].Material.Vector3Values["material.diffuse"] = new Vector3(1f,1f,1f);
+				rend2.Model.meshes[0].Material.Vector3Values["material.specular"] = new Vector3(1f, 1f, 1f);
+				rend2.Model.meshes[0].Material.FloatValues["material.transparency"] = 0.6f;
+				rend2.Model.meshes[0].Material.FloatValues["material.shininess"] =256f;
 			}
 			GameObject lightObj = scene.CreateSceneObject("Light Object");
 			Light light = lightObj.Components.Add<Light>();
@@ -90,7 +113,7 @@ namespace PGK2.Engine.Core
 		{
 			base.OnRenderFrame(e);
 			aspectRatio = (float)ClientSize.X / ClientSize.Y;
-			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 			if (Mouse.framesSinceLastMove>0)
 				Mouse.Delta = Vector2.Zero;
 			else
@@ -115,7 +138,24 @@ namespace PGK2.Engine.Core
 				{
 					foreach (Renderer r in SceneManager.ActiveScene.Renderers)
 					{
-						r.CallRender(activeCamera);
+						r.CallRender(activeCamera, EngineInstance.RenderPass.Opaque);
+					}
+
+					SceneManager.ActiveScene.Renderers.Sort((r1, r2) =>
+					{
+						float distance1 = (r1.gameObject.transform.Position - activeCamera.transform.Position).LengthSquared;
+						float distance2 = (r2.gameObject.transform.Position - activeCamera.transform.Position).LengthSquared;
+						return distance2.CompareTo(distance1); 
+					});
+
+					foreach (Renderer r in SceneManager.ActiveScene.Renderers)
+					{
+						r.CallRender(activeCamera, EngineInstance.RenderPass.Transparent);
+					}
+
+					foreach (Renderer r in SceneManager.ActiveScene.Renderers)
+					{
+						r.CallRenderOutline(activeCamera);
 					}
 				}
 			}
@@ -125,6 +165,8 @@ namespace PGK2.Engine.Core
 		{
 			base.OnUnload();
 			shader.Dispose();
+			lightShader.Dispose();
+			OutlineShader.Dispose();
 		}
 		protected override void OnMouseMove(MouseMoveEventArgs e)
 		{

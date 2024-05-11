@@ -1,16 +1,29 @@
-﻿using Assimp;
-using PGK2.Engine.Components.Base;
+﻿using PGK2.Engine.Components.Base;
 using OpenTK;
-using OpenTK.Mathematics;
 using PGK2.Engine.Core;
 using PGK2.Engine.SceneSystem;
-using System.Text.Json.Serialization;
+using OpenTK.Mathematics;
 
 namespace PGK2.Engine.Components
 {
 	[Serializable]
 	public abstract class Renderer : Component
 	{
+		public Color4 OutlineColor = Color4.Transparent;
+		protected Material _outlineMaterial;
+		protected bool DrawOutline => OutlineColor != Color4.Transparent;
+		protected Material OutlineMaterial
+		{
+			get
+			{
+				if (_outlineMaterial == null || _outlineMaterial.ColorValues["outlinecolor"] != OutlineColor)
+				{
+					_outlineMaterial = new Material(EngineWindow.OutlineShader);
+					_outlineMaterial.ColorValues["outlinecolor"] = OutlineColor;
+				}
+				return _outlineMaterial;
+			}
+		}
 		public TagsContainer RenderTags { get; private set; }
 		protected Renderer()
 		{
@@ -28,7 +41,7 @@ namespace PGK2.Engine.Components
 				SceneManager.ActiveScene.Renderers.Remove(this);
 			}
 		}
-		public void CallRender(CameraComponent camera)
+		public void CallRender(CameraComponent camera, EngineInstance.RenderPass RenderPass)
 		{
 			if (camera == null || !camera.Enabled)
 				return;
@@ -37,45 +50,28 @@ namespace PGK2.Engine.Components
 			bool pass = camera.RenderTags.isEmpty || camera.RenderTags.HasAny(RenderTags);
 			if (pass)
 			{
-				Render(camera);
+				Render(camera, RenderPass);
 			}
 		}
-		protected virtual void Render(CameraComponent camera)
+		public void CallRenderOutline(CameraComponent camera)
 		{
+			if (camera == null || !camera.Enabled)
+				return;
 
-		}
-	}
-	[Serializable]
-	public class ModelRenderer : Renderer
-	{
-		private Core.Model? _model;
-		[JsonIgnore]
-		public Core.Model? Model
-		{
-			get => _model; set
+			if (!Enabled) return;
+			bool pass = camera.RenderTags.isEmpty || camera.RenderTags.HasAny(RenderTags);
+			if (pass)
 			{
-				SetModel(value);
+				RenderOutline(camera);
 			}
 		}
-		public ModelRenderer()
+		protected virtual void Render(CameraComponent camera, EngineInstance.RenderPass RenderPass)
 		{
-			_model = null;
-		}
-		public void SetModel(Core.Model? model)
-		{
-			Console.WriteLine("Setting MODEL to " + (model != null ? model.ToString() : "NULL"));
-			_model = model;
-		}
 
-		protected override void Render(CameraComponent camera)
+		}	
+		protected virtual void RenderOutline(CameraComponent camera)
 		{
-			if (Model == null) return;
-			base.Render(camera);
-			Matrix4 modelMatrix = gameObject.transform.GetModelMatrix();
-			Matrix4 viewMatrix = camera.ViewMatrix;
-			Matrix4 projectionMatrix = camera.ProjectionMatrix;
 
-			Model.Draw(modelMatrix, viewMatrix, projectionMatrix, gameObject.MyScene.Lights, camera);
 		}
 	}
 }

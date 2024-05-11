@@ -12,7 +12,7 @@ namespace PGK2.Engine.Core
 		public int id;
 		public string type;
 		public string path;
-
+		public bool transparency;
 		public static bool FindLoaded(string path, out Texture texture)
 		{
 			if (textures_loaded.ContainsKey(path))
@@ -26,12 +26,32 @@ namespace PGK2.Engine.Core
 		public static Texture LoadFromFile(string path, string typeName)
 		{
 			bool exists = FindLoaded(path, out Texture texture);
-			if(!exists)
+			if (!exists)
 			{
 				Console.WriteLine($"Trying to load an image from ({path})");
 				byte[] imageData = File.ReadAllBytes(path);
 				ImageResult imageResult = ImageResult.FromMemory(imageData, ColorComponents.RedGreenBlueAlpha);
 
+				// Check for transparency
+				bool hasTransparency = false;
+				for (int i = 0; i < imageResult.Data.Length; i += 4) // Assuming RGBA format
+				{
+					if (imageResult.Data[i + 3] < 255) // Alpha channel is less than 1
+					{
+						hasTransparency = true;
+						break;
+					}
+				}
+
+				if (hasTransparency)
+				{
+					Console.WriteLine("The texture has transparency.");
+				}
+				else
+				{
+					Console.WriteLine("The texture does not have transparency.");
+				}
+				texture.transparency = hasTransparency;
 				texture.id = GL.GenTexture();
 				texture.type = typeName;
 				texture.path = path;
@@ -44,5 +64,6 @@ namespace PGK2.Engine.Core
 			}
 			return texture;
 		}
+
 	};
 }

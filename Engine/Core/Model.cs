@@ -12,10 +12,20 @@ namespace PGK2.Engine.Core
 		{
 			loadModel(path);
 		}
-		public void Draw(Matrix4 modelMatrix, Matrix4 viewMatrix, Matrix4 projectionMatrix, List<Light> lights, CameraComponent camera)
+		public void Draw(Matrix4 modelMatrix, Matrix4 viewMatrix, Matrix4 projectionMatrix, List<Light> lights, CameraComponent camera, EngineInstance.RenderPass RenderPass, Material? overrideMaterial = null)
 		{
 			foreach (var mesh in meshes)
-				mesh.Draw(modelMatrix,viewMatrix,projectionMatrix, lights, camera);
+			{
+				bool Transparent = (mesh.hasTransparency && RenderPass == EngineInstance.RenderPass.Transparent);
+				bool Opaque = (RenderPass == EngineInstance.RenderPass.Opaque && !mesh.hasTransparency);
+				bool Outline = (RenderPass == EngineInstance.RenderPass.Outline);
+
+				//Console.WriteLine($"{Transparent}, {Opaque}");
+				if (Transparent || Opaque || Outline)
+					mesh.Draw(modelMatrix, viewMatrix, projectionMatrix, lights, camera, overrideMaterial);
+				//Console.WriteLine($"DRAWN");
+
+			}
 		}
 
 		public List<Mesh> meshes = new();

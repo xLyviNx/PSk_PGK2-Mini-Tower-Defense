@@ -30,5 +30,12 @@ namespace PGK2.Engine.Core
 				window.Run();
 			}
 		}
-	}
+        public enum RenderPass
+        {
+            Opaque,
+			Transparent,
+			Outline,
+
+        }
+    }
 }

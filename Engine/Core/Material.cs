@@ -13,6 +13,7 @@ namespace PGK2.Engine.Core
 		public Dictionary<string, Texture> Textures { get; set; } = new Dictionary<string, Texture>();
 		public Dictionary<string, float> FloatValues { get; set; } = new Dictionary<string, float>();
 		public Dictionary<string, Vector3> Vector3Values { get; set; } = new Dictionary<string, Vector3>();
+		public Dictionary<string, int> IntValues { get; set; } = new Dictionary<string, int>();
 		public Dictionary<string, Color4> ColorValues { get; set; } = new Dictionary<string, Color4>();
 
 		public Material(Shader shader)
@@ -32,6 +33,8 @@ namespace PGK2.Engine.Core
 			this.Vector3Values.Add("material.diffuse", material.HasColorDiffuse? AssimpColorToVec3(material.ColorDiffuse) : Vector3.Zero);
 			this.Vector3Values.Add("material.specular", material.HasColorSpecular? AssimpColorToVec3(material.ColorSpecular) : Vector3.Zero);
 			this.FloatValues.Add("material.shininess", material.HasShininess? material.Shininess : 0f);
+			this.FloatValues.Add("material.transparency", material.HasOpacity? material.Opacity : 1f);
+			this.IntValues.Add("specularAlwaysVisible", 1);
 		}
 
 		public void Use()
@@ -52,6 +55,11 @@ namespace PGK2.Engine.Core
 			foreach (var kvp in FloatValues)
 			{
 				Shader.SetFloat(kvp.Key, kvp.Value);
+			}
+				
+			foreach (var kvp in IntValues)
+			{
+				Shader.SetInt(kvp.Key, kvp.Value);
 			}
 
 			// Ustawienia dla wartości wektorowych
