@@ -62,8 +62,6 @@ namespace PGK2.Engine.Core
 			LockController.AddComponent<MouseLockController>();
 
 			GameObject CamParent = scene.CreateSceneObject("CAMERA PARENT");
-			CamParent.transform.Position = Vector3.Zero;
-			CamParent.transform.LocalRotation = new Vector3(0, 0, 0);
 			GameObject CameraObject = scene.CreateSceneObject("CAMERA OBJECT");
 			CameraObject.transform.Parent=CamParent.transform;
 
@@ -74,7 +72,7 @@ namespace PGK2.Engine.Core
 			var rend = newObject2.Components.Add<ModelRenderer>();
 			rend.Model = new Model("Models/Level1.fbx");
 			rend.OutlineColor = Color4.Transparent;
-			rend.transform.LocalRotation = new Vector3(0, -90f, 0);
+			rend.transform.Pitch = -90f;
 			rend.transform.Scale = Vector3.One * 1;
 
 

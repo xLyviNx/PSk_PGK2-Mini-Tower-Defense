@@ -22,7 +22,7 @@ namespace PGK2.TowerDef.Scripts
 			Debug.Assert(transform.Parent != null);
 			Debug.Assert(EngineWindow.instance != null);
 			transform.LocalPosition = Vector3.One * 5f;
-			transform.LocalRotation = new Vector3(180f, 0, 0f);
+			transform.Rotation = new Vector3(0f, 0, 0f);
 			if (EngineWindow.instance.IsFocused)
 			{
 				var mouse = EngineWindow.instance.MouseState;
@@ -31,9 +31,9 @@ namespace PGK2.TowerDef.Scripts
 				if (MouseLockController.HoldingCamera && Mouse.IsLocked) 
 				{
 					if (Mouse.Delta.X != 0f)
-						transform.Parent.LocalRotation -= new Vector3(0f, Mouse.Delta.X, 0f) * Time.deltaTime * MouseSens * 10f;
+						transform.Parent.Rotation -= new Vector3(0f, Mouse.Delta.X, 0f) * Time.deltaTime * MouseSens * 10f;
 					if (Mouse.Delta.Y != 0f)
-						transform.Parent.LocalRotation += new Vector3(Mouse.Delta.Y, 0f, 0f) * Time.deltaTime * MouseSens * 10f;
+						transform.Parent.Rotation += new Vector3(Mouse.Delta.Y, 0f, 0f) * Time.deltaTime * MouseSens * 10f;
 
 					//float x = Math.Clamp(transform.Rotation.X, -90f, 90f);
 
