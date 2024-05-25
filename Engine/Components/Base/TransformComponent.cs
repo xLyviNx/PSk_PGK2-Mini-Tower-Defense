@@ -14,10 +14,10 @@ namespace PGK2.Engine.Components.Base
         public Vector3 LocalPosition { get; set; } = Vector3.Zero;
         public Vector3 LocalScale { get; set; } = Vector3.One;
 
-        // Separate Euler angles
-        public float Pitch { get; set; } = 0f; // X
-        public float Yaw { get; set; } = 0f;   // Y
-        public float Roll { get; set; } = 0f;  // Z
+        // Local Euler angles
+        public float LocalPitch { get; set; } = 0f; // X
+        public float LocalYaw { get; set; } = 0f;   // Y
+        public float LocalRoll { get; set; } = 0f;  // Z
 
         private TransformComponent? parent = null;
         public ChildrenContainer Children { get; private set; }
@@ -79,7 +79,7 @@ namespace PGK2.Engine.Components.Base
         {
             //gameObject = attachedTo;
             LocalPosition = Vector3.Zero;
-            Pitch = Yaw = Roll = 0f;
+            LocalPitch = LocalYaw = LocalRoll = 0f;
             LocalScale = Vector3.One;
             Children = new ChildrenContainer();
         }
@@ -93,13 +93,25 @@ namespace PGK2.Engine.Components.Base
             return scaleMatrix * rotationMatrix * translationMatrix;
         }
 
-        public Matrix4 GetRotationMatrix()
+        public Matrix4 GetLocalRotationMatrix()
         {
-            Matrix4 rollMatrix = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(Roll));
-            Matrix4 pitchMatrix = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(Pitch));
-            Matrix4 yawMatrix = Matrix4.CreateRotationY(MathHelper.DegreesToRadians(Yaw));
+            Matrix4 rollMatrix = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(LocalRoll));
+            Matrix4 pitchMatrix = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(LocalPitch));
+            Matrix4 yawMatrix = Matrix4.CreateRotationY(MathHelper.DegreesToRadians(LocalYaw));
 
             return rollMatrix * pitchMatrix * yawMatrix;
+        }
+
+        public Matrix4 GetRotationMatrix()
+        {
+            if (parent != null)
+            {
+                return parent.GetRotationMatrix() * GetLocalRotationMatrix();
+            }
+            else
+            {
+                return GetLocalRotationMatrix();
+            }
         }
 
         public Vector3 TransformPoint(Vector3 point)
@@ -125,20 +137,45 @@ namespace PGK2.Engine.Components.Base
 
             return Vector3.Transform(worldVector / Scale, Matrix4.Invert(GetRotationMatrix()).ExtractRotation());
         }
-        public Vector3 Rotation
+
+        public Vector3 LocalRotation
         {
             get
             {
-                return new Vector3(Pitch, Yaw, Roll);
+                return new Vector3(LocalPitch, LocalYaw, LocalRoll);
             }
             set
             {
-                Pitch = value.X;
-                Yaw = value.Y;
-                Roll = value.Z;
+                LocalPitch = value.X;
+                LocalYaw = value.Y;
+                LocalRoll = value.Z;
             }
         }
 
-
-    }
+		public Vector3 Rotation
+		{
+			get
+            {
+				if (parent != null)
+				{
+					return parent.TransformVector(LocalRotation);
+				}
+				else
+				{
+                    return LocalRotation;
+				}
+			}
+			set
+			{
+				if (parent != null)
+				{
+					LocalRotation = parent.InverseTransformVector(value);
+				}
+				else
+				{
+					LocalRotation = value;
+				}
+			}
+		}
+	}
 }

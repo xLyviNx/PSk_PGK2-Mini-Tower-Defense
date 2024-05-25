@@ -22,7 +22,7 @@ namespace PGK2.Engine.Core
 			}
 			set
 			{
-				bool wasDiff = false; ;
+				bool wasDiff = false;
 				if (value != IsLocked)
 				{
 					wasDiff = true;

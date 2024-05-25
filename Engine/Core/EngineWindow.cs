@@ -8,6 +8,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using PGK2.Engine.Components.Base;
 using PGK2.Engine.SceneSystem;
 using System.Reflection;
+using PGK2.TowerDef.Scripts;
 
 namespace PGK2.Engine.Core
 {
@@ -57,51 +58,33 @@ namespace PGK2.Engine.Core
 		{
 			SceneSystem.Scene scene = new();
 			SceneManager.LoadScene(scene);
-			GameObject newObject = scene.CreateSceneObject("CAMERA OBJECT");
-			newObject.Components.Add<CameraComponent>();
-			newObject.Components.Add<Freecam>();
+			GameObject LockController = scene.CreateSceneObject("LOCK CONTROLLER");
+			LockController.AddComponent<MouseLockController>();
 
-			GameObject newObject2 = scene.CreateSceneObject("RENDER OBJECT");
+			GameObject CamParent = scene.CreateSceneObject("CAMERA PARENT");
+			CamParent.transform.Position = Vector3.Zero;
+			CamParent.transform.LocalRotation = new Vector3(0, 0, 0);
+			GameObject CameraObject = scene.CreateSceneObject("CAMERA OBJECT");
+			CameraObject.transform.Parent=CamParent.transform;
+
+			CameraObject.Components.Add<CameraComponent>();
+			CameraObject.Components.Add<CameraController>();
+
+			GameObject newObject2 = scene.CreateSceneObject("MAP OBJECT");
 			var rend = newObject2.Components.Add<ModelRenderer>();
-			rend.Model = new Model("Models/cube.fbx");
-			rend.OutlineColor = Color4.Aqua;
-			if (rend.Model != null)
-			{
-				rend.transform.Scale = Vector3.One * 0.005f;
-				Console.WriteLine($"Loaded Model: {rend.Model.meshes.Count} MESHES");
-				rend.Model.meshes[0].Material.Vector3Values["material.diffuse"] = new Vector3(1f, 1f,1f);
-				rend.Model.meshes[0].Material.Vector3Values["material.specular"] = new Vector3(1f, 1f, 1f);
-				rend.Model.meshes[0].Material.FloatValues["material.shininess"] =256f;
-				rend.Model.meshes[0].Material.FloatValues["material.transparency"] = 1;
-			}
+			rend.Model = new Model("Models/Level1.fbx");
+			rend.OutlineColor = Color4.Transparent;
+			rend.transform.LocalRotation = new Vector3(0, -90f, 0);
+			rend.transform.Scale = Vector3.One * 1;
 
-			GameObject newObject3 = scene.CreateSceneObject("TRANSPARENT");
-			var rend2 = newObject3.Components.Add<ModelRenderer>();
-			rend2.Model = new Model("Models/cube.fbx");
-			rend2.OutlineColor = Color4.Yellow;
-			if (rend2.Model != null)
-			{
-				rend2.transform.Scale = Vector3.One * 0.005f;
-				rend2.transform.Position = new Vector3(-0.5f,-0.5f,-0.5f);
-				rend2.Model.meshes[0].Material.Vector3Values["material.diffuse"] = new Vector3(1f,1f,1f);
-				rend2.Model.meshes[0].Material.Vector3Values["material.specular"] = new Vector3(1f, 1f, 1f);
-				rend2.Model.meshes[0].Material.FloatValues["material.transparency"] = 0.6f;
-				rend2.Model.meshes[0].Material.FloatValues["material.shininess"] =256f;
-			}
+
 			GameObject lightObj = scene.CreateSceneObject("Light Object");
 			Light light = lightObj.Components.Add<Light>();
 			lightObj.transform.Position = new Vector3(1.5f, 1f, 1f);
-			light.Diffuse = new Vector3(0f, 0.1f, 1f);
+			light.Diffuse = new Vector3(1, 1, 1f);
 			light.Specular = new Vector3(1f,1f,1f);
 
-
-			GameObject lightObj2 = scene.CreateSceneObject("Light Object 2");
-			Light light2 = lightObj2.Components.Add<Light>();
-			lightObj2.transform.Position = new Vector3(-1.5f, 1f, -1f);
-			light2.Diffuse = new Vector3(1f, 0, 1f);
-			light2.Specular = new Vector3(1f, 1f, 1f);
-
-			SceneManager.SaveSceneToFile(scene, "SCENE.lscn");
+			SceneManager.SaveSceneToFile(scene, "GAME.lscn");
 			foreach(var obj in scene.GameObjects)
 			{
 				Console.WriteLine(obj.name);
@@ -222,12 +205,18 @@ namespace PGK2.Engine.Core
 				secTimer = 0f;
 			}
 
-			while(StartQueue.Count > 0)
+			while (StartQueue.Count > 0)
 			{
-				StartQueue.Dequeue().Start();
+				var component = StartQueue.Dequeue();
+				if (!component.CalledAwake)
+				{
+					component.Awake();
+					component.CalledAwake = true;
+				}
+				component.Start();
 			}
 
-			if(SceneManager.ActiveScene!=null)
+			if (SceneManager.ActiveScene!=null)
 			{
 				foreach(GameObject obj in SceneManager.ActiveScene.GameObjects)
 				{

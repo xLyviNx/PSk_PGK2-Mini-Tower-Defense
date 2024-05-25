@@ -71,13 +71,13 @@ namespace PGK2.Engine.Components
 				if (Mouse.IsLocked)
 				{
 					if (Mouse.Delta.X != 0f)
-						transform.Rotation -= new Vector3(0f, Mouse.Delta.X, 0f) * Time.deltaTime *  MouseSens * 10f;
+						transform.LocalRotation -= new Vector3(0f, Mouse.Delta.X, 0f) * Time.deltaTime *  MouseSens * 10f;
 					if (Mouse.Delta.Y != 0f)
-						transform.Rotation += new Vector3(Mouse.Delta.Y, 0f, 0f) * Time.deltaTime * MouseSens * 10f;
+						transform.LocalRotation += new Vector3(Mouse.Delta.Y, 0f, 0f) * Time.deltaTime * MouseSens * 10f;
 
-					float x = Math.Clamp(transform.Rotation.X, -90f, 90f);
+					float x = Math.Clamp(transform.LocalRotation.X, -90f, 90f);
 
-					transform.Rotation = new Vector3(x, transform.Rotation.Y, transform.Rotation.Z);
+					transform.LocalRotation = new Vector3(x, transform.LocalRotation.Y, transform.LocalRotation.Z);
 				}
 				if (input.IsKeyPressed(Keys.F12))
 				{

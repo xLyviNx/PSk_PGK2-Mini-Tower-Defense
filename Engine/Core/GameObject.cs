@@ -51,8 +51,15 @@ namespace PGK2.Engine.Core
                 IsActiveSelf = value;
             }
         }
-
-        public GameObject() : this("GameObject") { }
+		public T? GetComponent<T>() where T : Component
+		{
+			return Components.Get<T>();
+		}
+		public T? AddComponent<T>() where T : Component, new()
+		{
+			return Components.Add<T>();
+		}
+		public GameObject() : this("GameObject") { }
         public GameObject(string name)
         {
             Console.WriteLine("MADE OBJECT");
