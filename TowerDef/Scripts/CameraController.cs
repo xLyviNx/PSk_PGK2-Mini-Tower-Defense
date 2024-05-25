@@ -10,6 +10,7 @@ namespace PGK2.TowerDef.Scripts
 	{
 		float MouseSens = 3f;
 		private CameraComponent? myCamera;
+		private float CameraDistance = 12f;
 		public override void Awake()
 		{
 			base.Awake();
@@ -21,8 +22,7 @@ namespace PGK2.TowerDef.Scripts
 			Debug.Assert(myCamera != null);
 			Debug.Assert(transform.Parent != null);
 			Debug.Assert(EngineWindow.instance != null);
-			transform.LocalPosition = Vector3.One * 5f;
-			transform.Rotation = new Vector3(0f, 0, 0f);
+			myCamera.FieldOfView = 30f;
 			if (EngineWindow.instance.IsFocused)
 			{
 				var mouse = EngineWindow.instance.MouseState;
@@ -31,15 +31,19 @@ namespace PGK2.TowerDef.Scripts
 				if (MouseLockController.HoldingCamera && Mouse.IsLocked) 
 				{
 					if (Mouse.Delta.X != 0f)
-						transform.Parent.Rotation -= new Vector3(0f, Mouse.Delta.X, 0f) * Time.deltaTime * MouseSens * 10f;
+						transform.Parent.Yaw -= Mouse.Delta.X * Time.deltaTime * MouseSens * 10f;
 					if (Mouse.Delta.Y != 0f)
-						transform.Parent.Rotation += new Vector3(Mouse.Delta.Y, 0f, 0f) * Time.deltaTime * MouseSens * 10f;
+						transform.Parent.Pitch += Mouse.Delta.Y * Time.deltaTime * MouseSens * 10f;
 
-					//float x = Math.Clamp(transform.Rotation.X, -90f, 90f);
-
-					//transform.Rotation = new Vector3(x, transform.Rotation.Y, transform.Rotation.Z);
+					transform.Parent.Pitch = Math.Clamp(transform.Parent.Pitch, -44.9f, 134.9f);
+					Console.WriteLine(transform.Parent.Pitch);
 				}
+				CameraDistance -= mouse.ScrollDelta.Y * Time.deltaTime * 15f;
+				CameraDistance = Math.Clamp(CameraDistance, 3f, 25f);
 			}
+			transform.LocalPosition = new(0, CameraDistance, CameraDistance);
+			var look = TransformComponent.LookAtRotation(transform.Position, transform.Parent.Position);
+			transform.Rotation = look;
 		}
 	}
 }

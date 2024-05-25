@@ -93,13 +93,32 @@ namespace PGK2.Engine.Components.Base
             return scaleMatrix * rotationMatrix * translationMatrix;
         }
 
-        public Matrix4 GetRotationMatrix()
+        public Matrix4 GetLocalRotationMatrix()
         {
             Matrix4 rollMatrix = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(Roll));
             Matrix4 pitchMatrix = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(Pitch));
             Matrix4 yawMatrix = Matrix4.CreateRotationY(MathHelper.DegreesToRadians(Yaw));
 
             return rollMatrix * pitchMatrix * yawMatrix;
+        }
+		public Matrix4 GetWorldRotationMatrix()
+		{
+			Matrix4 rollMatrix = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(WorldRoll));
+			Matrix4 pitchMatrix = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(WorldPitch));
+			Matrix4 yawMatrix = Matrix4.CreateRotationY(MathHelper.DegreesToRadians(WorldYaw));
+
+			return rollMatrix * pitchMatrix * yawMatrix;
+		}
+		public Matrix4 GetRotationMatrix()
+        {
+            if (Parent == null)
+            {
+                return GetLocalRotationMatrix();
+            }
+            else
+            {
+                return GetWorldRotationMatrix();
+            }
         }
 
         public Vector3 TransformPoint(Vector3 point)
@@ -125,20 +144,85 @@ namespace PGK2.Engine.Components.Base
 
             return Vector3.Transform(worldVector / Scale, Matrix4.Invert(GetRotationMatrix()).ExtractRotation());
         }
-        public Vector3 Rotation
-        {
-            get
-            {
-                return new Vector3(Pitch, Yaw, Roll);
-            }
-            set
-            {
-                Pitch = value.X;
-                Yaw = value.Y;
-                Roll = value.Z;
-            }
-        }
 
+		public Vector3 LocalRotation
+		{
+			get
+			{
+				return new Vector3(Pitch, Yaw, Roll);
+			}
+			set
+			{
+				Pitch = value.X;
+				Yaw = value.Y;
+				Roll = value.Z;
+			}
+		}
 
-    }
+		public Vector3 Rotation
+		{
+			get
+			{
+				if (parent == null)
+					return LocalRotation;
+				return new Vector3(WorldPitch, WorldYaw, WorldRoll);
+			}
+			set
+			{
+				if (parent == null)
+					LocalRotation = value;
+				else
+				{
+					Vector3 parentRotation = new Vector3(parent.WorldPitch, parent.WorldYaw, parent.WorldRoll);
+					LocalRotation = value - parentRotation;
+				}
+			}
+		}
+
+		public float WorldPitch
+		{
+			get
+			{
+				if (parent != null)
+					return parent.WorldPitch + LocalRotation.X;
+				else
+					return LocalRotation.X;
+			}
+		}
+
+		public float WorldYaw
+		{
+			get
+			{
+				if (parent != null)
+					return parent.WorldYaw + LocalRotation.Y;
+				else
+					return LocalRotation.Y;
+			}
+		}
+
+		public float WorldRoll
+		{
+			get
+			{
+				if (parent != null)
+					return parent.WorldRoll + LocalRotation.Z;
+				else
+					return LocalRotation.Z;
+			}
+		}
+		public static Vector3 LookAtRotation(Vector3 eye, Vector3 target)
+		{
+			Vector3 forward = Vector3.Normalize(target - eye);
+
+			float yaw = (float)Math.Atan2(forward.X, forward.Z);
+			float pitch = (float)Math.Asin(forward.Y);
+
+			float yawDegrees = MathHelper.RadiansToDegrees(yaw);
+			float pitchDegrees = MathHelper.RadiansToDegrees(pitch);
+
+			return new Vector3(-pitchDegrees, yawDegrees, 0f);
+		}
+
+	}
 }
