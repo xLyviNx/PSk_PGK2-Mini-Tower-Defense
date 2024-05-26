@@ -33,6 +33,7 @@ namespace PGK2.Engine.Core
 
 		private void loadModel(string path)
 		{
+			Console.WriteLine($"Loading MODEL: '{path}'");
 			AssimpContext context = new AssimpContext();
 			context.SetConfig(new NormalSmoothingAngleConfig(66.0f));
 

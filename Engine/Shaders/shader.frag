@@ -6,6 +6,7 @@ struct Material {
     vec3 diffuse;
     vec3 specular;
     float shininess;
+    float transparency;
 };
 
 struct Light {
@@ -17,6 +18,7 @@ struct Light {
 
 uniform Material material;
 uniform vec3 viewPos;
+uniform int specularAlwaysVisible;
 
 #define MAX_LIGHTS 8
 uniform int numLights;
@@ -24,7 +26,8 @@ uniform Light lights[MAX_LIGHTS];
     
 in vec3 FragPos;
 in vec3 Normal;
-in vec3 TexCoord;
+in vec2 TexCoord;
+uniform sampler2D texture_diffuse1; // Assuming you have a texture
 
 void main()
 {
@@ -48,7 +51,21 @@ void main()
         float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
         specular += lights[i].specular * (spec * material.specular);
     }
-    vec3 result = ambient + diffuse + specular;
-     //result = specular;
-    FragColor = vec4(result, 1.0);
+    vec3 result = ambient + diffuse;
+    
+    float specularIntensity = length(specular);
+    float specularAlpha = specularIntensity > 0.0 ? specularIntensity : 0.0;
+
+    float transparency = (specularAlwaysVisible == 1? specularAlpha : 0.0) + (texture(texture_diffuse1, TexCoord).a * material.transparency);
+    if (transparency < 0.1)
+        discard;
+        
+    if (specularAlwaysVisible == 1)
+    {
+        
+        FragColor = vec4(result, transparency) + vec4(specular, specularAlpha);
+    }
+    else
+        FragColor = vec4(result + specular, transparency);
+    
 }

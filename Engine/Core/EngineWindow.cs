@@ -48,9 +48,9 @@ namespace PGK2.Engine.Core
 			GL.Enable(EnableCap.FragmentLightingSgix);
 			GL.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Replace);
 			GL.StencilFunc(StencilFunction.Notequal, 1, 0xFF);
-			shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
-			lightShader = new Shader("Shaders/lightShader.vert", "Shaders/lightShader.frag");
-			OutlineShader = new Shader("Shaders/outline.vert", "Shaders/outline.frag");
+			shader = new Shader($"{EngineInstance.ENGINE_PATH}/Shaders/shader.vert", $"{EngineInstance.ENGINE_PATH}/Shaders/shader.frag");
+			lightShader = new Shader($"{EngineInstance.ENGINE_PATH}/Shaders/lightShader.vert", $"{EngineInstance.ENGINE_PATH}/Shaders/lightShader.frag");
+			OutlineShader = new Shader($"{EngineInstance.ENGINE_PATH}/Shaders/outline.vert", $"{EngineInstance.ENGINE_PATH}/Shaders/outline.frag");
 			SceneTest();
 
 		}
@@ -70,7 +70,7 @@ namespace PGK2.Engine.Core
 
 			GameObject newObject2 = scene.CreateSceneObject("MAP OBJECT");
 			var rend = newObject2.Components.Add<ModelRenderer>();
-			rend.Model = new Model("Models/Level1.fbx");
+			rend.Model = new Model($"{EngineInstance.ASSETS_PATH}/Models/Level1.fbx");
 			rend.OutlineColor = Color4.Transparent;
 			rend.transform.Pitch = -90f;
 			rend.transform.Scale = Vector3.One * 1;
@@ -82,7 +82,7 @@ namespace PGK2.Engine.Core
 			light.Diffuse = new Vector3(1, 1, 1f);
 			light.Specular = new Vector3(1f,1f,1f);
 
-			SceneManager.SaveSceneToFile(scene, "GAME.lscn");
+			SceneManager.SaveSceneToFile(scene, $"{EngineInstance.ASSETS_PATH}/Scenes/GAME.lscn");
 			foreach(var obj in scene.GameObjects)
 			{
 				Console.WriteLine(obj.name);
