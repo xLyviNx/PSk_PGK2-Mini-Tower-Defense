@@ -10,7 +10,9 @@ namespace PGK2.TowerDef.Scripts
 	{
 		float MouseSens = 3f;
 		private CameraComponent? myCamera;
-		private float CameraDistance = 12f;
+		private float TargetCameraDistance = 12f;
+		private float CameraDistance;
+		private float CameraDistanceLerpSpeed = 5f;
 		public override void Awake()
 		{
 			base.Awake();
@@ -33,13 +35,18 @@ namespace PGK2.TowerDef.Scripts
 					if (Mouse.Delta.X != 0f)
 						transform.Parent.Yaw -= Mouse.Delta.X * Time.deltaTime * MouseSens * 10f;
 					if (Mouse.Delta.Y != 0f)
-						transform.Parent.Pitch += Mouse.Delta.Y * Time.deltaTime * MouseSens * 10f;
+						transform.Parent.Pitch -= Mouse.Delta.Y * Time.deltaTime * MouseSens * 10f;
 
 					transform.Parent.Pitch = Math.Clamp(transform.Parent.Pitch, -44.9f, 134.9f);
 				}
-				CameraDistance -= mouse.ScrollDelta.Y * Time.deltaTime * 15f;
-				CameraDistance = Math.Clamp(CameraDistance, 3f, 25f);
+				TargetCameraDistance -= mouse.ScrollDelta.Y * 0.5f;
+				TargetCameraDistance = Math.Clamp(TargetCameraDistance, 3f, 25f);
 			}
+			if (MathF.Abs(CameraDistance - TargetCameraDistance) > 0.005f)
+				CameraDistance = MathHelper.Lerp(CameraDistance, TargetCameraDistance, Time.deltaTime * CameraDistanceLerpSpeed);
+			else
+				CameraDistance = TargetCameraDistance;
+			Console.WriteLine($"CURR: {CameraDistance} TARGET: {TargetCameraDistance}");
 			transform.LocalPosition = new(0, CameraDistance, CameraDistance);
 			var look = TransformComponent.LookAtRotation(transform.Position, transform.Parent.Position);
 			transform.Rotation = look;
