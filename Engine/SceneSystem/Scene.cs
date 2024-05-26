@@ -8,10 +8,11 @@ namespace PGK2.Engine.SceneSystem
 	public class Scene
 	{
 		public string SceneName = "Unnamed Scene";
-		public List<GameObject> GameObjects { get; set; }
-		[JsonIgnore] public List<CameraComponent> Cameras { get; set; }
-		[JsonIgnore] public List<Renderer> Renderers { get; set; }
-		[JsonIgnore] public List<Light> Lights { get; set; }
+		public List<GameObject> GameObjects { get; internal set; }
+		[JsonIgnore] public List<CameraComponent> Cameras { get; internal set; }
+		[JsonIgnore] public List<Renderer> Renderers { get; internal set; }
+		[JsonIgnore] public List<UI_Renderer> UI_Renderers { get; internal set; }
+		[JsonIgnore] public List<Light> Lights { get; internal set; }
 		/*[JsonInclude]
 		public List<Guid> CameraObjects
 		{
@@ -32,6 +33,7 @@ namespace PGK2.Engine.SceneSystem
 			GameObjects = new List<GameObject>();
 			Cameras = new();
 			Renderers = new();
+			UI_Renderers = new();
 			Lights = new();
 		}
 		public static GameObject CreateObject(string ObjectName = "GameObject")

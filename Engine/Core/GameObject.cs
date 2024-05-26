@@ -19,17 +19,18 @@ namespace PGK2.Engine.Core
             {
                 if(ReferenceEquals(_myscene, value) == false)
                 {
+                    Scene? oldScene = _myscene;
                     if(_myscene!=null)
                     {
                         _myscene.GameObjects.Remove(this);
                     }
-					OnSceneTransfer.Invoke(_myscene);
                     if (value != null)
                         if (!value.GameObjects.Contains(this))
                         {
                             value.GameObjects.Add(this);
                         }
 					_myscene = value;
+					OnSceneTransfer.Invoke(oldScene);
 				}
 			}
 		}

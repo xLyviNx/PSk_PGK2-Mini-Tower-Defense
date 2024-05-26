@@ -46,7 +46,6 @@ namespace PGK2.TowerDef.Scripts
 				CameraDistance = MathHelper.Lerp(CameraDistance, TargetCameraDistance, Time.deltaTime * CameraDistanceLerpSpeed);
 			else
 				CameraDistance = TargetCameraDistance;
-			Console.WriteLine($"CURR: {CameraDistance} TARGET: {TargetCameraDistance}");
 			transform.LocalPosition = new(0, CameraDistance, CameraDistance);
 			var look = TransformComponent.LookAtRotation(transform.Position, transform.Parent.Position);
 			transform.Rotation = look;

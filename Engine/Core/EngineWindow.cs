@@ -9,12 +9,16 @@ using PGK2.Engine.Components.Base;
 using PGK2.Engine.SceneSystem;
 using System.Reflection;
 using PGK2.TowerDef.Scripts;
+using ImGuiNET;
+using TP_IMGUI;
+using PGK2.Engine.Components.Base.Renderers;
 
 namespace PGK2.Engine.Core
 {
 	public class EngineWindow : GameWindow
 	{
 		public static EngineWindow? instance;
+		private TP_IMGUI.ImGuiController _imGuiController;
 		Queue<int> frameQueue = new Queue<int>();
 		double secTimer = 0d;
 		long frames = 0;
@@ -51,6 +55,9 @@ namespace PGK2.Engine.Core
 			shader = new Shader($"{EngineInstance.ENGINE_PATH}/Shaders/shader.vert", $"{EngineInstance.ENGINE_PATH}/Shaders/shader.frag");
 			lightShader = new Shader($"{EngineInstance.ENGINE_PATH}/Shaders/lightShader.vert", $"{EngineInstance.ENGINE_PATH}/Shaders/lightShader.frag");
 			OutlineShader = new Shader($"{EngineInstance.ENGINE_PATH}/Shaders/outline.vert", $"{EngineInstance.ENGINE_PATH}/Shaders/outline.frag");
+			_imGuiController = new ImGuiController(ClientSize.X, ClientSize.Y);
+
+
 			SceneTest();
 
 		}
@@ -82,6 +89,11 @@ namespace PGK2.Engine.Core
 			light.Diffuse = new Vector3(1, 1, 1f);
 			light.Specular = new Vector3(1f,1f,1f);
 
+			GameObject TestText = scene.CreateSceneObject("UI TEXT TEST");
+			var text = TestText.AddComponent<UI_Text>();
+			text.Text = "TESTOWY TEKST";
+			text.Color = new(0, 1, 0, 0.5f);
+			text.transform.Position = new(50,50,0);
 			SceneManager.SaveSceneToFile(scene, $"{EngineInstance.ASSETS_PATH}/Scenes/GAME.lscn");
 			foreach(var obj in scene.GameObjects)
 			{
@@ -126,7 +138,7 @@ namespace PGK2.Engine.Core
 					{
 						float distance1 = (r1.gameObject.transform.Position - activeCamera.transform.Position).LengthSquared;
 						float distance2 = (r2.gameObject.transform.Position - activeCamera.transform.Position).LengthSquared;
-						return distance2.CompareTo(distance1); 
+						return distance2.CompareTo(distance1);
 					});
 
 					foreach (Renderer r in SceneManager.ActiveScene.Renderers)
@@ -139,7 +151,12 @@ namespace PGK2.Engine.Core
 						r.CallRenderOutline(activeCamera);
 					}
 				}
+				foreach (UI_Renderer uir in SceneManager.ActiveScene.UI_Renderers)
+				{
+					uir.CallDraw();
+				}
 			}
+			_imGuiController.Render();
 			SwapBuffers();
 		}
 		protected override void OnUnload()
@@ -148,6 +165,8 @@ namespace PGK2.Engine.Core
 			shader.Dispose();
 			lightShader.Dispose();
 			OutlineShader.Dispose();
+			_imGuiController.Dispose();
+
 		}
 		protected override void OnMouseMove(MouseMoveEventArgs e)
 		{
@@ -166,6 +185,7 @@ namespace PGK2.Engine.Core
 			base.OnResize(e);
 			
 			GL.Viewport(0, 0, e.Width, e.Height);
+			_imGuiController.WindowResized(ClientSize.X, ClientSize.Y);
 		}
 		protected override void OnFocusedChanged(FocusedChangedEventArgs e)
 		{
@@ -175,6 +195,7 @@ namespace PGK2.Engine.Core
 		protected override void OnUpdateFrame(FrameEventArgs e)
 		{
 			base.OnUpdateFrame(e);
+			_imGuiController.Update(this, (float)e.Time);
 			CursorState = Mouse.IsLocked ? CursorState.Grabbed : CursorState.Normal;
 			if (Mouse.IsLocked)
 			{
