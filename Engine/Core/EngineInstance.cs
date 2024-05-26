@@ -5,6 +5,8 @@ namespace PGK2.Engine.Core
 	public sealed class EngineInstance
 	{
 		public static EngineInstance? Instance { get; private set; }
+		public static readonly string ASSETS_PATH = ".//Game/Assets/";
+		public static readonly string CODE_PATH = ".//Game/Code/";
 		public EngineWindow? window;
 
 		public static void CreateInstance()

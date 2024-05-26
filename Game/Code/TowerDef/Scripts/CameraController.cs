@@ -36,7 +36,6 @@ namespace PGK2.TowerDef.Scripts
 						transform.Parent.Pitch += Mouse.Delta.Y * Time.deltaTime * MouseSens * 10f;
 
 					transform.Parent.Pitch = Math.Clamp(transform.Parent.Pitch, -44.9f, 134.9f);
-					Console.WriteLine(transform.Parent.Pitch);
 				}
 				CameraDistance -= mouse.ScrollDelta.Y * Time.deltaTime * 15f;
 				CameraDistance = Math.Clamp(CameraDistance, 3f, 25f);

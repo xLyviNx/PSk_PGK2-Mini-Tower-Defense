@@ -78,7 +78,7 @@ namespace PGK2.Engine.Core
 
 			GameObject lightObj = scene.CreateSceneObject("Light Object");
 			Light light = lightObj.Components.Add<Light>();
-			lightObj.transform.Position = new Vector3(1.5f, 1f, 1f);
+			lightObj.transform.Position = new Vector3(1.5f, 10f, 1f);
 			light.Diffuse = new Vector3(1, 1, 1f);
 			light.Specular = new Vector3(1f,1f,1f);
 
