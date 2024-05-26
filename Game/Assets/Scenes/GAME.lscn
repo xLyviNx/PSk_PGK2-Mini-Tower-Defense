@@ -1,0 +1,493 @@
+{
+  "GameObjects": [
+    {
+      "LOCK CONTROLLER": {
+        "Tags": {
+          "Count": 0,
+          "Length": 0,
+          "isEmpty": true
+        },
+        "IsActiveSelf": true,
+        "Id": "12f0e2d6-2aff-4746-a22b-f53ff50e03a7",
+        "Components": {
+          "All": [
+            {
+              "Type": "PGK2.Engine.Components.Base.TransformComponent",
+              {
+                "LocalPosition": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "LocalScale": {
+                  "X": 1,
+                  "Y": 1,
+                  "Z": 1
+                },
+                "Pitch": 0,
+                "Yaw": 0,
+                "Roll": 0,
+                "Children": {
+                  "All": []
+                },
+                "LocalRotation": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "EnabledSelf": true
+              }
+            },
+            {
+              "Type": "PGK2.TowerDef.Scripts.MouseLockController",
+              {
+                "EnabledSelf": true
+              }
+            }
+          ]
+        },
+        "transform": {
+          "LocalPosition": {
+            "X": 0,
+            "Y": 0,
+            "Z": 0
+          },
+          "LocalScale": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "Pitch": 0,
+          "Yaw": 0,
+          "Roll": 0,
+          "Children": {
+            "All": []
+          },
+          "LocalRotation": {
+            "X": 0,
+            "Y": 0,
+            "Z": 0
+          },
+          "EnabledSelf": true
+        }
+      }
+    },
+    {
+      "CAMERA PARENT": {
+        "Tags": {
+          "Count": 0,
+          "Length": 0,
+          "isEmpty": true
+        },
+        "IsActiveSelf": true,
+        "Id": "5e84d948-09eb-43a7-a061-aa9d1c6ad190",
+        "Components": {
+          "All": [
+            {
+              "Type": "PGK2.Engine.Components.Base.TransformComponent",
+              {
+                "LocalPosition": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "LocalScale": {
+                  "X": 1,
+                  "Y": 1,
+                  "Z": 1
+                },
+                "Pitch": 0,
+                "Yaw": 0,
+                "Roll": 0,
+                "Children": {
+                  "All": [
+                    "791a687d-a2ac-4d76-8d3d-5009588e8501"
+                  ]
+                },
+                "LocalRotation": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "EnabledSelf": true
+              }
+            }
+          ]
+        },
+        "transform": {
+          "LocalPosition": {
+            "X": 0,
+            "Y": 0,
+            "Z": 0
+          },
+          "LocalScale": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "Pitch": 0,
+          "Yaw": 0,
+          "Roll": 0,
+          "Children": {
+            "All": [
+              "791a687d-a2ac-4d76-8d3d-5009588e8501"
+            ]
+          },
+          "LocalRotation": {
+            "X": 0,
+            "Y": 0,
+            "Z": 0
+          },
+          "EnabledSelf": true
+        }
+      }
+    },
+    {
+      "CAMERA OBJECT": {
+        "Tags": {
+          "Count": 0,
+          "Length": 0,
+          "isEmpty": true
+        },
+        "IsActiveSelf": true,
+        "Id": "791a687d-a2ac-4d76-8d3d-5009588e8501",
+        "Components": {
+          "All": [
+            {
+              "Type": "PGK2.Engine.Components.Base.TransformComponent",
+              {
+                "LocalPosition": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 3
+                },
+                "LocalScale": {
+                  "X": 1,
+                  "Y": 1,
+                  "Z": 1
+                },
+                "Pitch": 0,
+                "Yaw": 0,
+                "Roll": 0,
+                "Children": {
+                  "All": []
+                },
+                "LocalRotation": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "EnabledSelf": true
+              }
+            },
+            {
+              "Type": "PGK2.Engine.Components.Base.CameraComponent",
+              {
+                "IsOrthographic": false,
+                "FieldOfView": 45,
+                "BackgroundColor": {
+                  "R": 0,
+                  "G": 0,
+                  "B": 0,
+                  "A": 1
+                },
+                "RenderTags": {
+                  "Count": 0,
+                  "Length": 0,
+                  "isEmpty": true
+                },
+                "Priority": 0,
+                "OrthoSize": 10,
+                "NearClip": 0.1,
+                "FarClip": 1000,
+                "EnabledSelf": true
+              }
+            },
+            {
+              "Type": "PGK2.TowerDef.Scripts.CameraController",
+              {
+                "EnabledSelf": true
+              }
+            }
+          ]
+        },
+        "transform": {
+          "LocalPosition": {
+            "X": 0,
+            "Y": 0,
+            "Z": 3
+          },
+          "LocalScale": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "Pitch": 0,
+          "Yaw": 0,
+          "Roll": 0,
+          "Children": {
+            "All": []
+          },
+          "LocalRotation": {
+            "X": 0,
+            "Y": 0,
+            "Z": 0
+          },
+          "EnabledSelf": true
+        }
+      }
+    },
+    {
+      "MAP OBJECT": {
+        "Tags": {
+          "Count": 0,
+          "Length": 0,
+          "isEmpty": true
+        },
+        "IsActiveSelf": true,
+        "Id": "9ecbe5ed-4367-487c-93ba-c42b286c7c52",
+        "Components": {
+          "All": [
+            {
+              "Type": "PGK2.Engine.Components.Base.TransformComponent",
+              {
+                "LocalPosition": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "LocalScale": {
+                  "X": 1,
+                  "Y": 1,
+                  "Z": 1
+                },
+                "Pitch": -90,
+                "Yaw": 0,
+                "Roll": 0,
+                "Children": {
+                  "All": []
+                },
+                "LocalRotation": {
+                  "X": -90,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "EnabledSelf": true
+              }
+            },
+            {
+              "Type": "PGK2.Engine.Components.ModelRenderer",
+              {
+                "RenderTags": {
+                  "Count": 0,
+                  "Length": 0,
+                  "isEmpty": true
+                },
+                "OutlineColor": {
+                  "R": 1,
+                  "G": 1,
+                  "B": 1,
+                  "A": 0
+                },
+                "EnabledSelf": true
+              }
+            }
+          ]
+        },
+        "transform": {
+          "LocalPosition": {
+            "X": 0,
+            "Y": 0,
+            "Z": 0
+          },
+          "LocalScale": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "Pitch": -90,
+          "Yaw": 0,
+          "Roll": 0,
+          "Children": {
+            "All": []
+          },
+          "LocalRotation": {
+            "X": -90,
+            "Y": 0,
+            "Z": 0
+          },
+          "EnabledSelf": true
+        }
+      }
+    },
+    {
+      "Light Object": {
+        "Tags": {
+          "Count": 0,
+          "Length": 0,
+          "isEmpty": true
+        },
+        "IsActiveSelf": true,
+        "Id": "6b966c17-898f-435e-9763-b150a02a2939",
+        "Components": {
+          "All": [
+            {
+              "Type": "PGK2.Engine.Components.Base.TransformComponent",
+              {
+                "LocalPosition": {
+                  "X": 1.5,
+                  "Y": 10,
+                  "Z": 1
+                },
+                "LocalScale": {
+                  "X": 1,
+                  "Y": 1,
+                  "Z": 1
+                },
+                "Pitch": 0,
+                "Yaw": 0,
+                "Roll": 0,
+                "Children": {
+                  "All": []
+                },
+                "LocalRotation": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "EnabledSelf": true
+              }
+            },
+            {
+              "Type": "PGK2.Engine.Core.Light",
+              {
+                "Ambient": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "Diffuse": {
+                  "X": 1,
+                  "Y": 1,
+                  "Z": 1
+                },
+                "Specular": {
+                  "X": 1,
+                  "Y": 1,
+                  "Z": 1
+                },
+                "CreateModelOnCreation": true,
+                "EnabledSelf": true
+              }
+            }
+          ]
+        },
+        "transform": {
+          "LocalPosition": {
+            "X": 1.5,
+            "Y": 10,
+            "Z": 1
+          },
+          "LocalScale": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "Pitch": 0,
+          "Yaw": 0,
+          "Roll": 0,
+          "Children": {
+            "All": []
+          },
+          "LocalRotation": {
+            "X": 0,
+            "Y": 0,
+            "Z": 0
+          },
+          "EnabledSelf": true
+        }
+      }
+    },
+    {
+      "UI TEXT TEST": {
+        "Tags": {
+          "Count": 0,
+          "Length": 0,
+          "isEmpty": true
+        },
+        "IsActiveSelf": true,
+        "Id": "d8b200ec-3b13-40bb-ad04-a0ee4a88bf38",
+        "Components": {
+          "All": [
+            {
+              "Type": "PGK2.Engine.Components.Base.TransformComponent",
+              {
+                "LocalPosition": {
+                  "X": 50,
+                  "Y": 50,
+                  "Z": 0
+                },
+                "LocalScale": {
+                  "X": 1,
+                  "Y": 1,
+                  "Z": 1
+                },
+                "Pitch": 0,
+                "Yaw": 0,
+                "Roll": 0,
+                "Children": {
+                  "All": []
+                },
+                "LocalRotation": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+                },
+                "EnabledSelf": true
+              }
+            },
+            {
+              "Type": "PGK2.Engine.Components.Base.Renderers.UI_Text",
+              {
+                "Text": "TESTOWY TEKST",
+                "FontSize": 1,
+                "Color": {
+                  "X": 0,
+                  "Y": 1,
+                  "Z": 0,
+                  "W": 0.5
+                },
+                "EnabledSelf": true
+              }
+            }
+          ]
+        },
+        "transform": {
+          "LocalPosition": {
+            "X": 50,
+            "Y": 50,
+            "Z": 0
+          },
+          "LocalScale": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "Pitch": 0,
+          "Yaw": 0,
+          "Roll": 0,
+          "Children": {
+            "All": []
+          },
+          "LocalRotation": {
+            "X": 0,
+            "Y": 0,
+            "Z": 0
+          },
+          "EnabledSelf": true
+        }
+      }
+    }
+  ],
+  "SceneName": "Unnamed Scene"
+}

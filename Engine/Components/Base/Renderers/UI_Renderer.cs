@@ -1,18 +1,25 @@
 ﻿using PGK2.Engine.Core;
 using PGK2.Engine.SceneSystem;
 using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace PGK2.Engine.Components.Base
 {
 	public class UI_Renderer : Component
 	{
+		[JsonIgnore]
 		public Vector2 UI_Position => new Vector2(transform.Position.X, transform.Position.Y);
 		public Vector4 Color = new Vector4(1, 1, 1, 1);
 		public UI_Renderer()
 		{
 			OnSceneTransfer += SceneTransfer;
 		}
-
+		public override void OnDestroy()
+		{
+			if (OnSceneTransfer != null)
+				OnSceneTransfer -= SceneTransfer;
+			base.OnDestroy();
+		}
 		private void SceneTransfer(Scene? oldscene)
 		{
 			if (oldscene != null)
@@ -29,7 +36,7 @@ namespace PGK2.Engine.Components.Base
 
 		internal void CallDraw()
 		{
-			if (Enabled)
+			if (EnabledInHierarchy)
 				Draw();
 		}
 	}

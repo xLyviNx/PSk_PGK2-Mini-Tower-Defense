@@ -3,6 +3,7 @@ using OpenTK;
 using PGK2.Engine.Core;
 using PGK2.Engine.SceneSystem;
 using OpenTK.Mathematics;
+using System.Linq;
 
 namespace PGK2.Engine.Components
 {
@@ -28,25 +29,28 @@ namespace PGK2.Engine.Components
 		protected Renderer()
 		{
 			RenderTags = new();
-			if (SceneManager.ActiveScene != null)
-			{
-				SceneManager.ActiveScene.Renderers.Add(this);
-			}
+			OnSceneTransfer += SceneTransfer;
 		}
 		public override void OnDestroy()
 		{
+			if (OnSceneTransfer != null)
+				OnSceneTransfer -= SceneTransfer;
 			base.OnDestroy();
-			if (SceneManager.ActiveScene != null)
-			{
-				SceneManager.ActiveScene.Renderers.Remove(this);
-			}
+		}
+		private void SceneTransfer(Scene? oldscene)
+		{
+			if (oldscene != null)
+				oldscene.Renderers.Remove(this);
+
+			if (MyScene.Renderers.Contains(this)) return;
+			MyScene.Renderers.Add(this);
 		}
 		public void CallRender(CameraComponent camera, EngineInstance.RenderPass RenderPass)
 		{
-			if (camera == null || !camera.Enabled)
+			if (camera == null || !camera.EnabledInHierarchy)
 				return;
 
-			if (!Enabled) return;
+			if (!EnabledInHierarchy) return;
 			bool pass = camera.RenderTags.isEmpty || camera.RenderTags.HasAny(RenderTags);
 			if (pass)
 			{
@@ -55,10 +59,10 @@ namespace PGK2.Engine.Components
 		}
 		public void CallRenderOutline(CameraComponent camera)
 		{
-			if (camera == null || !camera.Enabled)
+			if (camera == null || !camera.EnabledInHierarchy)
 				return;
 
-			if (!Enabled) return;
+			if (!EnabledInHierarchy) return;
 			bool pass = camera.RenderTags.isEmpty || camera.RenderTags.HasAny(RenderTags);
 			if (pass)
 			{

@@ -17,14 +17,14 @@ namespace PGK2.Engine.Core
         [JsonIgnore] public SceneSystem.Scene MyScene => gameObject.MyScene;
 		[JsonIgnore] public GameObjectComponents Components => gameObject.Components;
 		[JsonIgnore] public TransformComponent transform => gameObject.transform;
-		private bool _enabledSelf = true;
-        public bool Enabled
+		public bool EnabledSelf = true;
+		[JsonIgnore]
+		public bool EnabledInHierarchy
         {
             get
             {
-                return _enabledSelf && gameObject != null && gameObject.IsActive;
+                return EnabledSelf && gameObject != null && gameObject.IsActive;
             }
-            set { _enabledSelf = value; }
         }
         [JsonIgnore] public Action<SceneSystem.Scene?> OnSceneTransfer = delegate { };
 

@@ -59,7 +59,7 @@ namespace PGK2.Engine.SceneSystem
 					continue;
 
 				var component = gameObject.Components.Get<T>();
-				if (component != null && component.Enabled)
+				if (component != null && component.EnabledInHierarchy)
 					return component;
 			}
 

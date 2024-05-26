@@ -113,7 +113,7 @@ namespace PGK2.Engine.Components.Base
             {
                 throw new Exception("[CAMERA] NO GAME ENGINE INSTANCE OR WINDOW REGISTERED");
             }
-            if (activeCamera == null && Enabled)
+            if (activeCamera == null && EnabledInHierarchy)
             {
                 activeCamera = this;
             }

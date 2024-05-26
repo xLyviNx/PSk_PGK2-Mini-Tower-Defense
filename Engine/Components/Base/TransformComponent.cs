@@ -22,13 +22,14 @@ namespace PGK2.Engine.Components.Base
         private TransformComponent? parent = null;
         public ChildrenContainer Children { get; private set; }
 
-        public Vector3 Position
+		[JsonIgnore]
+		public Vector3 Position
         {
             get { return parent != null ? parent.TransformPoint(LocalPosition) : LocalPosition; }
             set { LocalPosition = parent != null ? parent.InverseTransformPoint(value) : value; }
         }
-
-        public Vector3 Scale
+		[JsonIgnore]
+		public Vector3 Scale
         {
             get { return parent != null ? parent.TransformVector(LocalScale) : LocalScale; }
             set { LocalScale = parent != null ? parent.InverseTransformVector(value) : value; }
@@ -159,6 +160,7 @@ namespace PGK2.Engine.Components.Base
 			}
 		}
 
+		[JsonIgnore]
 		public Vector3 Rotation
 		{
 			get
@@ -179,6 +181,7 @@ namespace PGK2.Engine.Components.Base
 			}
 		}
 
+		[JsonIgnore]
 		public float WorldPitch
 		{
 			get
@@ -190,6 +193,7 @@ namespace PGK2.Engine.Components.Base
 			}
 		}
 
+		[JsonIgnore]
 		public float WorldYaw
 		{
 			get
@@ -201,7 +205,7 @@ namespace PGK2.Engine.Components.Base
 			}
 		}
 
-		public float WorldRoll
+		[JsonIgnore] public float WorldRoll
 		{
 			get
 			{

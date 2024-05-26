@@ -1,15 +1,18 @@
 ﻿using OpenTK.Mathematics;
 using PGK2.Engine.Components;
 using PGK2.Engine.Components.Base;
+using System.Text.Json.Serialization;
 
 namespace PGK2.Engine.Core
 {
 	public class Light : Core.Component
 	{
+		[JsonIgnore]
 		public Vector3 Position => transform.Position;
 		public Vector3 Ambient;
 		public Vector3 Diffuse;
 		public Vector3 Specular;
+		[JsonIgnore]
 		public ModelRenderer? LightModel;
 		public bool CreateModelOnCreation = true;
 		public Light()

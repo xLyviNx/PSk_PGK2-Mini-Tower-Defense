@@ -77,7 +77,7 @@ namespace PGK2.Engine.Core
             if (!IsActive) return;
             foreach(Component c in Components.All)
             {
-                if (!c.Enabled) continue;
+                if (!c.EnabledInHierarchy) continue;
                 c.Update();
             }
         }
@@ -86,7 +86,7 @@ namespace PGK2.Engine.Core
             if (_isdestroyed || Components == null) return;
             foreach (var component in Components.All)
             {
-                component.Enabled = false;
+                component.EnabledSelf = false;
                 component.OnDestroy();
             }
             Components.All.Clear();
