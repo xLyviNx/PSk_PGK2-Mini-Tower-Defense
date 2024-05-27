@@ -13,6 +13,7 @@ namespace PGK2.TowerDef.Scripts
 		private float TargetCameraDistance = 12f;
 		private float CameraDistance;
 		private float CameraDistanceLerpSpeed = 5f;
+		private Vector2 CameraVelocity;
 		public override void Awake()
 		{
 			base.Awake();
@@ -32,16 +33,19 @@ namespace PGK2.TowerDef.Scripts
 				KeyboardState input = EngineWindow.instance.KeyboardState;
 				if (MouseLockController.HoldingCamera && Mouse.IsLocked) 
 				{
+					CameraVelocity = Vector2.Zero;
 					if (Mouse.Delta.X != 0f)
-						transform.Parent.Yaw -= Mouse.Delta.X * Time.deltaTime * MouseSens * 10f;
+						CameraVelocity.X -= Mouse.Delta.X * Time.deltaTime * MouseSens * 10f;
 					if (Mouse.Delta.Y != 0f)
-						transform.Parent.Pitch -= Mouse.Delta.Y * Time.deltaTime * MouseSens * 10f;
-
-					transform.Parent.Pitch = Math.Clamp(transform.Parent.Pitch, -44.9f, 134.9f);
+						CameraVelocity.Y -= Mouse.Delta.Y * Time.deltaTime * MouseSens * 10f;
 				}
 				TargetCameraDistance -= mouse.ScrollDelta.Y * 0.5f;
 				TargetCameraDistance = Math.Clamp(TargetCameraDistance, 3f, 25f);
 			}
+			transform.Parent.Yaw += CameraVelocity.X;
+			transform.Parent.Pitch += CameraVelocity.Y;
+			transform.Parent.Pitch = Math.Clamp(transform.Parent.Pitch, -44.9f, 134.9f);
+			CameraVelocity = Vector2.Lerp(CameraVelocity, Vector2.Zero, Time.deltaTime * 2f);
 			if (MathF.Abs(CameraDistance - TargetCameraDistance) > 0.005f)
 				CameraDistance = MathHelper.Lerp(CameraDistance, TargetCameraDistance, Time.deltaTime * CameraDistanceLerpSpeed);
 			else
