@@ -38,7 +38,7 @@ namespace PGK2.Engine.Components.Base.Renderers
 
 			HandleHoverState();
 
-			ImGui.SetCursorPos(ImGui.GetCursorPos() - new Vector2(0, textSize.Y)); // Reset cursor position
+			ImGui.SetCursorPos(ImGui.GetCursorPos() - new Vector2(0, textSize.Y)); 
 			ImGui.Text(Text);
 
 			ImGui.End();
