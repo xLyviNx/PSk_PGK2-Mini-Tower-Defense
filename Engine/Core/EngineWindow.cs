@@ -25,17 +25,10 @@ namespace PGK2.Engine.Core
 		public static Shader shader;
 		public static Shader lightShader;
 		public static Shader OutlineShader;
-		Renderer test;
 		private bool changedFocus;
 		public float aspectRatio { get; private set; }
-		GameObject gobj;
 		public static Queue<Component> StartQueue = new();
 		public CameraComponent? activeCamera {get=>CameraComponent.activeCamera; }
-		float[] vertices = {
-				-0.5f, -0.5f, 0.0f, //Bottom-left vertex
-				 0.5f, -0.5f, 0.0f, //Bottom-right vertex
-				 0.0f,  0.5f, 0.0f  //Top vertex
-			};
 		public EngineWindow(GameWindowSettings gws, NativeWindowSettings nws) : base(gws,nws)
 		{
 			instance = this;
