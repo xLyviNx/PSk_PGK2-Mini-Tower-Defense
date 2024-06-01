@@ -61,7 +61,6 @@ namespace PGK2.Engine.Core
 				if (Material.Shader != EngineWindow.lightShader)
 				{
 					int lightsnum = (int)MathF.Min(8, Lights.Count);
-					Console.WriteLine($"LIGHTS: {lightsnum}");
 					for (int i = 0; i < lightsnum; i++)
 					{
 						Light l = Lights[i];

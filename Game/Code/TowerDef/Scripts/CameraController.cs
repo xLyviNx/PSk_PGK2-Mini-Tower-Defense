@@ -70,7 +70,7 @@ namespace PGK2.TowerDef.Scripts
 				var model = hit.AddComponent<ModelRenderer>();
 				model.transform.Position = hitInfo.Point;
 				model.transform.LocalScale = Vector3.One* 0.002f;
-				model.Model = new Model($"{EngineInstance.ASSETS_PATH}/Models/Cube.fbx");
+				model.Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/cube.fbx");
 				Console.WriteLine($"Hit at distance: {hitInfo.Distance}");
 				Console.WriteLine($"Hit Point: {hitInfo.Point}");
 				Console.WriteLine($"Hit GAMEOBJECT: {hitInfo.gameObject.name}");

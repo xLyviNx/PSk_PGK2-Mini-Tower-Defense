@@ -51,15 +51,20 @@ namespace PGK2.Engine.SceneSystem
 			{
 				using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
 				{
-					JsonSerializerOptions options= new JsonSerializerOptions();
-					options.Converters.Add(new Vector3Converter());					
-					options.Converters.Add(new QuaternionConverter());
-					options.Converters.Add(new ComponentListConverter());
-					options.Converters.Add(new GameObjectListConverter());  // Dodaj nowy konwerter GameObjectList
-
-					options.WriteIndented = true;
-					options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-					options.IncludeFields = true;
+					JsonSerializerOptions options = new JsonSerializerOptions
+					{
+						Converters =
+				{
+					new Vector3Converter(),
+					new QuaternionConverter(),
+					new ComponentListConverter(),
+					new GameObjectConverter(),
+					new GameObjectListConverter()
+				},
+						WriteIndented = true,
+						DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+						IncludeFields = true
+					};
 					JsonSerializer.Serialize(fileStream, scene, options);
 				}
 			}
@@ -77,8 +82,28 @@ namespace PGK2.Engine.SceneSystem
 			{
 				using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
 				{
-					//XmlSerializer xmlSerializer = new XmlSerializer(typeof(Scene));
-					//loadedScene = (Scene)xmlSerializer.Deserialize(fileStream);
+					JsonSerializerOptions options = new JsonSerializerOptions
+					{
+						Converters =
+				{
+					new Vector3Converter(),
+					new QuaternionConverter(),
+					new ComponentListConverter(),
+					new GameObjectConverter(),
+					new GameObjectListConverter()
+				}
+					};
+
+					loadedScene = JsonSerializer.Deserialize<Scene>(fileStream, options);
+
+					// Restore parent-child relationships
+					RestoreParentChildRelationships(loadedScene);
+					Console.WriteLine($"Scene Loaded.\n" +
+									  $" Scene Name: {loadedScene.SceneName}\n" +
+									  $" GameObjects: {loadedScene.GameObjects.Count}\n" +
+									  $" Renderers: {loadedScene.Renderers.Count}\n" +
+									  $" UI Renderers: {loadedScene.UI_Renderers.Count}\n" +
+									  $" Lights: {loadedScene.Lights.Count}\n");
 				}
 			}
 			catch (Exception e)
@@ -87,6 +112,21 @@ namespace PGK2.Engine.SceneSystem
 			}
 
 			return loadedScene;
+		}
+
+		private static void RestoreParentChildRelationships(Scene scene)
+		{
+			foreach (var gameObject in scene.GameObjects)
+			{
+				foreach (var childId in gameObject.transform.Children.All)
+				{
+					var child = scene.GameObjects.Find(obj => obj.Id == childId);
+					if (child != null)
+					{
+						child.transform.Parent = gameObject.transform;
+					}
+				}
+			}
 		}
 	}
 }

@@ -2,6 +2,7 @@
 using PGK2.Engine.SceneSystem;
 using PGK2.Engine.Serialization.Converters;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
 
 namespace PGK2.Engine.Core
 {
@@ -39,8 +40,8 @@ namespace PGK2.Engine.Core
 		[JsonIgnore] public bool isDestroyed { get => _isdestroyed; }
 		public GameObjectComponents Components;
 		public TransformComponent transform;
-		public TagsContainer Tags { get; private set; }
-		public bool IsActiveSelf { get; private set; } = true;
+		public TagsContainer Tags { get; internal set; }
+		public bool IsActiveSelf { get; internal set; } = true;
 		[JsonIgnore] public bool IsActive
         {
             get
@@ -61,14 +62,15 @@ namespace PGK2.Engine.Core
 			return Components.Add<T>();
 		}
 		public GameObject() : this("GameObject") { }
-        public GameObject(string name)
+        public GameObject(string name) : this(name, Guid.NewGuid()) { }
+        public GameObject(string name, Guid GUID)
         {
             Console.WriteLine("MADE OBJECT");
             Components = new GameObjectComponents(this);
             transform = Components.Add<TransformComponent>();
             Tags = new();
             this.name = name;
-			Id = Guid.NewGuid();
+			Id = GUID;
             if (MyScene == null)
                 MyScene = SceneManager.ActiveScene;
 		}

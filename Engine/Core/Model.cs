@@ -7,7 +7,17 @@ namespace PGK2.Engine.Core
 {
 	public class Model
 	{
-
+		public static Dictionary<string, Model> LoadedModels = new();
+		public string Path;
+		
+		public static Model LoadFromFile(string path)
+		{
+			if (LoadedModels.ContainsKey(path) && LoadedModels[path] != null)
+				return LoadedModels[path];
+			Model model = new Model(path);
+			LoadedModels[path] = model;
+			return model;
+		}
 		public Model(string path)
 		{
 			loadModel(path);
@@ -44,6 +54,8 @@ namespace PGK2.Engine.Core
 
 			directory = path.Substring(0, path.LastIndexOf('/'));
 			processNode(scene.RootNode, scene);
+			Path = path;
+			
 		}
 		private void processNode(Assimp.Node node, in Assimp.Scene scene)
 		{

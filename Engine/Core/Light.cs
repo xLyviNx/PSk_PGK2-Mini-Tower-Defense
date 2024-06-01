@@ -51,7 +51,7 @@ namespace PGK2.Engine.Core
 			if (CreateModelOnCreation)
 			{
 				LightModel = Components.Add<ModelRenderer>();
-				LightModel.Model = new Model($"{EngineInstance.ASSETS_PATH}/Models/cube.fbx");
+				LightModel.Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/cube.fbx");
 				if (LightModel.Model != null)
 				{
 					LightModel.transform.Scale = Vector3.One * 0.001f;

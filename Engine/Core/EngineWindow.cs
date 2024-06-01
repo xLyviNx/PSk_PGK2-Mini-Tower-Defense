@@ -51,10 +51,16 @@ namespace PGK2.Engine.Core
 			_imGuiController = new ImGuiController(ClientSize.X, ClientSize.Y);
 
 
-			SceneTest();
+			//SceneLoadTest();
+			SceneMakeTest();
 
 		}
-		void SceneTest()
+		void SceneLoadTest()
+		{
+			var scene = SceneManager.LoadSceneFromFile($"{EngineInstance.ASSETS_PATH}/Scenes/GAME.lscn");
+			SceneManager.LoadScene(scene);
+		}
+		void SceneMakeTest()
 		{
 			SceneSystem.Scene scene = new();
 			SceneManager.LoadScene(scene);
@@ -70,7 +76,7 @@ namespace PGK2.Engine.Core
 
 			GameObject newObject2 = scene.CreateSceneObject("MAP OBJECT");
 			var rend = newObject2.Components.Add<ModelRenderer>();
-			rend.Model = new Model($"{EngineInstance.ASSETS_PATH}/Models/Level1.fbx");
+			rend.Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/Level1.fbx");	
 			rend.OutlineColor = Color4.Transparent;
 			rend.transform.Pitch = -90f;
 			rend.transform.Scale = Vector3.One * 1;
