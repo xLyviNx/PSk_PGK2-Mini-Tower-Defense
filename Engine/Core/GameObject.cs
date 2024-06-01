@@ -25,9 +25,9 @@ namespace PGK2.Engine.Core
                         _myscene.GameObjects.Remove(this);
                     }
                     if (value != null)
-                        if (!value.GameObjects.Contains(this))
+                        if (!value.GameObjects.Contains(this) && !value.AwaitingGameObjects.Contains(this))
                         {
-                            value.GameObjects.Add(this);
+                            value.AwaitingGameObjects.Add(this);
                         }
 					_myscene = value;
 					OnSceneTransfer.Invoke(oldScene);

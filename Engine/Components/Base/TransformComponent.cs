@@ -52,7 +52,6 @@ namespace PGK2.Engine.Components.Base
         {
             get { return Vector3.Transform(Vector3.UnitX, GetRotationMatrix().ExtractRotation()); }
         }
-
         [JsonIgnore]
         public TransformComponent? Parent
         {

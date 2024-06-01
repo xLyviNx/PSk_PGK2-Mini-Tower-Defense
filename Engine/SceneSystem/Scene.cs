@@ -9,6 +9,7 @@ namespace PGK2.Engine.SceneSystem
 	{
 		public string SceneName = "Unnamed Scene";
 		public List<GameObject> GameObjects { get; internal set; }
+		public List<GameObject> AwaitingGameObjects { get; internal set; }
 		[JsonIgnore] public List<CameraComponent> Cameras { get; internal set; }
 		[JsonIgnore] public List<Renderer> Renderers { get; internal set; }
 		[JsonIgnore] public List<UI_Renderer> UI_Renderers { get; internal set; }
@@ -27,9 +28,18 @@ namespace PGK2.Engine.SceneSystem
 				return list;
 			}
 		}*/
-		
+		public void AddAwaitingObjects()
+		{
+			List<GameObject> toadd = new();
+			foreach (GameObject obj in AwaitingGameObjects)
+				if(!obj.isDestroyed && obj!=null)
+					toadd.Add(obj);
+			GameObjects.InsertRange(GameObjects.Count, toadd);
+			AwaitingGameObjects.Clear();
+		}
 		public Scene()
 		{
+			AwaitingGameObjects = new List<GameObject>();
 			GameObjects = new List<GameObject>();
 			Cameras = new();
 			Renderers = new();

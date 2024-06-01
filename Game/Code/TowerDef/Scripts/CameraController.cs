@@ -1,7 +1,11 @@
 ﻿using OpenTK.Mathematics;
+using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using PGK2.Engine.Components;
 using PGK2.Engine.Components.Base;
 using PGK2.Engine.Core;
+using PGK2.Engine.Core.Physics;
+using PGK2.Engine.SceneSystem;
 using System.Diagnostics;
 
 namespace PGK2.TowerDef.Scripts
@@ -41,6 +45,10 @@ namespace PGK2.TowerDef.Scripts
 				}
 				TargetCameraDistance -= mouse.ScrollDelta.Y * 0.5f;
 				TargetCameraDistance = Math.Clamp(TargetCameraDistance, 3f, 25f);
+				if (mouse.IsButtonPressed(MouseButton.Button1))
+				{
+					OnMouseClick(mouse.Position);
+				}
 			}
 			transform.Parent.Yaw += CameraVelocity.X;
 			transform.Parent.Pitch += CameraVelocity.Y;
@@ -53,6 +61,25 @@ namespace PGK2.TowerDef.Scripts
 			transform.LocalPosition = new(0, CameraDistance, CameraDistance);
 			var look = TransformComponent.LookAtRotation(transform.Position, transform.Parent.Position);
 			transform.Rotation = look;
+		}
+		void OnMouseClick(Vector2 mousePosition)
+		{
+			if (Physics.RayCast_Triangle(myCamera, mousePosition, 1000f, out RayCastHit hitInfo))
+			{
+				GameObject hit = new("HIT OBJECT");
+				var model = hit.AddComponent<ModelRenderer>();
+				model.transform.Position = hitInfo.Point;
+				model.transform.LocalScale = Vector3.One* 0.002f;
+				model.Model = new Model($"{EngineInstance.ASSETS_PATH}/Models/Cube.fbx");
+				Console.WriteLine($"Hit at distance: {hitInfo.Distance}");
+				Console.WriteLine($"Hit Point: {hitInfo.Point}");
+				Console.WriteLine($"Hit GAMEOBJECT: {hitInfo.gameObject.name}");
+				Console.WriteLine($"Hit Model: {hitInfo.Model}");
+				Console.WriteLine($"Hit MESHES COUNT: {hitInfo.Model.meshes.Count}");
+				Console.WriteLine($"Hit Mesh: {hitInfo.Mesh}");
+				Console.WriteLine($"Hit Triangle: {hitInfo.Triangle}");
+				// Perform additional logic for a hit
+			}
 		}
 	}
 }

@@ -1,4 +1,6 @@
-﻿namespace PGK2.Engine.Core
+﻿using System.Text.Json.Serialization;
+
+namespace PGK2.Engine.Core
 {
 	public class TagsContainer
 	{
@@ -27,8 +29,11 @@
 			}
 			return false;
 		}
+		[JsonIgnore]
 		public int Count => All.Count;
+		[JsonIgnore]
 		public int Length => All.Count;
+		[JsonIgnore]
 		public bool isEmpty => (Count == 0);
 	}
 }

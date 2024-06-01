@@ -2,13 +2,9 @@
   "GameObjects": [
     {
       "LOCK CONTROLLER": {
-        "Tags": {
-          "Count": 0,
-          "Length": 0,
-          "isEmpty": true
-        },
+        "Tags": {},
         "IsActiveSelf": true,
-        "Id": "e8e7e3f9-c93a-4b6d-94be-08fadf438ce1",
+        "Id": "71d3e448-e560-4b26-aac8-92cbfa532718",
         "Components": {
           "All": [
             {
@@ -74,13 +70,9 @@
     },
     {
       "CAMERA PARENT": {
-        "Tags": {
-          "Count": 0,
-          "Length": 0,
-          "isEmpty": true
-        },
+        "Tags": {},
         "IsActiveSelf": true,
-        "Id": "f26ff3f9-1565-4300-8716-b6d7e39e633a",
+        "Id": "b3ac107c-bc4d-4fbc-a501-30dda033a950",
         "Components": {
           "All": [
             {
@@ -101,7 +93,7 @@
                 "Roll": 0,
                 "Children": {
                   "All": [
-                    "454a73dc-d543-4861-b456-f6820afa403d"
+                    "7ce17774-d625-433b-badf-927459664959"
                   ]
                 },
                 "LocalRotation": {
@@ -130,7 +122,7 @@
           "Roll": 0,
           "Children": {
             "All": [
-              "454a73dc-d543-4861-b456-f6820afa403d"
+              "7ce17774-d625-433b-badf-927459664959"
             ]
           },
           "LocalRotation": {
@@ -144,13 +136,9 @@
     },
     {
       "CAMERA OBJECT": {
-        "Tags": {
-          "Count": 0,
-          "Length": 0,
-          "isEmpty": true
-        },
+        "Tags": {},
         "IsActiveSelf": true,
-        "Id": "454a73dc-d543-4861-b456-f6820afa403d",
+        "Id": "7ce17774-d625-433b-badf-927459664959",
         "Components": {
           "All": [
             {
@@ -191,11 +179,7 @@
                   "B": 0,
                   "A": 1
                 },
-                "RenderTags": {
-                  "Count": 0,
-                  "Length": 0,
-                  "isEmpty": true
-                },
+                "RenderTags": {},
                 "Priority": 0,
                 "OrthoSize": 10,
                 "NearClip": 0.1,
@@ -239,13 +223,9 @@
     },
     {
       "MAP OBJECT": {
-        "Tags": {
-          "Count": 0,
-          "Length": 0,
-          "isEmpty": true
-        },
+        "Tags": {},
         "IsActiveSelf": true,
-        "Id": "32719976-48a0-4a82-9b48-3b197ada55c4",
+        "Id": "6622f648-5f8e-4153-a41d-9dcb8f3c272b",
         "Components": {
           "All": [
             {
@@ -278,11 +258,7 @@
             {
               "Type": "PGK2.Engine.Components.ModelRenderer",
               {
-                "RenderTags": {
-                  "Count": 0,
-                  "Length": 0,
-                  "isEmpty": true
-                },
+                "RenderTags": {},
                 "OutlineColor": {
                   "R": 1,
                   "G": 1,
@@ -322,13 +298,9 @@
     },
     {
       "Light Object": {
-        "Tags": {
-          "Count": 0,
-          "Length": 0,
-          "isEmpty": true
-        },
+        "Tags": {},
         "IsActiveSelf": true,
-        "Id": "f1bc81f4-4799-4fb6-b9bd-c3368310a189",
+        "Id": "d8bf09f8-0775-48e6-8ba7-0d7db5bd1b00",
         "Components": {
           "All": [
             {
@@ -410,13 +382,9 @@
     },
     {
       "UI TEXT TEST": {
-        "Tags": {
-          "Count": 0,
-          "Length": 0,
-          "isEmpty": true
-        },
+        "Tags": {},
         "IsActiveSelf": true,
-        "Id": "bc1fb239-b926-4b7d-b074-638ad9827997",
+        "Id": "3c61b786-72b3-4074-8b4a-557e022737bd",
         "Components": {
           "All": [
             {
@@ -490,5 +458,6 @@
       }
     }
   ],
+  "AwaitingGameObjects": [],
   "SceneName": "Unnamed Scene"
 }

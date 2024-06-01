@@ -87,6 +87,7 @@ namespace PGK2.Engine.Core
 			text.Text = "TESTOWY TEKST";
 			text.Color = new(0, 1, 0, 0.5f);
 			text.transform.Position = new(50,50,0);
+			scene.AddAwaitingObjects();
 			SceneManager.SaveSceneToFile(scene, $"{EngineInstance.ASSETS_PATH}/Scenes/GAME.lscn");
 			foreach(var obj in scene.GameObjects)
 			{
@@ -230,6 +231,7 @@ namespace PGK2.Engine.Core
 
 			if (SceneManager.ActiveScene!=null)
 			{
+				SceneManager.ActiveScene.AddAwaitingObjects();
 				foreach(GameObject obj in SceneManager.ActiveScene.GameObjects)
 				{
 					obj.Update();
