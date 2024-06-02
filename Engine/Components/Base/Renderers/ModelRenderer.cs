@@ -19,6 +19,17 @@ namespace PGK2.Engine.Components
 				SetModel(value);
 			}
 		}
+		[JsonInclude]
+		public string? ModelPath
+		{
+			get => _model?.Path;
+			internal set
+			{
+				_loadedModelPath = value;
+			}
+		}
+		[JsonIgnore]
+		internal string? _loadedModelPath;
 		public ModelRenderer()
 		{
 			_model = null;

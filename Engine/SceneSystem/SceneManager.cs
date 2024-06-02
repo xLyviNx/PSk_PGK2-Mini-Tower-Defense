@@ -1,4 +1,7 @@
-﻿using PGK2.Engine.Serialization.Converters;
+﻿using PGK2.Engine.Components;
+using PGK2.Engine.Components.Base;
+using PGK2.Engine.Core;
+using PGK2.Engine.Serialization.Converters;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -59,7 +62,11 @@ namespace PGK2.Engine.SceneSystem
 					new QuaternionConverter(),
 					new ComponentListConverter(),
 					new GameObjectConverter(),
-					new GameObjectListConverter()
+					new GameObjectListConverter(),
+					new SceneConverter(),
+					new GameObjectComponentsConverter(),
+					new ChildrenContainerConverter(),
+					new TransformComponentConverter(),
 				},
 						WriteIndented = true,
 						DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
@@ -77,11 +84,11 @@ namespace PGK2.Engine.SceneSystem
 		public static Scene? LoadSceneFromFile(string filePath)
 		{
 			Scene? loadedScene = null;
-
 			try
 			{
 				using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
 				{
+					DeserializeContext.CurrentContext = new();
 					JsonSerializerOptions options = new JsonSerializerOptions
 					{
 						Converters =
@@ -90,43 +97,85 @@ namespace PGK2.Engine.SceneSystem
 					new QuaternionConverter(),
 					new ComponentListConverter(),
 					new GameObjectConverter(),
-					new GameObjectListConverter()
-				}
+					new GameObjectListConverter(),
+					new SceneConverter(),
+					new GameObjectComponentsConverter(),
+					new ChildrenContainerConverter(),
+					new TransformComponentConverter(),
+				},
+						WriteIndented = true,
+						DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+						IncludeFields = true,
 					};
-
+					Console.WriteLine("Starting deserialization...");
 					loadedScene = JsonSerializer.Deserialize<Scene>(fileStream, options);
-
+					Console.WriteLine("Deserialization completed.");
 					// Restore parent-child relationships
-					RestoreParentChildRelationships(loadedScene);
+					loadedScene.AddAwaitingObjects();
+
+					RestoreHierarchy(loadedScene);
+					LoadAllModels(loadedScene);
+					string GameObjectList = "";
+					foreach (var go in loadedScene.GameObjects)
+						GameObjectList += $"   - {go.name}\n";	
+					foreach (var go in loadedScene.AwaitingGameObjects)
+						GameObjectList += $"   * {go.name}\n";
+
 					Console.WriteLine($"Scene Loaded.\n" +
 									  $" Scene Name: {loadedScene.SceneName}\n" +
 									  $" GameObjects: {loadedScene.GameObjects.Count}\n" +
+									  GameObjectList +
 									  $" Renderers: {loadedScene.Renderers.Count}\n" +
 									  $" UI Renderers: {loadedScene.UI_Renderers.Count}\n" +
 									  $" Lights: {loadedScene.Lights.Count}\n");
+					DeserializeContext.CurrentContext = null;
 				}
 			}
 			catch (Exception e)
 			{
 				Console.WriteLine("Failed to deserialize. Reason: " + e.Message + '\n' + e.StackTrace);
 			}
-
 			return loadedScene;
 		}
 
-		private static void RestoreParentChildRelationships(Scene scene)
+		private static void LoadAllModels(Scene loadedScene)
 		{
+			Console.WriteLine("\n== SCENE MODEL LOADING STARTED ==");
+			foreach(var rend in loadedScene.Renderers)
+			{
+				ModelRenderer? mrend = rend as ModelRenderer;
+				if(mrend !=null)
+				{
+					Console.WriteLine($"Found Model Renderer with MODEL PATH: {mrend._loadedModelPath}");
+					mrend.Model = Model.LoadFromFile(mrend._loadedModelPath);
+				}
+			}
+
+			Console.WriteLine("== SCENE MODEL LOADING ENDED ==\n");
+		}
+
+		internal static void RestoreHierarchy(Scene scene)
+		{
+			Console.WriteLine("\n== STARTING RESTORING SCENE HIERARCHY ==");
 			foreach (var gameObject in scene.GameObjects)
 			{
-				foreach (var childId in gameObject.transform.Children.All)
+				if (gameObject.transform == null)
+					gameObject.transform = gameObject.GetComponent<TransformComponent>();
+				foreach (var childId in gameObject.transform.Children._loaded)
 				{
+					Console.WriteLine($"  {gameObject.name}'s CHILD ID: {childId}");
 					var child = scene.GameObjects.Find(obj => obj.Id == childId);
 					if (child != null)
 					{
+						if(child.transform==null)
+							child.transform = child.GetComponent<TransformComponent>();
+						Console.WriteLine($"   CHILD FOUND. APPLYING.");
 						child.transform.Parent = gameObject.transform;
 					}
 				}
 			}
+
+			Console.WriteLine("== RESTORING ENDED ==\n");
 		}
 	}
 }

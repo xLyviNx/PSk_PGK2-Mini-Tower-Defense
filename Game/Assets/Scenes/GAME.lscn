@@ -1,445 +1,275 @@
 {
+  "SceneName": "Game Scene",
   "GameObjects": [
     {
       "name": "LOCK CONTROLLER",
-      "Id": "833c0fa6-ebd9-46c2-aee1-8de648ebda77",
-      "Components": [
-        {
-          "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "Id": "59f224a7-9df1-4f00-8be4-50dd43aebf7e",
+      "Components": {
+        "All": [
           {
-            "LocalPosition": {
-              "X": 0,
-              "Y": 0,
-              "Z": 0
-            },
-            "LocalScale": {
-              "X": 1,
-              "Y": 1,
-              "Z": 1
-            },
-            "Pitch": 0,
-            "Yaw": 0,
-            "Roll": 0,
-            "Children": {
-              "All": []
-            },
-            "LocalRotation": {
-              "X": 0,
-              "Y": 0,
-              "Z": 0
-            },
-            "EnabledSelf": true
-          }
-        },
-        {
-          "Type": "PGK2.TowerDef.Scripts.MouseLockController, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "LocalScale": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
           {
-            "EnabledSelf": true
+            "Type": "PGK2.TowerDef.Scripts.MouseLockController, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
           }
-        }
-      ],
-      "transform": {
-        "LocalPosition": {
-          "X": 0,
-          "Y": 0,
-          "Z": 0
-        },
-        "LocalScale": {
-          "X": 1,
-          "Y": 1,
-          "Z": 1
-        },
-        "Pitch": 0,
-        "Yaw": 0,
-        "Roll": 0,
-        "Children": {
-          "All": []
-        },
-        "LocalRotation": {
-          "X": 0,
-          "Y": 0,
-          "Z": 0
-        },
-        "EnabledSelf": true
+        ]
       },
       "Tags": {},
       "IsActiveSelf": true
     },
     {
       "name": "CAMERA PARENT",
-      "Id": "600e3609-8107-4b81-bc72-5268ede10b39",
-      "Components": [
-        {
-          "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "Id": "08e5d932-7119-46d2-9fdc-7ad8446c3719",
+      "Components": {
+        "All": [
           {
-            "LocalPosition": {
-              "X": 0,
-              "Y": 0,
-              "Z": 0
-            },
-            "LocalScale": {
-              "X": 1,
-              "Y": 1,
-              "Z": 1
-            },
-            "Pitch": 0,
-            "Yaw": 0,
-            "Roll": 0,
-            "Children": {
-              "All": [
-                "3884272c-71a5-4157-9c42-7e0fc2d55d24"
-              ]
-            },
-            "LocalRotation": {
-              "X": 0,
-              "Y": 0,
-              "Z": 0
-            },
-            "EnabledSelf": true
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "LocalScale": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": [
+                  "022cd593-256c-4d53-8e55-a8d27f40df86"
+                ]
+              }
+            }
           }
-        }
-      ],
-      "transform": {
-        "LocalPosition": {
-          "X": 0,
-          "Y": 0,
-          "Z": 0
-        },
-        "LocalScale": {
-          "X": 1,
-          "Y": 1,
-          "Z": 1
-        },
-        "Pitch": 0,
-        "Yaw": 0,
-        "Roll": 0,
-        "Children": {
-          "All": [
-            "3884272c-71a5-4157-9c42-7e0fc2d55d24"
-          ]
-        },
-        "LocalRotation": {
-          "X": 0,
-          "Y": 0,
-          "Z": 0
-        },
-        "EnabledSelf": true
+        ]
       },
       "Tags": {},
       "IsActiveSelf": true
     },
     {
       "name": "CAMERA OBJECT",
-      "Id": "3884272c-71a5-4157-9c42-7e0fc2d55d24",
-      "Components": [
-        {
-          "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "Id": "022cd593-256c-4d53-8e55-a8d27f40df86",
+      "Components": {
+        "All": [
           {
-            "LocalPosition": {
-              "X": 0,
-              "Y": 0,
-              "Z": 3
-            },
-            "LocalScale": {
-              "X": 1,
-              "Y": 1,
-              "Z": 1
-            },
-            "Pitch": 0,
-            "Yaw": 0,
-            "Roll": 0,
-            "Children": {
-              "All": []
-            },
-            "LocalRotation": {
-              "X": 0,
-              "Y": 0,
-              "Z": 0
-            },
-            "EnabledSelf": true
-          }
-        },
-        {
-          "Type": "PGK2.Engine.Components.Base.CameraComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 0,
+                "Y": 0,
+                "Z": 3
+              },
+              "LocalScale": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
           {
-            "IsOrthographic": false,
-            "FieldOfView": 45,
-            "BackgroundColor": {
-              "R": 0,
-              "G": 0,
-              "B": 0,
-              "A": 1
-            },
-            "RenderTags": {},
-            "Priority": 0,
-            "OrthoSize": 10,
-            "NearClip": 0.1,
-            "FarClip": 1000,
-            "EnabledSelf": true
-          }
-        },
-        {
-          "Type": "PGK2.TowerDef.Scripts.CameraController, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Type": "PGK2.Engine.Components.Base.CameraComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "IsOrthographic": false,
+              "FieldOfView": 45,
+              "BackgroundColor": {
+                "R": 0,
+                "G": 0,
+                "B": 0,
+                "A": 1
+              },
+              "RenderTags": {},
+              "Priority": 0,
+              "OrthoSize": 10,
+              "NearClip": 0.1,
+              "FarClip": 1000,
+              "EnabledSelf": true
+            }
+          },
           {
-            "EnabledSelf": true
+            "Type": "PGK2.TowerDef.Scripts.CameraController, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
           }
-        }
-      ],
-      "transform": {
-        "LocalPosition": {
-          "X": 0,
-          "Y": 0,
-          "Z": 3
-        },
-        "LocalScale": {
-          "X": 1,
-          "Y": 1,
-          "Z": 1
-        },
-        "Pitch": 0,
-        "Yaw": 0,
-        "Roll": 0,
-        "Children": {
-          "All": []
-        },
-        "LocalRotation": {
-          "X": 0,
-          "Y": 0,
-          "Z": 0
-        },
-        "EnabledSelf": true
+        ]
       },
       "Tags": {},
       "IsActiveSelf": true
     },
     {
       "name": "MAP OBJECT",
-      "Id": "6db62911-0892-4673-891a-ff95d45f7e4e",
-      "Components": [
-        {
-          "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "Id": "ad33c475-9921-496f-8317-f482962a9503",
+      "Components": {
+        "All": [
           {
-            "LocalPosition": {
-              "X": 0,
-              "Y": 0,
-              "Z": 0
-            },
-            "LocalScale": {
-              "X": 1,
-              "Y": 1,
-              "Z": 1
-            },
-            "Pitch": -90,
-            "Yaw": 0,
-            "Roll": 0,
-            "Children": {
-              "All": []
-            },
-            "LocalRotation": {
-              "X": -90,
-              "Y": 0,
-              "Z": 0
-            },
-            "EnabledSelf": true
-          }
-        },
-        {
-          "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "LocalScale": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              },
+              "Pitch": -90,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
           {
-            "RenderTags": {},
-            "OutlineColor": {
-              "R": 1,
-              "G": 1,
-              "B": 1,
-              "A": 0
-            },
-            "EnabledSelf": true
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/Level1.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 1,
+                "G": 1,
+                "B": 1,
+                "A": 0
+              },
+              "EnabledSelf": true
+            }
           }
-        }
-      ],
-      "transform": {
-        "LocalPosition": {
-          "X": 0,
-          "Y": 0,
-          "Z": 0
-        },
-        "LocalScale": {
-          "X": 1,
-          "Y": 1,
-          "Z": 1
-        },
-        "Pitch": -90,
-        "Yaw": 0,
-        "Roll": 0,
-        "Children": {
-          "All": []
-        },
-        "LocalRotation": {
-          "X": -90,
-          "Y": 0,
-          "Z": 0
-        },
-        "EnabledSelf": true
+        ]
       },
       "Tags": {},
       "IsActiveSelf": true
     },
     {
       "name": "Light Object",
-      "Id": "ba6505bd-16cc-46ed-bed5-d753c0e05f9f",
-      "Components": [
-        {
-          "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "Id": "589203b3-1de4-409b-b91b-71816fe3e3d0",
+      "Components": {
+        "All": [
           {
-            "LocalPosition": {
-              "X": 1.5,
-              "Y": 10,
-              "Z": 1
-            },
-            "LocalScale": {
-              "X": 1,
-              "Y": 1,
-              "Z": 1
-            },
-            "Pitch": 0,
-            "Yaw": 0,
-            "Roll": 0,
-            "Children": {
-              "All": []
-            },
-            "LocalRotation": {
-              "X": 0,
-              "Y": 0,
-              "Z": 0
-            },
-            "EnabledSelf": true
-          }
-        },
-        {
-          "Type": "PGK2.Engine.Core.Light, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 1.5,
+                "Y": 10,
+                "Z": 1
+              },
+              "LocalScale": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
           {
-            "Ambient": {
-              "X": 0,
-              "Y": 0,
-              "Z": 0
-            },
-            "Diffuse": {
-              "X": 1,
-              "Y": 1,
-              "Z": 1
-            },
-            "Specular": {
-              "X": 1,
-              "Y": 1,
-              "Z": 1
-            },
-            "CreateModelOnCreation": true,
-            "EnabledSelf": true
+            "Type": "PGK2.Engine.Core.Light, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "Ambient": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "Diffuse": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              },
+              "Specular": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              },
+              "CreateModelOnCreation": true,
+              "EnabledSelf": true
+            }
           }
-        }
-      ],
-      "transform": {
-        "LocalPosition": {
-          "X": 1.5,
-          "Y": 10,
-          "Z": 1
-        },
-        "LocalScale": {
-          "X": 1,
-          "Y": 1,
-          "Z": 1
-        },
-        "Pitch": 0,
-        "Yaw": 0,
-        "Roll": 0,
-        "Children": {
-          "All": []
-        },
-        "LocalRotation": {
-          "X": 0,
-          "Y": 0,
-          "Z": 0
-        },
-        "EnabledSelf": true
+        ]
       },
       "Tags": {},
       "IsActiveSelf": true
     },
     {
       "name": "UI TEXT TEST",
-      "Id": "378a2440-3543-4cf8-b5d8-be16b2a3d17c",
-      "Components": [
-        {
-          "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "Id": "bb1eb823-ff45-4caa-8039-3f730c22c6ea",
+      "Components": {
+        "All": [
           {
-            "LocalPosition": {
-              "X": 50,
-              "Y": 50,
-              "Z": 0
-            },
-            "LocalScale": {
-              "X": 1,
-              "Y": 1,
-              "Z": 1
-            },
-            "Pitch": 0,
-            "Yaw": 0,
-            "Roll": 0,
-            "Children": {
-              "All": []
-            },
-            "LocalRotation": {
-              "X": 0,
-              "Y": 0,
-              "Z": 0
-            },
-            "EnabledSelf": true
-          }
-        },
-        {
-          "Type": "PGK2.Engine.Components.Base.Renderers.UI_Text, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 50,
+                "Y": 50,
+                "Z": 0
+              },
+              "LocalScale": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
           {
-            "Text": "TESTOWY TEKST",
-            "FontSize": 1,
-            "Color": {
-              "X": 0,
-              "Y": 1,
-              "Z": 0,
-              "W": 0.5
-            },
-            "wasHovered": false,
-            "EnabledSelf": true
+            "Type": "PGK2.Engine.Components.Base.Renderers.UI_Text, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "Text": "TESTOWY TEKST",
+              "FontSize": 1,
+              "Color": {
+                "X": 0,
+                "Y": 1,
+                "Z": 0,
+                "W": 0.5
+              },
+              "wasHovered": false,
+              "EnabledSelf": true
+            }
           }
-        }
-      ],
-      "transform": {
-        "LocalPosition": {
-          "X": 50,
-          "Y": 50,
-          "Z": 0
-        },
-        "LocalScale": {
-          "X": 1,
-          "Y": 1,
-          "Z": 1
-        },
-        "Pitch": 0,
-        "Yaw": 0,
-        "Roll": 0,
-        "Children": {
-          "All": []
-        },
-        "LocalRotation": {
-          "X": 0,
-          "Y": 0,
-          "Z": 0
-        },
-        "EnabledSelf": true
+        ]
       },
       "Tags": {},
       "IsActiveSelf": true
     }
-  ],
-  "AwaitingGameObjects": [],
-  "SceneName": "Unnamed Scene"
+  ]
 }

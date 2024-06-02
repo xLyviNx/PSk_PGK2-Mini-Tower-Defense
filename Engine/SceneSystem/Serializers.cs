@@ -1,12 +1,21 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using OpenTK.Mathematics;
 using PGK2.Engine.Components.Base;
 using PGK2.Engine.Core;
+using PGK2.Engine.SceneSystem;
 
 namespace PGK2.Engine.Serialization.Converters
 {
+	internal class DeserializeContext
+	{
+		public static DeserializeContext CurrentContext;
+		public Scene? Scene;
+		public GameObject? GameObject;
+	}
+
 	public class Vector3Converter : JsonConverter<Vector3>
 	{
 		public override Vector3 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -117,6 +126,7 @@ namespace PGK2.Engine.Serialization.Converters
 	{
 		public override List<Component> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
+			Console.WriteLine("READING COMPONENTS LIST");
 			var components = new List<Component>();
 
 			if (reader.TokenType != JsonTokenType.StartArray)
@@ -133,26 +143,43 @@ namespace PGK2.Engine.Serialization.Converters
 
 				if (reader.TokenType == JsonTokenType.StartObject)
 				{
-					// Read the type information first
 					string type = null;
+					Dictionary<string, JsonElement> componentData = new Dictionary<string, JsonElement>();
+
 					while (reader.Read())
 					{
-						if (reader.TokenType == JsonTokenType.PropertyName && reader.GetString() == "Type")
+						if (reader.TokenType == JsonTokenType.EndObject)
 						{
-							reader.Read();
-							type = reader.GetString();
 							break;
+						}
+
+						if (reader.TokenType == JsonTokenType.PropertyName)
+						{
+							string propertyName = reader.GetString();
+							reader.Read(); // Move to the property value
+
+							if (propertyName == "Type")
+							{
+								type = reader.GetString();
+							}
+							else if (propertyName == "Data")
+							{
+								componentData[propertyName] = JsonDocument.ParseValue(ref reader).RootElement;
+							}
 						}
 					}
 
-					// Deserialize the component based on the type information
-					if (!string.IsNullOrEmpty(type))
+					if (!string.IsNullOrEmpty(type) && componentData.ContainsKey("Data"))
 					{
 						Type componentType = Type.GetType(type);
 						if (componentType != null && typeof(Component).IsAssignableFrom(componentType))
 						{
-							var component = (Component)JsonSerializer.Deserialize(ref reader, componentType, options);
-							components.Add(component);
+							var componentJson = componentData["Data"].GetRawText();
+							var component = JsonSerializer.Deserialize(componentJson, componentType, options);
+							components.Add(component as Component);
+							(component as Component).gameObject = DeserializeContext.CurrentContext.GameObject;
+							(component as Component).OnSceneTransfer?.Invoke(null);
+							EngineWindow.StartQueue.Enqueue(component as Component);
 						}
 					}
 				}
@@ -161,24 +188,26 @@ namespace PGK2.Engine.Serialization.Converters
 			return components;
 		}
 
+
 		public override void Write(Utf8JsonWriter writer, List<Component> value, JsonSerializerOptions options)
 		{
 			writer.WriteStartArray();
+
 			foreach (var component in value)
 			{
 				writer.WriteStartObject();
 
-				// Write type information
 				writer.WriteString("Type", component.GetType().AssemblyQualifiedName);
-
-				// Serialize the component
+				writer.WritePropertyName("Data");
 				JsonSerializer.Serialize(writer, component, component.GetType(), options);
 
 				writer.WriteEndObject();
 			}
+
 			writer.WriteEndArray();
 		}
 	}
+
 	public static class Utf8JsonWriterExtensions
 	{
 		public static void WriteGuid(this Utf8JsonWriter writer, string propertyName, Guid value)
@@ -192,6 +221,7 @@ namespace PGK2.Engine.Serialization.Converters
 	{
 		public override GameObject Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
+			Console.WriteLine("Reading GAMEOBJECT...");
 			if (reader.TokenType != JsonTokenType.StartObject)
 			{
 				throw new JsonException("Expected StartObject token.");
@@ -204,6 +234,10 @@ namespace PGK2.Engine.Serialization.Converters
 			TagsContainer tags = null;
 			bool isActiveSelf = true;
 
+			// Create a placeholder GameObject
+			var gameObject = new GameObject("LOADING OBJECT", Guid.Empty);
+			gameObject.MyScene = DeserializeContext.CurrentContext.Scene;
+			DeserializeContext.CurrentContext.GameObject = gameObject;
 			while (reader.Read())
 			{
 				if (reader.TokenType == JsonTokenType.EndObject)
@@ -219,16 +253,13 @@ namespace PGK2.Engine.Serialization.Converters
 					switch (propertyName)
 					{
 						case "name":
-							name = reader.GetString();
+							gameObject.name = reader.GetString();
 							break;
 						case "Id":
-							id = Guid.Parse(reader.GetString());
+							gameObject.Id = Guid.Parse(reader.GetString());
 							break;
 						case "Components":
 							components = JsonSerializer.Deserialize<GameObjectComponents>(ref reader, options);
-							break;
-						case "transform":
-							transform = JsonSerializer.Deserialize<TransformComponent>(ref reader, options);
 							break;
 						case "Tags":
 							tags = JsonSerializer.Deserialize<TagsContainer>(ref reader, options);
@@ -239,21 +270,17 @@ namespace PGK2.Engine.Serialization.Converters
 					}
 				}
 			}
-
-			var gameObject = new GameObject(name, id)
-			{
-				Components = components ?? new GameObjectComponents(null),
-				transform = transform,
-				Tags = tags,
-				IsActiveSelf = isActiveSelf
-			};
-
+			if (components != null)
+				components.gameObject = gameObject;
+			// Update the placeholder GameObject's properties
+			gameObject.Components = components ?? new GameObjectComponents(gameObject);
+			gameObject.transform = transform;
+			gameObject.Tags = tags;
+			gameObject.IsActiveSelf = isActiveSelf;
 			return gameObject;
 		}
-
 		public override void Write(Utf8JsonWriter writer, GameObject value, JsonSerializerOptions options)
 		{
-			Console.WriteLine("GameObjectConverter.Write called");
 			if (value != null)
 			{
 				writer.WriteStartObject();
@@ -261,10 +288,7 @@ namespace PGK2.Engine.Serialization.Converters
 				writer.WriteString("Id", value.Id.ToString());
 
 				writer.WritePropertyName("Components");
-				JsonSerializer.Serialize(writer, value.Components.All, options);
-
-				writer.WritePropertyName("transform");
-				JsonSerializer.Serialize(writer, value.transform, options);
+				JsonSerializer.Serialize(writer, value.Components, options);
 
 				writer.WritePropertyName("Tags");
 				JsonSerializer.Serialize(writer, value.Tags, options);
@@ -283,7 +307,7 @@ namespace PGK2.Engine.Serialization.Converters
 	{
 		public override List<GameObject> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
-			Console.WriteLine("GameObjectListConverter.Read called");
+			Console.WriteLine("Reading GameObject List...");
 			if (reader.TokenType != JsonTokenType.StartArray)
 			{
 				throw new JsonException("Expected StartArray token.");
@@ -308,7 +332,6 @@ namespace PGK2.Engine.Serialization.Converters
 
 		public override void Write(Utf8JsonWriter writer, List<GameObject> value, JsonSerializerOptions options)
 		{
-			Console.WriteLine("GameObjectListConverter.Write called");
 			writer.WriteStartArray();
 			foreach (var gameObject in value)
 			{
@@ -317,4 +340,217 @@ namespace PGK2.Engine.Serialization.Converters
 			writer.WriteEndArray();
 		}
 	}
+	public class SceneConverter : JsonConverter<Scene>
+	{
+		public override Scene Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			Console.WriteLine("Reading SCENE OBJECT...");
+			if (reader.TokenType != JsonTokenType.StartObject)
+			{
+				throw new JsonException("Expected StartObject token.");
+			}
+			var scene = new Scene();
+			DeserializeContext.CurrentContext.Scene = scene;
+			scene.SceneName = "Unnamed Scene";
+			while (reader.Read())
+			{
+				if (reader.TokenType == JsonTokenType.EndObject)
+				{
+					break;
+				}
+
+				if (reader.TokenType == JsonTokenType.PropertyName)
+				{
+					string propertyName = reader.GetString();
+					reader.Read();
+					switch (propertyName)
+					{
+						case "SceneName":
+							scene.SceneName = reader.GetString();
+							break;
+						case "GameObjects":
+							scene.AwaitingGameObjects = JsonSerializer.Deserialize<List<GameObject>>(ref reader, options);
+							break;
+					}
+				}
+			}
+
+			return scene;
+		}
+
+		public override void Write(Utf8JsonWriter writer, Scene value, JsonSerializerOptions options)
+		{
+			writer.WriteStartObject();
+			writer.WriteString("SceneName", value.SceneName);
+			writer.WritePropertyName("GameObjects");
+			JsonSerializer.Serialize(writer, value.GameObjects, options);
+			writer.WriteEndObject();
+		}
+	}
+	public class GameObjectComponentsConverter : JsonConverter<GameObjectComponents>
+	{
+		public override GameObjectComponents Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			Console.WriteLine("Reading GameObject Components Object...");
+			if (reader.TokenType != JsonTokenType.StartObject)
+			{
+				throw new JsonException("Expected StartObject token.");
+			}
+
+			List<Component> components = null;
+
+			while (reader.Read())
+			{
+				if (reader.TokenType == JsonTokenType.EndObject)
+				{
+					break;
+				}
+
+				if (reader.TokenType == JsonTokenType.PropertyName)
+				{
+					var propertyName = reader.GetString();
+					reader.Read(); // Move to the property value
+
+					switch (propertyName)
+					{
+						case "All":
+							components = JsonSerializer.Deserialize<List<Component>>(ref reader, options);
+							break;
+					}
+				}
+			}
+
+			return new GameObjectComponents { All = components };
+		}
+
+		public override void Write(Utf8JsonWriter writer, GameObjectComponents value, JsonSerializerOptions options)
+		{
+			writer.WriteStartObject();
+			writer.WritePropertyName("All");
+			JsonSerializer.Serialize(writer, value.All, options);
+			writer.WriteEndObject();
+		}
+	}
+	public class ChildrenContainerConverter : JsonConverter<ChildrenContainer>
+	{
+		public override ChildrenContainer Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			Console.WriteLine("Reading CHILDREN CONTAINER Object...");
+			if (reader.TokenType != JsonTokenType.StartObject)
+			{
+				throw new JsonException("Expected StartObject token.");
+			}
+
+			var childrenContainer = new ChildrenContainer();
+			while (reader.Read())
+			{
+				if (reader.TokenType == JsonTokenType.EndObject)
+				{
+					break;
+				}
+
+				if (reader.TokenType == JsonTokenType.PropertyName)
+				{
+					var propertyName = reader.GetString();
+					reader.Read();
+
+					switch (propertyName)
+					{
+						case "All":
+							childrenContainer._loaded = JsonSerializer.Deserialize<List<Guid>>(ref reader, options);
+							break;
+					}
+				}
+			}
+			Console.WriteLine($"LOADED {childrenContainer._loaded.Count} CHILDREN ");
+			return childrenContainer;
+		}
+
+		public override void Write(Utf8JsonWriter writer, ChildrenContainer value, JsonSerializerOptions options)
+		{
+			writer.WriteStartObject();
+			writer.WritePropertyName("All");
+			JsonSerializer.Serialize(writer, value.All, options);
+			writer.WriteEndObject();
+		}
+	}
+	public class TransformComponentConverter : JsonConverter<TransformComponent>
+	{
+		public override TransformComponent Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			Console.WriteLine("Reading Transform Component Object...");
+
+			if (reader.TokenType != JsonTokenType.StartObject)
+			{
+				throw new JsonException("Expected StartObject token.");
+			}
+
+			var transformComponent = new TransformComponent();
+
+			while (reader.Read())
+			{
+				if (reader.TokenType == JsonTokenType.EndObject)
+				{
+					break;
+				}
+
+				if (reader.TokenType == JsonTokenType.PropertyName)
+				{
+					var propertyName = reader.GetString();
+					reader.Read();
+
+					switch (propertyName)
+					{
+						case "LocalPosition":
+							transformComponent.LocalPosition = JsonSerializer.Deserialize<Vector3>(ref reader, options);
+							break;
+						case "LocalScale":
+							transformComponent.LocalScale = JsonSerializer.Deserialize<Vector3>(ref reader, options);
+							break;
+						case "Pitch":
+							transformComponent.Pitch = reader.GetSingle();
+							break;
+						case "Yaw":
+							transformComponent.Yaw = reader.GetSingle();
+							break;
+						case "Roll":
+							transformComponent.Roll = reader.GetSingle();
+							break;
+						case "Children":
+							transformComponent.Children = JsonSerializer.Deserialize<ChildrenContainer>(ref reader, options);
+							break;
+					}
+				}
+			}
+			return transformComponent;
+		}
+
+		public override void Write(Utf8JsonWriter writer, TransformComponent value, JsonSerializerOptions options)
+		{
+			writer.WriteStartObject();
+
+			writer.WritePropertyName("LocalPosition");
+			JsonSerializer.Serialize(writer, value.LocalPosition, options);
+
+			writer.WritePropertyName("LocalScale");
+			JsonSerializer.Serialize(writer, value.LocalScale, options);
+
+			writer.WritePropertyName("Pitch");
+			writer.WriteNumberValue(value.Pitch);
+
+			writer.WritePropertyName("Yaw");
+			writer.WriteNumberValue(value.Yaw);
+
+			writer.WritePropertyName("Roll");
+			writer.WriteNumberValue(value.Roll);
+
+			writer.WritePropertyName("Children");
+			JsonSerializer.Serialize(writer, value.Children, options);
+
+			// Serialize other properties if needed
+
+			writer.WriteEndObject();
+		}
+	}
+
 }

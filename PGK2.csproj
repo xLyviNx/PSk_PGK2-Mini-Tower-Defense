@@ -31,4 +31,8 @@
     <FrameworkAssemblies Remove="Shaders\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Game\Assets\Scenes\" />
+  </ItemGroup>
+
 </Project>

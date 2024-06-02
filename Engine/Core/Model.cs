@@ -12,10 +12,11 @@ namespace PGK2.Engine.Core
 		
 		public static Model LoadFromFile(string path)
 		{
-			if (LoadedModels.ContainsKey(path) && LoadedModels[path] != null)
+			/*if (LoadedModels.ContainsKey(path) && LoadedModels[path] != null)
 				return LoadedModels[path];
+			*/
 			Model model = new Model(path);
-			LoadedModels[path] = model;
+			//LoadedModels[path] = model;
 			return model;
 		}
 		public Model(string path)

@@ -19,6 +19,7 @@ namespace PGK2.Engine.Components.Base.Renderers
 		}
 		internal override void Draw()
 		{
+
 			ImGui.SetNextWindowPos(UI_Position, ImGuiCond.Always);
 			ImGui.PushStyleColor(ImGuiCol.Text, Color);
 			ImGui.SetNextWindowBgAlpha(0.0f);

@@ -22,7 +22,6 @@ namespace PGK2.TowerDef.Scripts
 		{
 			base.Awake();
 			myCamera = GetComponent<CameraComponent>();
-			
 		}
 		public override void Update()
 		{
@@ -45,7 +44,7 @@ namespace PGK2.TowerDef.Scripts
 				}
 				TargetCameraDistance -= mouse.ScrollDelta.Y * 0.5f;
 				TargetCameraDistance = Math.Clamp(TargetCameraDistance, 3f, 25f);
-				if (mouse.IsButtonPressed(MouseButton.Button1))
+				if (mouse.IsButtonPressed(MouseButton.Left))
 				{
 					OnMouseClick(mouse.Position);
 				}
@@ -64,21 +63,11 @@ namespace PGK2.TowerDef.Scripts
 		}
 		void OnMouseClick(Vector2 mousePosition)
 		{
+			foreach(var c in gameObject.Components.All)
+				Console.WriteLine($"{c.GetType().Name} {gameObject.Id}");
 			if (Physics.RayCast_Triangle(myCamera, mousePosition, 1000f, out RayCastHit hitInfo))
 			{
-				GameObject hit = new("HIT OBJECT");
-				var model = hit.AddComponent<ModelRenderer>();
-				model.transform.Position = hitInfo.Point;
-				model.transform.LocalScale = Vector3.One* 0.002f;
-				model.Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/cube.fbx");
-				Console.WriteLine($"Hit at distance: {hitInfo.Distance}");
-				Console.WriteLine($"Hit Point: {hitInfo.Point}");
-				Console.WriteLine($"Hit GAMEOBJECT: {hitInfo.gameObject.name}");
-				Console.WriteLine($"Hit Model: {hitInfo.Model}");
-				Console.WriteLine($"Hit MESHES COUNT: {hitInfo.Model.meshes.Count}");
-				Console.WriteLine($"Hit Mesh: {hitInfo.Mesh}");
-				Console.WriteLine($"Hit Triangle: {hitInfo.Triangle}");
-				// Perform additional logic for a hit
+				Console.WriteLine("CLICKED AND HIT");
 			}
 		}
 	}

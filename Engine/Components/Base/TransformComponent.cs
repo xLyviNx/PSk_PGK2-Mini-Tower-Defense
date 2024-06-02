@@ -20,7 +20,8 @@ namespace PGK2.Engine.Components.Base
         public float Roll { get; set; } = 0f;  // Z
 
         private TransformComponent? parent = null;
-        public ChildrenContainer Children { get; private set; }
+        
+        public ChildrenContainer Children { get; internal set; }
 
 		[JsonIgnore]
 		public Vector3 Position

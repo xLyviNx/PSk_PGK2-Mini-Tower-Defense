@@ -1,6 +1,7 @@
 ﻿using PGK2.Engine.Components;
 using PGK2.Engine.Components.Base;
 using PGK2.Engine.SceneSystem;
+using PGK2.Engine.Serialization.Converters;
 using System.Text.Json.Serialization;
 
 namespace PGK2.Engine.Core
@@ -40,8 +41,8 @@ namespace PGK2.Engine.Core
                 Console.WriteLine("IS NULL");
 			if (assigningComponentTo != null)
                 gameObject = assigningComponentTo;
-            else
-                gameObject = null;
+            else if(DeserializeContext.CurrentContext!=null)
+                gameObject = DeserializeContext.CurrentContext.GameObject;
 			gameObject.OnSceneTransfer += OnSceneTransfer;
 			assigningComponentTo = null;
         }

@@ -51,8 +51,8 @@ namespace PGK2.Engine.Core
 			_imGuiController = new ImGuiController(ClientSize.X, ClientSize.Y);
 
 
-			//SceneLoadTest();
-			SceneMakeTest();
+			SceneLoadTest();
+			//SceneMakeTest();
 
 		}
 		void SceneLoadTest()
@@ -63,6 +63,7 @@ namespace PGK2.Engine.Core
 		void SceneMakeTest()
 		{
 			SceneSystem.Scene scene = new();
+			scene.SceneName = "Game Scene";
 			SceneManager.LoadScene(scene);
 			GameObject LockController = scene.CreateSceneObject("LOCK CONTROLLER");
 			LockController.AddComponent<MouseLockController>();

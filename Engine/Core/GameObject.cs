@@ -1,12 +1,11 @@
 ﻿using PGK2.Engine.Components.Base;
 using PGK2.Engine.SceneSystem;
-using PGK2.Engine.Serialization.Converters;
 using System.Text.Json.Serialization;
 using System.Xml.Linq;
 
 namespace PGK2.Engine.Core
 {
-    [Serializable]
+	[Serializable]
     public class GameObject
 	{
         [JsonInclude] public Guid Id;
@@ -160,40 +159,4 @@ namespace PGK2.Engine.Core
 			return Id.GetHashCode();
 		}
 	}
-    [Serializable]
-    public class GameObjectComponents
-    {
-		private GameObject gameObject;
-		[JsonConverter(typeof(ComponentListConverter))]
-		public List<Component> All { get; private set; }
-
-        public GameObjectComponents(GameObject gObj)
-        {
-            gameObject = gObj;
-            All = new List<Component>();
-        }
-
-        public T Add<T>() where T : Component, new()
-        {
-            Console.WriteLine("Setting component container to '" + gameObject + "'");
-            Component.assigningComponentTo = gameObject;
-			T newComponent = new T();
-			All.Add(newComponent);
-            newComponent.OnSceneTransfer?.Invoke(null);
-			EngineWindow.StartQueue.Enqueue(newComponent);
-			return newComponent;
-        }
-
-        public T? Get<T>() where T : Component
-        {
-            foreach (var component in All)
-            {
-                if (component is T typedComponent)
-                {
-                    return typedComponent;
-                }
-            }
-            return null;
-        }
-    }
 }

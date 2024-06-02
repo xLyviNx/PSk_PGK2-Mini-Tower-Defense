@@ -7,6 +7,9 @@ namespace PGK2.Engine.Components.Base
     {
         [JsonIgnore] public List<TransformComponent> AllObjects;
         [JsonInclude]
+        internal List<Guid> _loaded = new();
+
+		[JsonInclude]
         public List<Guid> All
         {
             get
