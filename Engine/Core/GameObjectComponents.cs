@@ -24,7 +24,7 @@ namespace PGK2.Engine.Core
 
 		public T Add<T>() where T : Component, new()
         {
-            Console.WriteLine("Setting component container to '" + gameObject + "'");
+            //Console.WriteLine("Setting component container to '" + gameObject + "'");
             Component.assigningComponentTo = gameObject;
 			T newComponent = new T();
 			All.Add(newComponent);

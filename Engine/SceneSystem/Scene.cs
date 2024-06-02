@@ -9,7 +9,8 @@ namespace PGK2.Engine.SceneSystem
 	{
 		public string SceneName = "Unnamed Scene";
 		public List<GameObject> GameObjects { get; internal set; }
-		public List<GameObject> AwaitingGameObjects { get; internal set; }
+		internal List<GameObject> AwaitingGameObjects { get; set; }
+		internal List<GameObject> RemovingGameObjects { get; set; }
 		[JsonIgnore] public List<CameraComponent> Cameras { get; internal set; }
 		[JsonIgnore] public List<Renderer> Renderers { get; internal set; }
 		[JsonIgnore] public List<UI_Renderer> UI_Renderers { get; internal set; }
@@ -28,7 +29,7 @@ namespace PGK2.Engine.SceneSystem
 				return list;
 			}
 		}*/
-		public void AddAwaitingObjects()
+		internal void AddAwaitingObjects()
 		{
 			List<GameObject> toadd = new();
 			foreach (GameObject obj in AwaitingGameObjects)
@@ -36,10 +37,17 @@ namespace PGK2.Engine.SceneSystem
 					toadd.Add(obj);
 			GameObjects.InsertRange(GameObjects.Count, toadd);
 			AwaitingGameObjects.Clear();
+		}	
+		internal void RemoveAwaitingObjects()
+		{
+			foreach (GameObject obj in RemovingGameObjects)
+				GameObjects.Remove(obj);
+			RemovingGameObjects.Clear();
 		}
 		public Scene()
 		{
 			AwaitingGameObjects = new List<GameObject>();
+			RemovingGameObjects = new List<GameObject>();
 			GameObjects = new List<GameObject>();
 			Cameras = new();
 			Renderers = new();

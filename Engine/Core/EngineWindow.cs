@@ -51,8 +51,8 @@ namespace PGK2.Engine.Core
 			_imGuiController = new ImGuiController(ClientSize.X, ClientSize.Y);
 
 
-			SceneLoadTest();
-			//SceneMakeTest();
+			//SceneLoadTest();
+			SceneMakeTest();
 
 		}
 		void SceneLoadTest()
@@ -77,7 +77,8 @@ namespace PGK2.Engine.Core
 
 			GameObject newObject2 = scene.CreateSceneObject("MAP OBJECT");
 			var rend = newObject2.Components.Add<ModelRenderer>();
-			rend.Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/Level1.fbx");	
+			rend.Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/Level1.fbx");
+			rend.RenderTags.Add("map");
 			rend.OutlineColor = Color4.Transparent;
 			rend.transform.Pitch = -90f;
 			rend.transform.Scale = Vector3.One * 1;
@@ -94,13 +95,30 @@ namespace PGK2.Engine.Core
 			text.Text = "TESTOWY TEKST";
 			text.Color = new(0, 1, 0, 0.5f);
 			text.transform.Position = new(50,50,0);
+			var temp = scene.CreateSceneObject("temp");
+			temp.AddComponent<TemporaryCube>();
+			temp.transform.Position = new(0, 2, 0);	
+			
+			var ai_target = scene.CreateSceneObject("AI TARGET");
+			ai_target.AddComponent<ModelRenderer>().Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/cube.fbx");
+			ai_target.transform.Position = new(-5, 0.12f, -4.25f);
+			ai_target.transform.Scale = 0.001f * Vector3.One;
+			
+			var ai_test = scene.CreateSceneObject("AI TEST");
+			ai_test.AddComponent<ModelRenderer>().Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/cube.fbx");
+			ai_test.GetComponent<ModelRenderer>().OutlineColor = Color4.Red;
+			ai_test.transform.Position = new(5, 0.12f, 3.4f);
+			ai_test.transform.Scale = 0.001f * Vector3.One;
+			var pathfind = ai_test.AddComponent<PathFindingAgent>();
+			pathfind.SetTargetPosition(ai_target.transform.Position);
+
 			scene.AddAwaitingObjects();
+
 			SceneManager.SaveSceneToFile(scene, $"{EngineInstance.ASSETS_PATH}/Scenes/GAME.lscn");
 			foreach(var obj in scene.GameObjects)
 			{
 				Console.WriteLine(obj.name);
 			}
-
 			SceneManager.LoadScene(scene);
 		}
 		protected override void OnRenderFrame(FrameEventArgs e)
@@ -243,6 +261,7 @@ namespace PGK2.Engine.Core
 				{
 					obj.Update();
 				}
+				SceneManager.ActiveScene.RemoveAwaitingObjects();
 			}
 		}
 		public bool IsPointInWindowBounds(Vector2i point)

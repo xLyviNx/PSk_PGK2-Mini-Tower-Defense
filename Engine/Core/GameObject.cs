@@ -79,9 +79,11 @@ namespace PGK2.Engine.Core
             foreach(Component c in Components.All)
             {
                 if (!c.EnabledInHierarchy) continue;
+                if (isDestroyed) return;
                 c.Update();
-            }
-        }
+				if (isDestroyed) return;
+			}
+		}
 		public void Destroy()
         {
             if (_isdestroyed || Components == null) return;
@@ -93,7 +95,7 @@ namespace PGK2.Engine.Core
             Components.All.Clear();
             if (MyScene != null)
             {
-				MyScene.GameObjects.Remove(this);
+				MyScene.RemovingGameObjects.Add(this);
             }
             foreach(TransformComponent child in transform.Children.AllObjects)
             {

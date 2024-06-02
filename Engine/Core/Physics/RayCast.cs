@@ -102,7 +102,7 @@ namespace PGK2.Engine.Core.Physics
 			Vector3 h = Vector3.Cross(ray.Direction, edge2);
 			float a = Vector3.Dot(edge1, h);
 
-			if (a > -0.00001f && a < 0.00001f)
+			if (Math.Abs(a) < 0.00001f)
 				return false;
 
 			float f = 1.0f / a;
@@ -125,8 +125,8 @@ namespace PGK2.Engine.Core.Physics
 				intersectionPoint = ray.GetPoint(distance);
 				return true;
 			}
-			else
-				return false;
+
+			return false;
 		}
 	}
 	public class Ray

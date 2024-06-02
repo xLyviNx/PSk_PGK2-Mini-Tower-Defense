@@ -36,9 +36,9 @@ namespace PGK2.Engine.Core
 
 		public Component()
         {
-            Console.WriteLine($"OBJ: '{assigningComponentTo}'");
-            if (assigningComponentTo == null)
-                Console.WriteLine("IS NULL");
+            //Console.WriteLine($"OBJ: '{assigningComponentTo}'");
+            //if (assigningComponentTo == null)
+               // Console.WriteLine("IS NULL");
 			if (assigningComponentTo != null)
                 gameObject = assigningComponentTo;
             else if(DeserializeContext.CurrentContext!=null)

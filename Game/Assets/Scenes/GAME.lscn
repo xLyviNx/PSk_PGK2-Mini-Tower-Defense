@@ -3,7 +3,7 @@
   "GameObjects": [
     {
       "name": "LOCK CONTROLLER",
-      "Id": "59f224a7-9df1-4f00-8be4-50dd43aebf7e",
+      "Id": "8762c681-0e09-4338-8f80-6d105c92eb6b",
       "Components": {
         "All": [
           {
@@ -40,7 +40,7 @@
     },
     {
       "name": "CAMERA PARENT",
-      "Id": "08e5d932-7119-46d2-9fdc-7ad8446c3719",
+      "Id": "eb51ee48-c43b-4090-9ae3-2d7c640b0edd",
       "Components": {
         "All": [
           {
@@ -61,7 +61,7 @@
               "Roll": 0,
               "Children": {
                 "All": [
-                  "022cd593-256c-4d53-8e55-a8d27f40df86"
+                  "17cc8ec5-bcef-46a8-8421-f407227714d4"
                 ]
               }
             }
@@ -73,7 +73,7 @@
     },
     {
       "name": "CAMERA OBJECT",
-      "Id": "022cd593-256c-4d53-8e55-a8d27f40df86",
+      "Id": "17cc8ec5-bcef-46a8-8421-f407227714d4",
       "Components": {
         "All": [
           {
@@ -129,7 +129,7 @@
     },
     {
       "name": "MAP OBJECT",
-      "Id": "ad33c475-9921-496f-8317-f482962a9503",
+      "Id": "26a7bc87-d49f-4634-903a-ff5268c5d445",
       "Components": {
         "All": [
           {
@@ -174,7 +174,7 @@
     },
     {
       "name": "Light Object",
-      "Id": "589203b3-1de4-409b-b91b-71816fe3e3d0",
+      "Id": "d9e0f4d2-b98a-4965-a361-021deffce6fb",
       "Components": {
         "All": [
           {
@@ -227,7 +227,7 @@
     },
     {
       "name": "UI TEXT TEST",
-      "Id": "bb1eb823-ff45-4caa-8039-3f730c22c6ea",
+      "Id": "4d073f20-15f4-4974-85f5-fd85cf5906ab",
       "Components": {
         "All": [
           {
@@ -263,6 +263,2362 @@
                 "W": 0.5
               },
               "wasHovered": false,
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "temp",
+      "Id": "37574ad9-3894-4a35-97de-2889530187b1",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 0,
+                "Y": 2,
+                "Z": 0
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 1,
+                "G": 1,
+                "B": 1,
+                "A": 0
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "AI TARGET",
+      "Id": "42010a89-ba2a-4de1-b748-dbe95904524f",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": -5,
+                "Y": 0.12,
+                "Z": -4.25
+              },
+              "LocalScale": {
+                "X": 0.001,
+                "Y": 0.001,
+                "Z": 0.001
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 1,
+                "G": 1,
+                "B": 1,
+                "A": 0
+              },
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "AI TEST",
+      "Id": "e93fb693-4aef-4cc1-a4a4-5ef7491b3408",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 5,
+                "Y": 0.12,
+                "Z": 3.4
+              },
+              "LocalScale": {
+                "X": 0.001,
+                "Y": 0.001,
+                "Z": 0.001
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 1,
+                "G": 0,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PathFindingAgent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "TargetPosition": {
+                "X": -5,
+                "Y": 0.12,
+                "Z": -4.25
+              },
+              "StepOffset": 0.4,
+              "Path": [
+                {
+                  "X": 5,
+                  "Y": 0.12,
+                  "Z": 3.4
+                },
+                {
+                  "X": 4.356771,
+                  "Y": 0.14115256,
+                  "Z": 3.3884394
+                },
+                {
+                  "X": 3.7107239,
+                  "Y": 0.11837047,
+                  "Z": 3.3727062
+                },
+                {
+                  "X": 3.0831442,
+                  "Y": 0.12084305,
+                  "Z": 3.3825846
+                },
+                {
+                  "X": 2.7654462,
+                  "Y": 0.12084305,
+                  "Z": 3.1395457
+                },
+                {
+                  "X": 2.4477482,
+                  "Y": 0.12084305,
+                  "Z": 2.8965068
+                },
+                {
+                  "X": 2.4367862,
+                  "Y": 0.12292341,
+                  "Z": 2.396741
+                },
+                {
+                  "X": 2.4467373,
+                  "Y": 0.14839283,
+                  "Z": 1.9256725
+                },
+                {
+                  "X": 2.4376593,
+                  "Y": 0.12436062,
+                  "Z": 1.4293034
+                },
+                {
+                  "X": 2.4496987,
+                  "Y": 0.13138004,
+                  "Z": 0.95993733
+                },
+                {
+                  "X": 2.1320007,
+                  "Y": 0.13138004,
+                  "Z": 0.7168983
+                },
+                {
+                  "X": 1.8143027,
+                  "Y": 0.13138004,
+                  "Z": 0.4738593
+                },
+                {
+                  "X": 1.4966047,
+                  "Y": 0.13138004,
+                  "Z": 0.23082031
+                },
+                {
+                  "X": 1.1789067,
+                  "Y": 0.13138004,
+                  "Z": -0.012218684
+                },
+                {
+                  "X": 0.55673575,
+                  "Y": 0.09209201,
+                  "Z": 0.0011652112
+                },
+                {
+                  "X": 0.23903772,
+                  "Y": 0.09209201,
+                  "Z": -0.24187379
+                },
+                {
+                  "X": -0.07866031,
+                  "Y": 0.09209201,
+                  "Z": -0.48491278
+                },
+                {
+                  "X": -0.39635834,
+                  "Y": 0.09209201,
+                  "Z": -0.72795177
+                },
+                {
+                  "X": -0.7140564,
+                  "Y": 0.09209201,
+                  "Z": -0.9709908
+                },
+                {
+                  "X": -1.0317544,
+                  "Y": 0.09209201,
+                  "Z": -1.2140298
+                },
+                {
+                  "X": -1.3494524,
+                  "Y": 0.09209201,
+                  "Z": -1.4570688
+                },
+                {
+                  "X": -1.6671504,
+                  "Y": 0.09209201,
+                  "Z": -1.7001078
+                },
+                {
+                  "X": -1.9848484,
+                  "Y": 0.09209201,
+                  "Z": -1.9431468
+                },
+                {
+                  "X": -2.3025465,
+                  "Y": 0.09209201,
+                  "Z": -2.1861858
+                },
+                {
+                  "X": -2.6202445,
+                  "Y": 0.09209201,
+                  "Z": -2.4292247
+                },
+                {
+                  "X": -2.9379425,
+                  "Y": 0.09209201,
+                  "Z": -2.6722636
+                },
+                {
+                  "X": -3.2556405,
+                  "Y": 0.09209201,
+                  "Z": -2.9153025
+                },
+                {
+                  "X": -3.5733385,
+                  "Y": 0.09209201,
+                  "Z": -3.1583414
+                },
+                {
+                  "X": -3.8910365,
+                  "Y": 0.09209201,
+                  "Z": -3.4013803
+                },
+                {
+                  "X": -4.2087345,
+                  "Y": 0.09209201,
+                  "Z": -3.6444192
+                },
+                {
+                  "X": -4.5264325,
+                  "Y": 0.09209201,
+                  "Z": -3.887458
+                },
+                {
+                  "X": -5,
+                  "Y": 0.12,
+                  "Z": -4.25
+                }
+              ],
+              "Speed": 1,
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "be9a48dd-f38c-48df-ae9a-98e4471cf02c",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 4.4945564,
+                "Y": 0.12,
+                "Z": 3.0133357
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 1,
+                "G": 1,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "980cd66f-6e43-49da-977a-9dee67b4cbcf",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 3.8664393,
+                "Y": 0.14115256,
+                "Z": 3.0133357
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 1,
+                "G": 1,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "ec9d45a6-1073-4e1d-a59a-83eb1c2fa53d",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 3.2409585,
+                "Y": 0.11837047,
+                "Z": 3.0133357
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 1,
+                "G": 1,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "56e177a0-bd67-44a4-b266-83a5863be91b",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 1.8756781,
+                "Y": 0.12084305,
+                "Z": 2.4588733
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 1,
+                "G": 1,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "66c5a3e1-5b04-4b11-a9cc-ef5cb9e77068",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 1.8756781,
+                "Y": 0.12292341,
+                "Z": 1.9674933
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 1,
+                "G": 1,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "eb118078-8fef-496d-b829-8ed4df4baeb1",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 1.8756781,
+                "Y": 0.14839283,
+                "Z": 1.4888122
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 1,
+                "G": 1,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "ce846c87-8ed1-4c06-8e4f-e03ab4267de1",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 1.8756781,
+                "Y": 0.12436062,
+                "Z": 0.99938774
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 1,
+                "G": 1,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "ffe0edea-03e5-48b2-b555-52dea05d84fc",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 0.73775464,
+                "Y": 0.13138004,
+                "Z": -0.34969997
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 1,
+                "G": 1,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "92445b1c-c2fb-449c-be16-7626b4339319",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 5,
+                "Y": 0.12,
+                "Z": 3.4
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "6e4e8853-8b04-407a-a66f-d19867395ff6",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 4.356771,
+                "Y": 0.14115256,
+                "Z": 3.3884394
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "4c66e248-474e-4e4b-a0ee-d716b86afee4",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 3.7107239,
+                "Y": 0.11837047,
+                "Z": 3.3727062
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "6b71e382-f106-4f80-ad6e-6f0bb6cdff07",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 3.0831442,
+                "Y": 0.12084305,
+                "Z": 3.3825846
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "07215556-a18b-4e1c-9fa2-4226e5aa02a0",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 2.7654462,
+                "Y": 0.12084305,
+                "Z": 3.1395457
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "8deb1c70-27ec-4168-901b-11004f3ad09f",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 2.4477482,
+                "Y": 0.12084305,
+                "Z": 2.8965068
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "1ad3f290-3453-4539-b8ea-431fecb07edd",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 2.4367862,
+                "Y": 0.12292341,
+                "Z": 2.396741
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "545bb3e6-46fa-49dd-b422-f7a7b622af92",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 2.4467373,
+                "Y": 0.14839283,
+                "Z": 1.9256725
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "5dd56db9-c6c2-403c-9d56-1d0e363310d7",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 2.4376593,
+                "Y": 0.12436062,
+                "Z": 1.4293034
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "5a739b01-322e-41b0-b74e-3dc81dfa742d",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 2.4496987,
+                "Y": 0.13138004,
+                "Z": 0.95993733
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "47da77e0-09ac-4cf4-8aa1-e7ec02f776e0",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 2.1320007,
+                "Y": 0.13138004,
+                "Z": 0.7168983
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "79d1f002-e638-4847-b887-b9f3cb50c838",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 1.8143027,
+                "Y": 0.13138004,
+                "Z": 0.4738593
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "239f451f-906a-4039-95f8-1201a2e66ec1",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 1.4966047,
+                "Y": 0.13138004,
+                "Z": 0.23082031
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "d2979dba-cf8a-4f5d-879a-f78326feea6f",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 1.1789067,
+                "Y": 0.13138004,
+                "Z": -0.012218684
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "1bbdbf1a-88f5-44db-b715-2aae28a0a67e",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 0.55673575,
+                "Y": 0.09209201,
+                "Z": 0.0011652112
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "85c0d2eb-2cad-49b7-92af-688ef8f0ebdd",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 0.23903772,
+                "Y": 0.09209201,
+                "Z": -0.24187379
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "1ba9ec2e-dbeb-406f-a6ad-26a6589a69c2",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": -0.07866031,
+                "Y": 0.09209201,
+                "Z": -0.48491278
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "7fb0acb3-ba1e-43fc-9b6d-5a8f3a08e259",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": -0.39635834,
+                "Y": 0.09209201,
+                "Z": -0.72795177
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "c057fb63-6718-479a-a5ca-44aba5fba664",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": -0.7140564,
+                "Y": 0.09209201,
+                "Z": -0.9709908
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "fde15c81-10e8-4f84-923b-c2cb5df4ef1c",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": -1.0317544,
+                "Y": 0.09209201,
+                "Z": -1.2140298
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "2a022a01-e09f-4fae-9e32-06c2e94d8f16",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": -1.3494524,
+                "Y": 0.09209201,
+                "Z": -1.4570688
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "105bd084-710d-4d02-8c52-93775fc7adbc",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": -1.6671504,
+                "Y": 0.09209201,
+                "Z": -1.7001078
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "b151886c-a40a-4112-911f-234e9caaf219",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": -1.9848484,
+                "Y": 0.09209201,
+                "Z": -1.9431468
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "8cad97d5-1de9-45b2-93ce-8e0871fbc5ea",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": -2.3025465,
+                "Y": 0.09209201,
+                "Z": -2.1861858
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "c0d2e221-bb62-464f-981a-4d852bb00105",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": -2.6202445,
+                "Y": 0.09209201,
+                "Z": -2.4292247
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "ec528032-1ce3-4379-b861-03153c69db55",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": -2.9379425,
+                "Y": 0.09209201,
+                "Z": -2.6722636
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "1be93639-4dd3-4f55-a544-c950a44094b2",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": -3.2556405,
+                "Y": 0.09209201,
+                "Z": -2.9153025
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "66a4a3be-f85e-4513-92cd-3317e39b552d",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": -3.5733385,
+                "Y": 0.09209201,
+                "Z": -3.1583414
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "be200d48-bc04-4bb1-8b38-c072efcd90f4",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": -3.8910365,
+                "Y": 0.09209201,
+                "Z": -3.4013803
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "b74606e9-0fa0-4e76-8960-dad4a803c221",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": -4.2087345,
+                "Y": 0.09209201,
+                "Z": -3.6444192
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "22cfc3c1-af2a-423e-9c23-eda7f334fc8c",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": -4.5264325,
+                "Y": 0.09209201,
+                "Z": -3.887458
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {},
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameObject",
+      "Id": "2bee8005-e5c8-47bf-9989-6365652c403c",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": -5,
+                "Y": 0.12,
+                "Z": -4.25
+              },
+              "LocalScale": {
+                "X": 0.0005,
+                "Y": 0.0005,
+                "Z": 0.0005
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/cube.fbx",
+              "RenderTags": {},
+              "OutlineColor": {
+                "R": 0,
+                "G": 0.5019608,
+                "B": 0,
+                "A": 1
+              },
+              "EnabledSelf": true
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.TemporaryCube, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
               "EnabledSelf": true
             }
           }
