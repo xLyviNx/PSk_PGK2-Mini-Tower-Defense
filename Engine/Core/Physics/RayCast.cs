@@ -6,9 +6,7 @@ using PGK2.Engine.Components.Base;
 using PGK2.Engine.SceneSystem;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
 namespace PGK2.Engine.Core.Physics
 {
@@ -19,9 +17,9 @@ namespace PGK2.Engine.Core.Physics
 			Ray ray = Ray.GetRayFromScreenCoordinates(MousePosition, camera.ProjectionMatrix, camera.ViewMatrix, EngineWindow.instance.ClientSize.X, EngineWindow.instance.ClientSize.Y);
 			Vector3 rayOrigin = ray.Origin;
 			Vector3 rayDirection = ray.Direction;
-			return RayCast_Triangle(rayOrigin, rayDirection, maxDistance, out hitInfo);
-
+			return RayCast_Triangle(rayOrigin, rayDirection, maxDistance, out hitInfo, tags);
 		}
+
 		public static bool RayCast_Triangle(Vector3 origin, Vector3 direction, float maxDistance, out RayCastHit hitInfo, TagsContainer tags = null)
 		{
 			hitInfo = new RayCastHit();
@@ -39,11 +37,7 @@ namespace PGK2.Engine.Core.Physics
 				{
 					for (int i = 0; i < mesh.indices.Count; i += 3)
 					{
-						Vector3 v0 = Vector3.TransformPosition(mesh.vertices[(int)mesh.indices[i]].Position, modelTransform);
-						Vector3 v1 = Vector3.TransformPosition(mesh.vertices[(int)mesh.indices[i + 1]].Position, modelTransform);
-						Vector3 v2 = Vector3.TransformPosition(mesh.vertices[(int)mesh.indices[i + 2]].Position, modelTransform);
-
-						if (RayIntersections.RayIntersectsTriangle(ray, v0, v1, v2, out float distance, out Vector3 intersectionPoint))
+						if (RayIntersections.RayIntersectsTriangle(ray, mesh, i / 3, modelTransform, out float distance, out Vector3 intersectionPoint))
 						{
 							if (distance < closestDistance)
 							{
@@ -54,7 +48,7 @@ namespace PGK2.Engine.Core.Physics
 									Point = intersectionPoint,
 									Mesh = mesh,
 									Model = model,
-									Triangle = (v0, v1, v2),
+									TriangleIndex = i / 3,
 									Distance = distance,
 									gameObject = modelRenderer.gameObject
 								};
@@ -64,24 +58,19 @@ namespace PGK2.Engine.Core.Physics
 				}
 			}
 
-			// Return false if no hit or if the hit is at maxDistance
-			if (!hit || closestDistance == maxDistance)
-			{
-				return false;
-			}
-
-			return true;
+			return hit;
 		}
+
 		private static List<ModelRenderer> GetAllRenderers(TagsContainer tags = null)
 		{
 			var models = new List<ModelRenderer>();
 
-			foreach(ModelRenderer rend in SceneManager.ActiveScene.Renderers)
+			foreach (ModelRenderer rend in SceneManager.ActiveScene.Renderers)
 			{
-				if(rend != null)
+				if (rend != null)
 				{
 					if (rend.Model == null) continue;
-					if(tags == null || tags.Count==0 || rend.RenderTags.HasAny(tags))
+					if (tags == null || tags.Count == 0 || rend.RenderTags.HasAny(tags))
 					{
 						models.Add(rend);
 					}
@@ -90,45 +79,43 @@ namespace PGK2.Engine.Core.Physics
 			return models;
 		}
 	}
+
 	public static class RayIntersections
 	{
-		public static bool RayIntersectsTriangle(Ray ray, Vector3 v0, Vector3 v1, Vector3 v2, out float distance, out Vector3 intersectionPoint)
+		public static bool RayIntersectsTriangle(Ray ray, Mesh mesh, int triangleIndex, Matrix4 modelTransform, out float distance, out Vector3 intersectionPoint)
 		{
 			distance = 0.0f;
 			intersectionPoint = Vector3.Zero;
 
-			Vector3 edge1 = v1 - v0;
-			Vector3 edge2 = v2 - v0;
-			Vector3 h = Vector3.Cross(ray.Direction, edge2);
-			float a = Vector3.Dot(edge1, h);
+			int i0 = (int)mesh.indices[triangleIndex * 3 + 0];
+			int i1 = (int)mesh.indices[triangleIndex * 3 + 1];
+			int i2 = (int)mesh.indices[triangleIndex * 3 + 2];
 
-			if (Math.Abs(a) < 0.00001f)
+			Vector3 v0 = Vector3.TransformPosition(mesh.vertices[i0].Position, modelTransform);
+			Vector3 v1 = Vector3.TransformPosition(mesh.vertices[i1].Position, modelTransform);
+			Vector3 v2 = Vector3.TransformPosition(mesh.vertices[i2].Position, modelTransform);
+
+			Triangle triangle = new Triangle(v0, v1, v2);
+
+			float t = (triangle.PlaneDistance - Vector3.Dot(ray.Origin, triangle.PlaneNormal)) / Vector3.Dot(ray.Direction, triangle.PlaneNormal);
+
+			if (t < 0.00001f || float.IsNaN(t) || float.IsInfinity(t))
 				return false;
 
-			float f = 1.0f / a;
-			Vector3 s = ray.Origin - v0;
-			float u = f * Vector3.Dot(s, h);
+			Vector3 intersectionPointLocal = ray.Origin + t * ray.Direction;
 
-			if (u < 0.0f || u > 1.0f)
+			float u = Vector3.Dot(intersectionPointLocal - triangle.Vertices[0], triangle.PlaneUnitU);
+			float v = Vector3.Dot(intersectionPointLocal - triangle.Vertices[0], triangle.PlaneUnitV);
+
+			if (u < 0 || v < 0 || u > triangle.EdgeU || v > triangle.EdgeV || u + v > triangle.EdgeU + triangle.EdgeV)
 				return false;
 
-			Vector3 q = Vector3.Cross(s, edge1);
-			float v = f * Vector3.Dot(ray.Direction, q);
-
-			if (v < 0.0f || u + v > 1.0f)
-				return false;
-
-			float t = f * Vector3.Dot(edge2, q);
-			if (t > 0.00001f)
-			{
-				distance = t;
-				intersectionPoint = ray.GetPoint(distance);
-				return true;
-			}
-
-			return false;
+			distance = t;
+			intersectionPoint = intersectionPointLocal;
+			return true;
 		}
 	}
+
 	public class Ray
 	{
 		public Vector3 Origin { get; set; }
@@ -144,6 +131,7 @@ namespace PGK2.Engine.Core.Physics
 		{
 			return Origin + Direction * distance;
 		}
+
 		public static Ray GetRayFromScreenCoordinates(Vector2 screenCoordinates, Matrix4 projectionMatrix, Matrix4 viewMatrix, float screenWidth, float screenHeight)
 		{
 			// Convert screen coordinates to NDC
@@ -176,8 +164,35 @@ namespace PGK2.Engine.Core.Physics
 		public Vector3 Point;
 		public Mesh Mesh;
 		public Model Model;
-		public (Vector3 v0, Vector3 v1, Vector3 v2) Triangle;
+		public int TriangleIndex;
 		public float Distance;
 		internal GameObject gameObject;
+	}
+
+	public struct Triangle
+	{
+		public Vector3[] Vertices;
+		public Vector3 PlaneNormal;
+		public float PlaneDistance;
+		public Vector3 PlaneUnitU;
+		public Vector3 PlaneUnitV;
+		public float EdgeU;
+		public float EdgeV;
+
+		public Triangle(Vector3 v0, Vector3 v1, Vector3 v2)
+		{
+			Vertices = new Vector3[] { v0, v1, v2 };
+
+			Vector3 edge1 = v1 - v0;
+			Vector3 edge2 = v2 - v0;
+			PlaneNormal = Vector3.Cross(edge1, edge2).Normalized();
+			PlaneDistance = Vector3.Dot(PlaneNormal, v0);
+
+			PlaneUnitU = edge1.Normalized();
+			PlaneUnitV = Vector3.Cross(PlaneNormal, edge1).Normalized();
+
+			EdgeU = Vector3.Dot(v1 - v0, PlaneUnitU);
+			EdgeV = Vector3.Dot(v2 - v0, PlaneUnitV);
+		}
 	}
 }

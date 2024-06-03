@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using OpenTK.Mathematics;
+﻿using OpenTK.Mathematics;
 using PGK2.Engine.Components;
-using PGK2.Engine.Core;
 using PGK2.Engine.Core.Physics;
-using PGK2.Engine.SceneSystem;
+using PGK2.Engine.Core;
 
 public class PathFindingAgent : Component
 {
 	public Vector3 TargetPosition { get; private set; }
-	public float StepOffset { get; private set; } = 0.4f;
+	public float StepOffset { get; private set; } = 0.8f;
 	public float Speed = 1f;
+	public float InitialClearanceDistance = 0.3f; // Initial distance to keep from walls
+	public float MinClearanceDistance = 0.0f; // Minimum allowable clearance distance
+	public float ClearanceStep = 0.01f; // Step by which to decrease clearance distance
+	int waypoint = 0;
 	public List<Vector3> Path { get; private set; }
-	// Other properties and fields as needed
 
 	public PathFindingAgent(Vector3 position, float stepOffset)
 	{
@@ -29,16 +29,19 @@ public class PathFindingAgent : Component
 	public void SetTargetPosition(Vector3 targetPosition)
 	{
 		TargetPosition = targetPosition;
+		var key = (transform.Position, targetPosition);
+		if (AStarPathfinding.pathCache.TryGetValue(key, out var cachedPath))
+		{
+			Path = cachedPath;
+			return;
+		}
 		CalculatePath();
 	}
 
 	private void CalculatePath()
 	{
-		// Clear the existing path
 		Path.Clear();
-
-		// Perform A* pathfinding algorithm
-		Path = AStarPathfinding.FindPath(transform.Position, TargetPosition, StepOffset);
+		Path = AStarPathfinding.FindPath(transform.Position, TargetPosition, StepOffset, 0.1f, InitialClearanceDistance, MinClearanceDistance, ClearanceStep);
 
 		if (Path == null || Path.Count == 0)
 		{
@@ -46,6 +49,11 @@ public class PathFindingAgent : Component
 		}
 		else
 		{
+			// Ensure the final target position is included
+			if (Path[Path.Count - 1] != TargetPosition)
+			{
+				Path.Add(TargetPosition);
+			}
 			Console.WriteLine($"Pathfinding complete. Found {Path.Count} waypoints.");
 			DrawPath();
 		}
@@ -74,16 +82,16 @@ public class PathFindingAgent : Component
 
 	public void Move()
 	{
-		if (Path == null || Path.Count == 0)
+		if (Path == null || Path.Count == 0 || waypoint>Path.Count)
 			return;
 
-		// Move towards the next waypoint in the path
-		Vector3 nextWaypoint = Path[0];
-
+		Vector3 nextWaypoint = Path[waypoint];
 		transform.Position = MoveTowards(transform.Position, nextWaypoint, Time.deltaTime * Speed);
 
-		if ((transform.Position - nextWaypoint).Length < StepOffset)
-			Path.RemoveAt(0);
+		if ((transform.Position - nextWaypoint).LengthFast < 0.1f)
+		{
+			waypoint++;
+		}
 	}
 
 	public static Vector3 MoveTowards(Vector3 current, Vector3 target, float maxDistanceDelta)
@@ -102,69 +110,167 @@ public class PathFindingAgent : Component
 
 public static class AStarPathfinding
 {
-	public static List<Vector3> FindPath(Vector3 startPos, Vector3 targetPos, float stepOffset)
+	internal static Dictionary<(Vector3, Vector3), List<Vector3>> pathCache = new Dictionary<(Vector3, Vector3), List<Vector3>>();
+
+	public static List<Vector3> FindPath(Vector3 startPos, Vector3 targetPos, float stepOffset, float maxStepHeight, float initialClearanceDistance, float minClearanceDistance, float clearanceStep)
 	{
-		// Placeholder implementation with obstacle detection and avoidance using raycasting
-		List<Vector3> path = new List<Vector3>();
-
-		// Add start position to the path
-		path.Add(startPos);
-
-		// Calculate intermediate points between start and target
-		Vector3 direction = (targetPos - startPos).Normalized();
-		float distance = (targetPos - startPos).Length;
-		Vector3 currentPos = startPos;
-
-		while (distance > stepOffset)
+		// Check if the path is already in the cache
+		var key = (startPos, targetPos);
+		if (pathCache.TryGetValue(key, out var cachedPath))
 		{
-			currentPos += direction * stepOffset;
-
-			// Perform raycast to check for obstacles
-			TagsContainer tags = new TagsContainer();
-			if (!Physics.RayCast_Triangle(currentPos, direction, stepOffset, out RayCastHit hitInfo, tags))
-			{
-				// No obstacle, add current position to the path
-				path.Add(currentPos);
-			}
-			else
-			{
-				var block = PathFindingAgent.DrawWaypoint(hitInfo.Point);
-				block.GetComponent<ModelRenderer>().OutlineColor = Color4.Yellow;
-				// Obstacle detected, adjust position or abort pathfinding
-				Console.WriteLine($"Obstacle detected at {hitInfo.Point}. Adjusting path...");
-				Vector3 triangleNormal = Vector3.Cross(hitInfo.Triangle.v1 - hitInfo.Triangle.v0, hitInfo.Triangle.v2 - hitInfo.Triangle.v0).Normalized();
-
-				// Calculate a new direction to avoid the obstacle
-				Vector3 newDirection = CalculateAvoidanceDirection(direction, triangleNormal);
-
-				// Update current position based on the new direction
-				currentPos += newDirection * stepOffset;
-
-				// Add the adjusted position to the path
-				path.Add(currentPos);
-
-				// Reset the distance to the target since we've adjusted the path
-				distance = (targetPos - currentPos).Length;
-			}
-
-			distance -= stepOffset;
+			return new List<Vector3>(cachedPath); // Return a copy of the cached path
 		}
 
-		// Add target position to the path
-		path.Add(targetPos);
+		List<Vector3> path = null;
+
+		// Attempt to find a path with progressively smaller clearance distances
+		for (float clearanceDistance = initialClearanceDistance; clearanceDistance >= minClearanceDistance; clearanceDistance -= clearanceStep)
+		{
+			path = FindPathWithClearance(startPos, targetPos, stepOffset, maxStepHeight, clearanceDistance);
+			if (path != null && path.Count > 0)
+			{
+				break;
+			}
+		}
+
+		if (path == null || path.Count == 0)
+		{
+			Console.WriteLine("No path found with any clearance distance.");
+		}
+		else
+		{
+			pathCache[key] = new List<Vector3>(path); // Cache the found path
+		}
 
 		return path;
 	}
 
-	private static Vector3 CalculateAvoidanceDirection(Vector3 currentDirection, Vector3 obstacleNormal)
+	private static List<Vector3> FindPathWithClearance(Vector3 startPos, Vector3 targetPos, float stepOffset, float maxStepHeight, float clearanceDistance)
 	{
-		// Reflect the current direction vector against the obstacle normal
-		Vector3 reflection = currentDirection - 2 * Vector3.Dot(currentDirection, obstacleNormal) * obstacleNormal;
+		List<Vector3> openList = new List<Vector3> { startPos };
+		HashSet<Vector3> closedList = new HashSet<Vector3>();
+		Dictionary<Vector3, float> gCost = new Dictionary<Vector3, float> { [startPos] = 0 };
+		Dictionary<Vector3, float> hCost = new Dictionary<Vector3, float> { [startPos] = Heuristic(startPos, targetPos) };
+		Dictionary<Vector3, Vector3> cameFrom = new Dictionary<Vector3, Vector3>();
 
-		// Add a small random perturbation to avoid sticking to walls
-		Random random = new Random();
-		Vector3 avoidanceDirection = reflection + (Vector3.UnitX * ((float)random.NextDouble() * 0.2f - 0.1f)) + (Vector3.UnitY * ((float)random.NextDouble() * 0.2f - 0.1f));
+		while (openList.Count > 0)
+		{
+			Vector3 current = GetLowestFCostNode(openList, gCost, hCost);
 
-		return avoidanceDirection.Normalized();
+			if (Vector3.Distance(current, targetPos) < stepOffset)
+			{
+				Console.WriteLine($"Path found with clearance distance {clearanceDistance}.");
+				return ReconstructPath(cameFrom, current);
+			}
+
+			openList.Remove(current);
+			closedList.Add(current);
+
+			foreach (Vector3 neighbor in GetNeighbors(current, stepOffset, maxStepHeight, clearanceDistance))
+			{
+				if (closedList.Contains(neighbor))
+				{
+					continue;
+				}
+
+				if (!gCost.ContainsKey(neighbor))
+				{
+					gCost[neighbor] = float.MaxValue;
+				}
+
+				float tentativeGCost = gCost[current] + Vector3.Distance(current, neighbor);
+
+				if (tentativeGCost < gCost[neighbor])
+				{
+					cameFrom[neighbor] = current;
+					gCost[neighbor] = tentativeGCost;
+					hCost[neighbor] = Heuristic(neighbor, targetPos);
+
+					if (!openList.Contains(neighbor))
+					{
+						openList.Add(neighbor);
+					}
+				}
+			}
+		}
+
+		return null; // Return null if no path is found
+	}
+
+	private static float Heuristic(Vector3 a, Vector3 b)
+	{
+		return Vector3.Distance(a, b);
+	}
+
+	private static Vector3 GetLowestFCostNode(List<Vector3> openList, Dictionary<Vector3, float> gCost, Dictionary<Vector3, float> hCost)
+	{
+		Vector3 lowest = openList[0];
+		float lowestFCost = gCost[lowest] + hCost[lowest];
+
+		foreach (Vector3 node in openList)
+		{
+			float fCost = gCost[node] + hCost[node];
+			if (fCost < lowestFCost)
+			{
+				lowest = node;
+				lowestFCost = fCost;
+			}
+		}
+
+		return lowest;
+	}
+
+	private static List<Vector3> ReconstructPath(Dictionary<Vector3, Vector3> cameFrom, Vector3 current)
+	{
+		List<Vector3> totalPath = new List<Vector3> { current };
+		while (cameFrom.ContainsKey(current))
+		{
+			current = cameFrom[current];
+			totalPath.Add(current);
+		}
+		totalPath.Reverse();
+		return totalPath;
+	}
+
+	private static List<Vector3> GetNeighbors(Vector3 currentPos, float stepOffset, float maxStepHeight, float clearanceDistance)
+	{
+		List<Vector3> neighbors = new List<Vector3>();
+
+		Vector3[] directions = new Vector3[]
+		{
+			new Vector3(stepOffset, 0, 0),
+			new Vector3(-stepOffset, 0, 0),
+			new Vector3(0, 0, stepOffset),
+			new Vector3(0, 0, -stepOffset),
+			new Vector3(0, stepOffset, 0), // Moving up
+            new Vector3(0, -stepOffset, 0) // Moving down
+        };
+
+		foreach (Vector3 direction in directions)
+		{
+			Vector3 neighbor = currentPos + direction;
+			RayCastHit hitInfo;
+
+			if (CheckForObstacles(currentPos, direction, stepOffset, clearanceDistance, out hitInfo))
+			{
+				float heightDifference = Math.Abs(currentPos.Y - neighbor.Y);
+				if (heightDifference <= maxStepHeight)
+				{
+					neighbors.Add(neighbor);
+				}
+			}
+		}
+
+		return neighbors;
+	}
+
+	private static bool CheckForObstacles(Vector3 currentPos, Vector3 direction, float stepOffset, float clearanceDistance, out RayCastHit hitInfo)
+	{
+		TagsContainer tags = new TagsContainer();
+		tags.Add("map");
+
+		// Perform a raycast with clearance distance added to the step offset
+		bool hit = Physics.RayCast_Triangle(currentPos, direction, stepOffset + clearanceDistance, out hitInfo, tags);
+		return !hit;
 	}
 }

@@ -10,7 +10,7 @@ namespace PGK2.Engine.Components
 {
 	internal class TemporaryCube : Component
 	{
-		float timeleft = 10f;
+		float timeleft = 15f;
 		ModelRenderer cube;
 		public override void Update()
 		{

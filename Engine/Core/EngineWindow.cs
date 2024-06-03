@@ -12,6 +12,8 @@ using PGK2.TowerDef.Scripts;
 using ImGuiNET;
 using TP_IMGUI;
 using PGK2.Engine.Components.Base.Renderers;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace PGK2.Engine.Core
 {
@@ -45,6 +47,8 @@ namespace PGK2.Engine.Core
 			GL.Enable(EnableCap.FragmentLightingSgix);
 			GL.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Replace);
 			GL.StencilFunc(StencilFunction.Notequal, 1, 0xFF);
+			GL.Enable(EnableCap.CullFace);
+			GL.CullFace(CullFaceMode.Back);
 			shader = new Shader($"{EngineInstance.ENGINE_PATH}/Shaders/shader.vert", $"{EngineInstance.ENGINE_PATH}/Shaders/shader.frag");
 			lightShader = new Shader($"{EngineInstance.ENGINE_PATH}/Shaders/lightShader.vert", $"{EngineInstance.ENGINE_PATH}/Shaders/lightShader.frag");
 			OutlineShader = new Shader($"{EngineInstance.ENGINE_PATH}/Shaders/outline.vert", $"{EngineInstance.ENGINE_PATH}/Shaders/outline.frag");
@@ -107,7 +111,7 @@ namespace PGK2.Engine.Core
 			var ai_test = scene.CreateSceneObject("AI TEST");
 			ai_test.AddComponent<ModelRenderer>().Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/cube.fbx");
 			ai_test.GetComponent<ModelRenderer>().OutlineColor = Color4.Red;
-			ai_test.transform.Position = new(5, 0.12f, 3.4f);
+			ai_test.transform.Position = new(4.8f, 0.12f, 3.4f);
 			ai_test.transform.Scale = 0.001f * Vector3.One;
 			var pathfind = ai_test.AddComponent<PathFindingAgent>();
 			pathfind.SetTargetPosition(ai_target.transform.Position);
