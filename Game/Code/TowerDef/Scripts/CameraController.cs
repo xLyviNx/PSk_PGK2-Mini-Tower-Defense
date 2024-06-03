@@ -7,6 +7,7 @@ using PGK2.Engine.Components.Base;
 using PGK2.Engine.Core;
 using PGK2.Engine.Core.Physics;
 using PGK2.Engine.SceneSystem;
+using PGK2.Game.Code.TowerDef.Scripts;
 using System.Diagnostics;
 
 namespace PGK2.TowerDef.Scripts
@@ -69,13 +70,7 @@ namespace PGK2.TowerDef.Scripts
 			if (Physics.RayCast_Triangle(myCamera, mousePosition, 1000f, out RayCastHit hitInfo))
 			{
 				Console.WriteLine("CLICKED AND HIT");
-				var ai_test = SceneManager.ActiveScene.CreateSceneObject("AI TEST");
-				ai_test.AddComponent<ModelRenderer>().Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/cube.fbx");
-				ai_test.GetComponent<ModelRenderer>().OutlineColor = Color4.Red;
-				ai_test.transform.Position = new(4.8f, 0.12f, 3.4f);
-				ai_test.transform.Scale = 0.001f * Vector3.One;
-				var pathfind = ai_test.AddComponent<PathFindingAgent>();
-				pathfind.SetTargetPosition(new(-5, 0.12f, -4.25f));
+				MyScene.FindObjectOfType<GameManager>().SpawnEnemy();
 			}
 		}
 	}

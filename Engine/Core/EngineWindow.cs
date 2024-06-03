@@ -14,6 +14,7 @@ using TP_IMGUI;
 using PGK2.Engine.Components.Base.Renderers;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using PGK2.Game.Code.TowerDef.Scripts;
 
 namespace PGK2.Engine.Core
 {
@@ -84,7 +85,7 @@ namespace PGK2.Engine.Core
 			rend.Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/Level1.fbx");
 			rend.RenderTags.Add("map");
 			rend.OutlineColor = Color4.Transparent;
-			rend.transform.Pitch = -90f;
+			//rend.transform.Pitch = -90f;
 			rend.transform.Scale = Vector3.One * 1;
 
 
@@ -94,28 +95,26 @@ namespace PGK2.Engine.Core
 			light.Diffuse = new Vector3(1, 1, 1f);
 			light.Specular = new Vector3(1f,1f,1f);
 
-			GameObject TestText = scene.CreateSceneObject("UI TEXT TEST");
-			var text = TestText.AddComponent<UI_Text>();
-			text.Text = "TESTOWY TEKST";
-			text.Color = new(0, 1, 0, 0.5f);
-			text.transform.Position = new(50,50,0);
-			var temp = scene.CreateSceneObject("temp");
-			temp.AddComponent<TemporaryCube>();
-			temp.transform.Position = new(0, 2, 0);	
-			
-			var ai_target = scene.CreateSceneObject("AI TARGET");
-			ai_target.AddComponent<ModelRenderer>().Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/cube.fbx");
+			GameObject lightObj2 = scene.CreateSceneObject("Light Object 2");
+			Light light2 = lightObj2.Components.Add<Light>();
+			lightObj2.transform.Position = new Vector3(8, 0.5f, 0f);
+			light2.Diffuse = new Vector3(0.5f, 0.5f, 1f);
+			light2.Specular = new Vector3(1f, 1f, 1f);
+
+			GameObject testbar = scene.CreateSceneObject("UI BAR TEST");
+			var bar = testbar.AddComponent<UI_ProgressBar>();
+			bar.Value = 0.5f;
+			bar.Color = new(0, 0.5f, 0, 0.5f);
+			bar.BarColor = new(0, 1f, 0, 0.5f);
+			bar.transform.Scale = new(1000, 50, 0);
+
+			var ai_target = scene.CreateSceneObject("ai_target");
 			ai_target.transform.Position = new(-5, 0.12f, -4.25f);
 			ai_target.transform.Scale = 0.001f * Vector3.One;
-			
-			var ai_test = scene.CreateSceneObject("AI TEST");
-			ai_test.AddComponent<ModelRenderer>().Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/cube.fbx");
-			ai_test.GetComponent<ModelRenderer>().OutlineColor = Color4.Red;
-			ai_test.transform.Position = new(4.8f, 0.12f, 3.4f);
-			ai_test.transform.Scale = 0.001f * Vector3.One;
-			var pathfind = ai_test.AddComponent<PathFindingAgent>();
-			pathfind.SetTargetPosition(ai_target.transform.Position);
 
+			var Manager = scene.CreateSceneObject("Game Manager");
+			Manager.AddComponent<GameManager>();
+			
 			scene.AddAwaitingObjects();
 
 			SceneManager.SaveSceneToFile(scene, $"{EngineInstance.ASSETS_PATH}/Scenes/GAME.lscn");

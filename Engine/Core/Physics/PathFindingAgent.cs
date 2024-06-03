@@ -11,7 +11,7 @@ public class PathFindingAgent : Component
 	public float InitialClearanceDistance = 0.3f; // Initial distance to keep from walls
 	public float MinClearanceDistance = 0.0f; // Minimum allowable clearance distance
 	public float ClearanceStep = 0.01f; // Step by which to decrease clearance distance
-	int waypoint = 0;
+	public int waypoint = 0;
 	public List<Vector3> Path { get; private set; }
 
 	public PathFindingAgent(Vector3 position, float stepOffset)
@@ -82,13 +82,14 @@ public class PathFindingAgent : Component
 
 	public void Move()
 	{
-		if (Path == null || Path.Count == 0 || waypoint>Path.Count)
+		Console.WriteLine($"Waypoint: {waypoint}, count: {Path.Count}");
+		if (Path == null || Path.Count == 0 || waypoint>=Path.Count)
 			return;
 
 		Vector3 nextWaypoint = Path[waypoint];
 		transform.Position = MoveTowards(transform.Position, nextWaypoint, Time.deltaTime * Speed);
 
-		if ((transform.Position - nextWaypoint).LengthFast < 0.1f)
+		if ((transform.Position - nextWaypoint).LengthFast < 0.01f)
 		{
 			waypoint++;
 		}

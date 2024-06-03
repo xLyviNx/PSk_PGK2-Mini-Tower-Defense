@@ -69,7 +69,7 @@ namespace PGK2.Engine.SceneSystem
 
 			return gameObject;
 		}
-		public T? FindObjectOfType<T>(bool onlyActive = true) where T : Component
+		public T? FindObjectOfType<T>(bool onlyActive = false) where T : Component
 		{
 			foreach (var gameObject in GameObjects)
 			{
@@ -83,7 +83,17 @@ namespace PGK2.Engine.SceneSystem
 
 			return null;
 		}
-
+		public GameObject FindObjectByName(string name, bool onlyActive = false)
+		{
+			foreach (var gameObject in GameObjects)
+			{
+				if (onlyActive && !gameObject.IsActive)
+					continue;
+				if(gameObject.name.Trim() == name.Trim())
+					return gameObject;
+			}
+			return null;
+		}
 		public List<T> FindAllObjectsOfType<T>(bool onlyActive = true) where T : Component
 		{
 			List<T> result = new List<T>();

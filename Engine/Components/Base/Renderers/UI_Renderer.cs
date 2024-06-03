@@ -1,7 +1,9 @@
-﻿using ImGuiNET;
+﻿using Assimp.Configs;
+using ImGuiNET;
 using PGK2.Engine.Core;
 using PGK2.Engine.SceneSystem;
 using System;
+using System.Diagnostics;
 using System.Numerics;
 using System.Text.Json.Serialization;
 
@@ -9,6 +11,59 @@ namespace PGK2.Engine.Components.Base
 {
 	public class UI_Renderer : Component
 	{
+		public enum Alignment
+		{
+			LeftUp,
+			CenterUp,
+			RightUp,
+			Left,
+			Center,
+			Right,
+			DownLeft,
+			DownCenter,
+			DownRight
+		}
+		public Alignment UI_Alignment;
+		internal Vector2 AlignmentPosition
+		{
+			get
+			{
+				Debug.Assert(EngineWindow.instance != null);
+
+				var size=EngineWindow.instance.ClientSize;
+				switch (UI_Alignment)
+				{
+					case Alignment.LeftUp:
+						return Vector2.Zero;
+					case Alignment.CenterUp:
+						return new Vector2(size.X / 2, 0);
+					case Alignment.RightUp:
+						return new Vector2(size.X, 0);
+					case Alignment.Left:
+						return new Vector2(0, size.Y / 2);
+					case Alignment.Center:
+						return new Vector2(size.X / 2, size.Y / 2);
+					case Alignment.Right:
+						return new Vector2(size.X, size.Y / 2);
+					case Alignment.DownLeft:
+						return new Vector2(0, size.Y);
+					case Alignment.DownCenter:
+						return new Vector2(size.X / 2, size.Y);
+					case Alignment.DownRight:
+						return new Vector2(size.X, size.Y);
+					default:
+						return Vector2.Zero;
+				}
+			}
+		}
+		internal Vector2 DrawPosition
+		{
+			get
+			{
+				return AlignmentPosition + new Vector2(transform.Position.X, transform.Position.Y);
+			}
+		}
+
 		[JsonIgnore]
 		public Vector2 UI_Position => new Vector2(transform.Position.X, transform.Position.Y);
 		public Vector4 Color = new Vector4(1, 1, 1, 1);

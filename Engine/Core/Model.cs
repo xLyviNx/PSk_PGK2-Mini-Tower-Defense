@@ -82,16 +82,17 @@ namespace PGK2.Engine.Core
 			{
 				MeshVertex vertex = new();
 
+				// Transformacja z Blender do OpenGL
 				Vector3 vector;
 				vector.X = mesh.Vertices[i].X;
-				vector.Y = mesh.Vertices[i].Y;
-				vector.Z = mesh.Vertices[i].Z;
+				vector.Y = mesh.Vertices[i].Z; // Z Blender -> Y OpenGL
+				vector.Z = -mesh.Vertices[i].Y; // Y Blender -> -Z OpenGL
 				vertex.Position = vector;
 
-
+				// Transformacja normalnych
 				vector.X = mesh.Normals[i].X;
-				vector.Y = mesh.Normals[i].Y;
-				vector.Z = mesh.Normals[i].Z;
+				vector.Y = mesh.Normals[i].Z; // Z Blender -> Y OpenGL
+				vector.Z = -mesh.Normals[i].Y; // Y Blender -> -Z OpenGL
 				vertex.Normal = vector;
 
 				if (mesh.HasTextureCoords(0))
@@ -106,27 +107,27 @@ namespace PGK2.Engine.Core
 
 				vertices.Add(vertex);
 			}
+
 			for (int i = 0; i < mesh.FaceCount; i++)
 			{
 				Assimp.Face face = mesh.Faces[i];
 				for (int j = 0; j < face.IndexCount; j++)
 					indices.Add((uint)face.Indices[j]);
 			}
-			// process material
+
+			// Process material
 			Material mat = new(EngineWindow.shader);
 			if (mesh.MaterialIndex >= 0)
 			{
 				Assimp.Material material = scene.Materials[mesh.MaterialIndex];
-				List<Texture> diffuseMaps = LoadMaterialTextures(material,
-													TextureType.Diffuse, "texture_diffuse");
+				List<Texture> diffuseMaps = LoadMaterialTextures(material, TextureType.Diffuse, "texture_diffuse");
 				textures.AddRange(diffuseMaps);
-				List<Texture> specularMaps = LoadMaterialTextures(material,
-													TextureType.Specular, "texture_specular");
+				List<Texture> specularMaps = LoadMaterialTextures(material, TextureType.Specular, "texture_specular");
 				textures.AddRange(specularMaps);
 
 				mat = new(material);
-				
 			}
+
 			return new Mesh(vertices, indices, textures, mat);
 		}
 		List<Texture> LoadMaterialTextures(Assimp.Material mat, TextureType type, string typeName)
