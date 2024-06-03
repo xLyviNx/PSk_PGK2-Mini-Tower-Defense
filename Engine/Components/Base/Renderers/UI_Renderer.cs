@@ -64,8 +64,6 @@ namespace PGK2.Engine.Components.Base
 			}
 		}
 
-		[JsonIgnore]
-		public Vector2 UI_Position => new Vector2(transform.Position.X, transform.Position.Y);
 		public Vector4 Color = new Vector4(1, 1, 1, 1);
 
 		public event Action OnClick = delegate { };

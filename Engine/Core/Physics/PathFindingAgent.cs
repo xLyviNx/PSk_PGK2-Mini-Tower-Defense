@@ -2,12 +2,14 @@
 using PGK2.Engine.Components;
 using PGK2.Engine.Core.Physics;
 using PGK2.Engine.Core;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using System.IO;
 
 public class PathFindingAgent : Component
 {
 	public Vector3 TargetPosition { get; private set; }
 	public float StepOffset { get; private set; } = 0.8f;
-	public float Speed = 1f;
+	public float Speed = 3f;
 	public float InitialClearanceDistance = 0.3f; // Initial distance to keep from walls
 	public float MinClearanceDistance = 0.0f; // Minimum allowable clearance distance
 	public float ClearanceStep = 0.01f; // Step by which to decrease clearance distance
@@ -55,7 +57,9 @@ public class PathFindingAgent : Component
 				Path.Add(TargetPosition);
 			}
 			Console.WriteLine($"Pathfinding complete. Found {Path.Count} waypoints.");
-			DrawPath();
+			var key = (transform.Position, TargetPosition);
+			AStarPathfinding.pathCache[key] = new List<Vector3>(Path); // Cache the found path
+			//DrawPath();
 		}
 	}
 
@@ -132,15 +136,6 @@ public static class AStarPathfinding
 			{
 				break;
 			}
-		}
-
-		if (path == null || path.Count == 0)
-		{
-			Console.WriteLine("No path found with any clearance distance.");
-		}
-		else
-		{
-			pathCache[key] = new List<Vector3>(path); // Cache the found path
 		}
 
 		return path;

@@ -3,7 +3,7 @@
   "GameObjects": [
     {
       "name": "LOCK CONTROLLER",
-      "Id": "8ec3882b-601f-4680-87d3-cdf5aafe275b",
+      "Id": "572e1291-4ef6-410f-94b0-7a0291bb1350",
       "Components": {
         "All": [
           {
@@ -40,7 +40,7 @@
     },
     {
       "name": "CAMERA PARENT",
-      "Id": "fc3765c6-0426-4d53-b2d1-fb04e0fe675b",
+      "Id": "21842d8e-8f5d-4d75-9d03-4b127ca3227e",
       "Components": {
         "All": [
           {
@@ -61,7 +61,7 @@
               "Roll": 0,
               "Children": {
                 "All": [
-                  "113810dd-957d-4ab8-9ec1-74130ba4c473"
+                  "6d29c41d-6743-4545-9903-6da05b6d193e"
                 ]
               }
             }
@@ -73,7 +73,7 @@
     },
     {
       "name": "CAMERA OBJECT",
-      "Id": "113810dd-957d-4ab8-9ec1-74130ba4c473",
+      "Id": "6d29c41d-6743-4545-9903-6da05b6d193e",
       "Components": {
         "All": [
           {
@@ -129,7 +129,7 @@
     },
     {
       "name": "MAP OBJECT",
-      "Id": "5d6e8e1f-60a6-43c5-b642-80fe0e87bdae",
+      "Id": "956ce75f-b9dd-4850-ba58-32cb4031b7bb",
       "Components": {
         "All": [
           {
@@ -174,7 +174,7 @@
     },
     {
       "name": "Light Object",
-      "Id": "70350767-e95b-419e-8756-76e0d099b4de",
+      "Id": "46c81554-3977-47f5-b529-9e83426da862",
       "Components": {
         "All": [
           {
@@ -227,7 +227,7 @@
     },
     {
       "name": "Light Object 2",
-      "Id": "fdbb50b5-04f6-4364-8f28-097403a7e155",
+      "Id": "123c031f-9566-479f-8809-ee74d9fd7396",
       "Components": {
         "All": [
           {
@@ -279,68 +279,8 @@
       "IsActiveSelf": true
     },
     {
-      "name": "UI BAR TEST",
-      "Id": "cc6bbbea-1bcb-4082-b97b-0914bf2b340b",
-      "Components": {
-        "All": [
-          {
-            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-            "Data": {
-              "LocalPosition": {
-                "X": 300,
-                "Y": 50,
-                "Z": 0
-              },
-              "LocalScale": {
-                "X": 1000,
-                "Y": 50,
-                "Z": 0
-              },
-              "Pitch": 0,
-              "Yaw": 0,
-              "Roll": 0,
-              "Children": {
-                "All": []
-              }
-            }
-          },
-          {
-            "Type": "PGK2.Engine.Components.Base.Renderers.UI_ProgressBar, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-            "Data": {
-              "BackgroundColor": {
-                "X": 0,
-                "Y": 0.5,
-                "Z": 0,
-                "W": 0.5
-              },
-              "Value": 0.5,
-              "MaxValue": 1,
-              "BarColor": {
-                "X": 0,
-                "Y": 1,
-                "Z": 0,
-                "W": 0.5
-              },
-              "BarWidth": 100,
-              "ShowPercentage": true,
-              "Color": {
-                "X": 0,
-                "Y": 0.5,
-                "Z": 0,
-                "W": 0.5
-              },
-              "wasHovered": false,
-              "EnabledSelf": true
-            }
-          }
-        ]
-      },
-      "Tags": {},
-      "IsActiveSelf": true
-    },
-    {
       "name": "ai_target",
-      "Id": "65a7a3ed-f1df-4735-aa66-22b3fbd0456e",
+      "Id": "8c6f16ea-125d-44c0-a761-9106ffab325e",
       "Components": {
         "All": [
           {
@@ -371,7 +311,7 @@
     },
     {
       "name": "Game Manager",
-      "Id": "4e018205-72b7-4ff1-8e29-b7fefa4d2f2c",
+      "Id": "bd8b004c-8dc4-46c5-8b6b-0b1c4f4199f9",
       "Components": {
         "All": [
           {
@@ -398,6 +338,9 @@
           {
             "Type": "PGK2.Game.Code.TowerDef.Scripts.GameManager, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Data": {
+              "IsGameStarted": false,
+              "Health": 0,
+              "MaxHealth": 1000,
               "EnabledSelf": true
             }
           }

@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using PGK2.Engine.Core;
 using System;
 using System.Numerics;
 
@@ -11,17 +12,17 @@ namespace PGK2.Engine.Components.Base.Renderers
 		public Vector4 BarColor = new Vector4(0, 1, 0, 1);
 		public Vector4 BackgroundColor => Color;
 		public float BarWidth = 100.0f;
+		public float BarHeight = 15f;
 		public bool ShowPercentage = true;
 
 		public override void Update()
 		{
 			base.Update();
-			// You can add additional update logic here
 		}
 
 		internal override void Draw()
 		{
-			ImGui.SetNextWindowPos(UI_Position, ImGuiCond.Always);
+			ImGui.SetNextWindowPos(new Vector2(DrawPosition.X-BarWidth/2f, DrawPosition.Y- BarHeight/2f), ImGuiCond.Always);
 
 			float fraction = Math.Clamp(Value / MaxValue, 0.0f, 1.0f);
 
@@ -38,13 +39,13 @@ namespace PGK2.Engine.Components.Base.Renderers
 			ImGui.PushStyleColor(ImGuiCol.FrameBg, BackgroundColor); // Set the progress bar background color
 
 			string overlay = ShowPercentage ? $"{(int)(fraction * 100)}%" : string.Empty;
-			ImGui.ProgressBar(fraction, new Vector2(BarWidth, 0.0f), overlay);
+			ImGui.ProgressBar(fraction, new Vector2(BarWidth,BarHeight), overlay);
 
-			ImGui.PopStyleColor(2); // Restore BarColor and FrameBg colors
+			ImGui.PopStyleColor(2);
 			ImGui.End();
 
-			ImGui.PopStyleVar(2); // Restore style variables
-			ImGui.PopStyleColor(2); // Restore ChildBg and WindowBg colors
+			ImGui.PopStyleVar(2);
+			ImGui.PopStyleColor(2);
 		}
 	}
 }

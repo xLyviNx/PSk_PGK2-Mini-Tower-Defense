@@ -20,7 +20,7 @@ namespace PGK2.Engine.Components.Base.Renderers
 		internal override void Draw()
 		{
 
-			ImGui.SetNextWindowPos(UI_Position, ImGuiCond.Always);
+			ImGui.SetNextWindowPos(DrawPosition, ImGuiCond.Always);
 			ImGui.PushStyleColor(ImGuiCol.Text, Color);
 			ImGui.SetNextWindowBgAlpha(0.0f);
 			ImGui.Begin("Text", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoBackground);
