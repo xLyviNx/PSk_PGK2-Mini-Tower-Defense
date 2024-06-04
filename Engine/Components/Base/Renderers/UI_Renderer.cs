@@ -11,6 +11,8 @@ namespace PGK2.Engine.Components.Base
 {
 	public class UI_Renderer : Component
 	{
+		public Vector2 Pivot;
+		public Vector2 Size;
 		public enum Alignment
 		{
 			LeftUp,
@@ -60,7 +62,9 @@ namespace PGK2.Engine.Components.Base
 		{
 			get
 			{
-				return AlignmentPosition + new Vector2(transform.Position.X, transform.Position.Y);
+				var pos = AlignmentPosition + new Vector2(transform.Position.X, transform.Position.Y);
+				pos -= Pivot * Size;
+				return pos;
 			}
 		}
 

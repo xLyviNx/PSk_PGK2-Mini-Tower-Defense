@@ -17,6 +17,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		private ModelRenderer myModelRenderer;
 		public string ModelName = "enemy1.fbx";
 		bool hasreached = false;
+		public int Health = 100;
 		GameManager? gameManager = null;
 		public override void Awake()
 		{
@@ -30,6 +31,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		public override void Start()
 		{
 			base.Start();
+			gameManager.SpawnedEnemies.Add(this);
 			myAgent.SetTargetPosition(MyScene.FindObjectByName("ai_target").transform.Position);
 		}
 		public override void Update()
@@ -44,14 +46,18 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			}
 
 			float dist = Vector3.Distance(myAgent.transform.Position, myAgent.TargetPosition);
-			Console.WriteLine(dist);
+			//Console.WriteLine(dist);
 			if (dist < 0.05f)
 			{
 				hasreached = true;
 				Reached();
 			}
 		}
-
+		public override void OnDestroy()
+		{
+			base.OnDestroy();
+			gameManager.SpawnedEnemies.Remove(this);
+		}
 		private void Reached()
 		{
 			gameManager.EnemyReached(this);

@@ -70,7 +70,6 @@ namespace PGK2.TowerDef.Scripts
 			if (Physics.RayCast_Triangle(myCamera, mousePosition, 1000f, out RayCastHit hitInfo))
 			{
 				Console.WriteLine("CLICKED AND HIT");
-				MyScene.FindObjectOfType<GameManager>().SpawnEnemy();
 			}
 		}
 	}

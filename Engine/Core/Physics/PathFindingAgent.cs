@@ -86,7 +86,7 @@ public class PathFindingAgent : Component
 
 	public void Move()
 	{
-		Console.WriteLine($"Waypoint: {waypoint}, count: {Path.Count}");
+		//Console.WriteLine($"Waypoint: {waypoint}, count: {Path.Count}");
 		if (Path == null || Path.Count == 0 || waypoint>=Path.Count)
 			return;
 

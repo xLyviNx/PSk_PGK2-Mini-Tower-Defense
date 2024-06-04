@@ -3,7 +3,7 @@
   "GameObjects": [
     {
       "name": "LOCK CONTROLLER",
-      "Id": "572e1291-4ef6-410f-94b0-7a0291bb1350",
+      "Id": "5f298f13-7b76-4a4f-9810-9cc108e68f12",
       "Components": {
         "All": [
           {
@@ -40,7 +40,7 @@
     },
     {
       "name": "CAMERA PARENT",
-      "Id": "21842d8e-8f5d-4d75-9d03-4b127ca3227e",
+      "Id": "069dd919-92fe-46ff-b490-c46170188cdf",
       "Components": {
         "All": [
           {
@@ -61,7 +61,7 @@
               "Roll": 0,
               "Children": {
                 "All": [
-                  "6d29c41d-6743-4545-9903-6da05b6d193e"
+                  "6bea4b2f-45a3-4bb6-a6c8-6002fc687a71"
                 ]
               }
             }
@@ -73,7 +73,7 @@
     },
     {
       "name": "CAMERA OBJECT",
-      "Id": "6d29c41d-6743-4545-9903-6da05b6d193e",
+      "Id": "6bea4b2f-45a3-4bb6-a6c8-6002fc687a71",
       "Components": {
         "All": [
           {
@@ -129,7 +129,7 @@
     },
     {
       "name": "MAP OBJECT",
-      "Id": "956ce75f-b9dd-4850-ba58-32cb4031b7bb",
+      "Id": "0c962deb-0eda-4483-b91f-ee024d1956e0",
       "Components": {
         "All": [
           {
@@ -174,7 +174,7 @@
     },
     {
       "name": "Light Object",
-      "Id": "46c81554-3977-47f5-b529-9e83426da862",
+      "Id": "d0ab8472-ff35-4f53-8314-fbee9fc34e8c",
       "Components": {
         "All": [
           {
@@ -227,7 +227,7 @@
     },
     {
       "name": "Light Object 2",
-      "Id": "123c031f-9566-479f-8809-ee74d9fd7396",
+      "Id": "3b3143b3-9241-4ffc-85b8-153aeb1f12f7",
       "Components": {
         "All": [
           {
@@ -280,7 +280,7 @@
     },
     {
       "name": "ai_target",
-      "Id": "8c6f16ea-125d-44c0-a761-9106ffab325e",
+      "Id": "acb413ca-389f-42f1-a7a3-2222089e3fc0",
       "Components": {
         "All": [
           {
@@ -311,7 +311,7 @@
     },
     {
       "name": "Game Manager",
-      "Id": "bd8b004c-8dc4-46c5-8b6b-0b1c4f4199f9",
+      "Id": "ba034993-da8c-414f-9840-446509897e78",
       "Components": {
         "All": [
           {
@@ -338,7 +338,12 @@
           {
             "Type": "PGK2.Game.Code.TowerDef.Scripts.GameManager, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Data": {
+              "WaveTimeLeft": 0,
+              "TimeString": "0:00",
               "IsGameStarted": false,
+              "TimePassed": 0,
+              "WaveTime": 0,
+              "SpawnedEnemies": [],
               "Health": 0,
               "MaxHealth": 1000,
               "EnabledSelf": true

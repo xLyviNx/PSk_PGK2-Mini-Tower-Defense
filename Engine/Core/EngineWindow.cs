@@ -107,7 +107,6 @@ namespace PGK2.Engine.Core
 
 			var Manager = scene.CreateSceneObject("Game Manager");
 			Manager.AddComponent<GameManager>();
-			
 			scene.AddAwaitingObjects();
 
 			SceneManager.SaveSceneToFile(scene, $"{EngineInstance.ASSETS_PATH}/Scenes/GAME.lscn");

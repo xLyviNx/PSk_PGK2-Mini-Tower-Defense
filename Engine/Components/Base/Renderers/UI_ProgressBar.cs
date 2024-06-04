@@ -22,7 +22,8 @@ namespace PGK2.Engine.Components.Base.Renderers
 
 		internal override void Draw()
 		{
-			ImGui.SetNextWindowPos(new Vector2(DrawPosition.X-BarWidth/2f, DrawPosition.Y- BarHeight/2f), ImGuiCond.Always);
+			Size = new(BarWidth, BarHeight);
+			ImGui.SetNextWindowPos(DrawPosition, ImGuiCond.Always);
 
 			float fraction = Math.Clamp(Value / MaxValue, 0.0f, 1.0f);
 
