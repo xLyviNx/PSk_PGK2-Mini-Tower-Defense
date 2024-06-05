@@ -3,7 +3,7 @@
   "GameObjects": [
     {
       "name": "LOCK CONTROLLER",
-      "Id": "5f298f13-7b76-4a4f-9810-9cc108e68f12",
+      "Id": "0767282d-acd2-4f18-b01e-fb0641f15159",
       "Components": {
         "All": [
           {
@@ -40,7 +40,7 @@
     },
     {
       "name": "CAMERA PARENT",
-      "Id": "069dd919-92fe-46ff-b490-c46170188cdf",
+      "Id": "05e9297c-63fd-491f-8568-2cbe30954346",
       "Components": {
         "All": [
           {
@@ -61,7 +61,7 @@
               "Roll": 0,
               "Children": {
                 "All": [
-                  "6bea4b2f-45a3-4bb6-a6c8-6002fc687a71"
+                  "31e56195-666c-4725-9b27-47f2731f6c6e"
                 ]
               }
             }
@@ -73,7 +73,7 @@
     },
     {
       "name": "CAMERA OBJECT",
-      "Id": "6bea4b2f-45a3-4bb6-a6c8-6002fc687a71",
+      "Id": "31e56195-666c-4725-9b27-47f2731f6c6e",
       "Components": {
         "All": [
           {
@@ -129,7 +129,7 @@
     },
     {
       "name": "MAP OBJECT",
-      "Id": "0c962deb-0eda-4483-b91f-ee024d1956e0",
+      "Id": "494d508a-f11a-46af-8698-637e42fd138c",
       "Components": {
         "All": [
           {
@@ -174,7 +174,7 @@
     },
     {
       "name": "Light Object",
-      "Id": "d0ab8472-ff35-4f53-8314-fbee9fc34e8c",
+      "Id": "9ea6b458-b654-48b8-afad-604cde2c3aca",
       "Components": {
         "All": [
           {
@@ -216,7 +216,7 @@
                 "Y": 1,
                 "Z": 1
               },
-              "CreateModelOnCreation": true,
+              "CreateModelOnCreation": false,
               "EnabledSelf": true
             }
           }
@@ -227,7 +227,7 @@
     },
     {
       "name": "Light Object 2",
-      "Id": "3b3143b3-9241-4ffc-85b8-153aeb1f12f7",
+      "Id": "6feda642-c1f9-4e2b-bdb3-055cdf597b37",
       "Components": {
         "All": [
           {
@@ -269,7 +269,7 @@
                 "Y": 1,
                 "Z": 1
               },
-              "CreateModelOnCreation": true,
+              "CreateModelOnCreation": false,
               "EnabledSelf": true
             }
           }
@@ -280,7 +280,7 @@
     },
     {
       "name": "ai_target",
-      "Id": "acb413ca-389f-42f1-a7a3-2222089e3fc0",
+      "Id": "5d381535-ba59-4619-bf55-123de240e46e",
       "Components": {
         "All": [
           {
@@ -311,7 +311,7 @@
     },
     {
       "name": "Game Manager",
-      "Id": "ba034993-da8c-414f-9840-446509897e78",
+      "Id": "e1bddb49-66c8-4f7a-8f29-5f6b7f93d4bb",
       "Components": {
         "All": [
           {

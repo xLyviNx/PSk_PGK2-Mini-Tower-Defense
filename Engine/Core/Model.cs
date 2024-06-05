@@ -12,16 +12,19 @@ namespace PGK2.Engine.Core
 		
 		public static Model LoadFromFile(string path)
 		{
-			/*if (LoadedModels.ContainsKey(path) && LoadedModels[path] != null)
+			if (LoadedModels.ContainsKey(path) && LoadedModels[path] != null)
 				return LoadedModels[path];
-			*/
 			Model model = new Model(path);
-			//LoadedModels[path] = model;
+			LoadedModels[path] = model;
 			return model;
 		}
+
 		public Model(string path)
 		{
 			loadModel(path);
+		}
+		internal Model()
+		{
 		}
 		public void Draw(Matrix4 modelMatrix, Matrix4 viewMatrix, Matrix4 projectionMatrix, List<Light> lights, CameraComponent camera, EngineInstance.RenderPass RenderPass, Material? overrideMaterial = null)
 		{

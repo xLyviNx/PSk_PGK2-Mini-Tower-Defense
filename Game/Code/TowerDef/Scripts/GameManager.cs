@@ -181,13 +181,14 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		}
 		private void CreateTimerText()
 		{
+
 			GameObject timerText = MyScene.CreateSceneObject("TIMER");
 			var text = timerText.AddComponent<UI_Text>();
 			text.Color = new(1, 1, 1, 1);
 			text.transform.Position = new(0f, 30f, 0f);
 			text.FontSize = 2;
 			text.UI_Alignment = UI_Renderer.Alignment.CenterUp;
-			text.Pivot = new(0.5f, 1);
+			text.Pivot = new(0.5f, 0);
 			TimeText = text;
 		}	
 		private void CreateWaveText()
@@ -195,10 +196,10 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			GameObject timerText = MyScene.CreateSceneObject("WAVE TEXT");
 			var text = timerText.AddComponent<UI_Text>();
 			text.Color = new(1, 1, 1, 1);
-			text.transform.Position = new(0f, 40f, 0f);
-			text.FontSize = 1;
+			text.transform.Position = new(0f, 60f, 0f);
+			text.FontSize = 1.5f;
 			text.UI_Alignment = UI_Renderer.Alignment.CenterUp;
-			text.Pivot = new(0.5f, 1);
+			text.Pivot = new(0.5f, 0);
 			WaveText = text;
 		}
 		public override void Update()
@@ -217,7 +218,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			if (WaveText != null)
 			{
 				if (WaveEnded)
-					WaveText.Text = $"PREPARE...";
+					WaveText.Text = $"WAVE COMING";
 				else
 					WaveText.Text = $"WAVE {wave}";
 			}
