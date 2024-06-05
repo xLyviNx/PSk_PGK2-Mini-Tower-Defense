@@ -3,7 +3,7 @@
   "GameObjects": [
     {
       "name": "LOCK CONTROLLER",
-      "Id": "a1df8952-c3bd-488f-9360-08026824ebb7",
+      "Id": "916ef133-aabe-4693-ad17-79ad93a3a1e4",
       "Components": {
         "All": [
           {
@@ -40,7 +40,7 @@
     },
     {
       "name": "CAMERA PARENT",
-      "Id": "2c69bae6-5abd-414f-be30-bf97020f9a09",
+      "Id": "5e7b57a5-696c-403b-917a-ef19d9c8998b",
       "Components": {
         "All": [
           {
@@ -61,7 +61,7 @@
               "Roll": 0,
               "Children": {
                 "All": [
-                  "0adbe7b6-5193-4cd4-87df-5143d2888f44"
+                  "27cf8722-4133-429d-bac5-f6faf3aec5e2"
                 ]
               }
             }
@@ -73,7 +73,7 @@
     },
     {
       "name": "CAMERA OBJECT",
-      "Id": "0adbe7b6-5193-4cd4-87df-5143d2888f44",
+      "Id": "27cf8722-4133-429d-bac5-f6faf3aec5e2",
       "Components": {
         "All": [
           {
@@ -129,7 +129,7 @@
     },
     {
       "name": "MAP OBJECT",
-      "Id": "71590bc7-898b-47ee-8933-57659bd6ba65",
+      "Id": "4c74ab3d-b0e1-483e-9d86-fb7e33dcf300",
       "Components": {
         "All": [
           {
@@ -174,7 +174,7 @@
     },
     {
       "name": "Light Object",
-      "Id": "67aca88a-0893-4d08-b917-ec2e517bf166",
+      "Id": "75ba2c05-2965-41ce-aa00-486941bbebbc",
       "Components": {
         "All": [
           {
@@ -227,7 +227,7 @@
     },
     {
       "name": "Light Object 2",
-      "Id": "eadff862-7bb6-4875-b056-b42141b3dd61",
+      "Id": "a2a5dbba-70f9-4fde-8085-da03f8158bd8",
       "Components": {
         "All": [
           {
@@ -280,7 +280,7 @@
     },
     {
       "name": "ai_target",
-      "Id": "2a10d281-9006-4e8c-b43a-562cab8c0d73",
+      "Id": "d26bb929-a52a-471e-80bf-4c5489b88421",
       "Components": {
         "All": [
           {
@@ -311,7 +311,7 @@
     },
     {
       "name": "Game Manager",
-      "Id": "5c05d854-9786-428c-a739-00263f836f4d",
+      "Id": "b553afdf-8bff-4ac2-89bd-9928a88af3c7",
       "Components": {
         "All": [
           {
@@ -346,6 +346,7 @@
               "SpawnedEnemies": [],
               "Health": 0,
               "MaxHealth": 1000,
+              "Money": 0,
               "EnabledSelf": true
             }
           }

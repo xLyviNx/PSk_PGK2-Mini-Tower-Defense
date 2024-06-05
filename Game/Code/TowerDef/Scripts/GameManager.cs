@@ -53,11 +53,13 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		UI_ProgressBar? HealthBar;
 		UI_Text? TimeText;
 		UI_Text? WaveText;
+		UI_Text? MoneyText;
 
 		List<(float, int, float)> EnemiesQueue = new();
 		public GameObject? CurrentMouseTarget;
 		UI_Text? EnemyHpDisplayText;
 		public Enemy? hoveredEnemy;
+		public int Money = 0;
 
 		private static readonly int TimeBeforeFirstWave = 5;
 		private void OnGameStarted()
@@ -67,6 +69,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			CreateTimerText();
 			CreateWaveText();
 			CreateEnemyHpText();
+			CreateMoneyText();
+			
+			Money = 2000;
 			WaveTime = TimeBeforeFirstWave;
 			WaveEnded = true;
 		}
@@ -207,7 +212,18 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			text.UI_Alignment = UI_Renderer.Alignment.CenterUp;
 			text.Pivot = new(0.5f, 0);
 			WaveText = text;
-		}	
+		}
+		private void CreateMoneyText()
+		{
+			GameObject texto = MyScene.CreateSceneObject("MONEY TEXT");
+			var text = texto.AddComponent<UI_Text>();
+			text.Color = new(1, 1, 1, 1);
+			text.transform.Position = new(-45f, 15f, 0f);
+			text.FontSize = 2f;
+			text.UI_Alignment = UI_Renderer.Alignment.RightUp;
+			text.Pivot = new(1f, 0);
+			MoneyText = text;
+		}
 		private void CreateEnemyHpText()
 		{
 			GameObject texto = MyScene.CreateSceneObject("ENEMY HP TEXT");
@@ -224,6 +240,8 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			base.Update();
 			RaycastTargetLogic();
 			WaveLogic();
+			if (MoneyText != null)
+				MoneyText.Text = $"$ {Money}";
 			if (HealthBar != null)
 			{
 				HealthBar.Value = Health / (float)MaxHealth;
@@ -289,6 +307,10 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			{
 				GameOver();
 			}
+		}
+		public void KilledEnemy(Enemy enemy)
+		{
+			Money += (int)(500 * (MathHelper.Clamp(50f - enemy.TimeLived, 1f, 50f)));
 		}
 		void GameOver()
 		{

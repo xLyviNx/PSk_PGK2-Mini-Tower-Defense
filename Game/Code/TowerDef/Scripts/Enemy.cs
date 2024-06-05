@@ -20,6 +20,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		public int Health = 100;
 		GameManager? gameManager = null;
 		public bool isHovered;
+		public float TimeLived;
 		public override void Awake()
 		{
 			base.Awake();
@@ -40,6 +41,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			base.Update();
 			if (hasreached)
 				return;
+			TimeLived += Time.deltaTime;
 			isHovered = gameManager.CurrentMouseTarget == gameObject;
 			if (isHovered)
 			{
