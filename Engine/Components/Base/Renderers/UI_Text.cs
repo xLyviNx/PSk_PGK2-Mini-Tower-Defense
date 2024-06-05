@@ -18,7 +18,7 @@ namespace PGK2.Engine.Components.Base.Renderers
 		{
 			// Calculate the text size
 			float padding = 10.0f;
-			Vector2 textSize = (ImGui.CalcTextSize(Text) * FontSize) + Vector2.One*padding;
+			Vector2 textSize = (ImGui.CalcTextSize(Text) * FontSize)/* + Vector2.One*padding*/;
 			Size = textSize;
 			// Add some padding to the text size
 			Vector2 windowSize = new Vector2(textSize.X + padding * 2, textSize.Y + padding * 2);

@@ -19,6 +19,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		bool hasreached = false;
 		public int Health = 100;
 		GameManager? gameManager = null;
+		public bool isHovered;
 		public override void Awake()
 		{
 			base.Awake();
@@ -39,6 +40,18 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			base.Update();
 			if (hasreached)
 				return;
+			isHovered = gameManager.CurrentMouseTarget == gameObject;
+			if (isHovered)
+			{
+				transform.LocalScale = Vector3.One * 1.1f;
+				gameManager.hoveredEnemy = this;
+			}
+			else
+			{
+				transform.LocalScale = Vector3.One;
+				if (gameManager.hoveredEnemy == this)
+					gameManager.hoveredEnemy = null;
+			}
 			if (myAgent.waypoint < myAgent.Path.Count)
 			{
 				var targetrot = TransformComponent.LookAtRotation(transform.Position, myAgent.Path[myAgent.waypoint]);

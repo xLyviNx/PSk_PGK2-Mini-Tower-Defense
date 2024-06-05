@@ -65,12 +65,7 @@ namespace PGK2.TowerDef.Scripts
 		}
 		void OnMouseClick(Vector2 mousePosition)
 		{
-			foreach(var c in gameObject.Components.All)
-				Console.WriteLine($"{c.GetType().Name} {gameObject.Id}");
-			if (Physics.RayCast_Triangle(myCamera, mousePosition, 1000f, out RayCastHit hitInfo))
-			{
-				Console.WriteLine("CLICKED AND HIT");
-			}
+	
 		}
 	}
 }

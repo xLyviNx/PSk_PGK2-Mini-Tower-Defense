@@ -14,6 +14,12 @@ namespace PGK2.Engine.Core.Physics
 	{
 		public static bool RayCast_Triangle(CameraComponent camera, Vector2 MousePosition, float maxDistance, out RayCastHit hitInfo, TagsContainer tags = null)
 		{
+			if(camera==null)
+			{
+				Console.WriteLine("[RAYCAST] Camera is null");
+				hitInfo = new();
+				return false;
+			}	
 			Ray ray = Ray.GetRayFromScreenCoordinates(MousePosition, camera.ProjectionMatrix, camera.ViewMatrix, EngineWindow.instance.ClientSize.X, EngineWindow.instance.ClientSize.Y);
 			Vector3 rayOrigin = ray.Origin;
 			Vector3 rayDirection = ray.Direction;

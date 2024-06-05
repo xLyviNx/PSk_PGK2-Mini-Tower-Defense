@@ -4,6 +4,7 @@ using PGK2.Engine.Components;
 using PGK2.Engine.Components.Base;
 using PGK2.Engine.Components.Base.Renderers;
 using PGK2.Engine.Core;
+using PGK2.Engine.Core.Physics;
 using PGK2.Engine.SceneSystem;
 
 namespace PGK2.Game.Code.TowerDef.Scripts
@@ -49,19 +50,24 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		}
 		public int Health;
 		public int MaxHealth=1000;
-		UI_ProgressBar HealthBar;
-		UI_Text TimeText;
-		UI_Text WaveText;
+		UI_ProgressBar? HealthBar;
+		UI_Text? TimeText;
+		UI_Text? WaveText;
 
 		List<(float, int, float)> EnemiesQueue = new();
+		public GameObject? CurrentMouseTarget;
+		UI_Text? EnemyHpDisplayText;
+		public Enemy? hoveredEnemy;
 
+		private static readonly int TimeBeforeFirstWave = 5;
 		private void OnGameStarted()
 		{
 			Health = MaxHealth;
 			CreateHealthBar();
 			CreateTimerText();
 			CreateWaveText();
-			WaveTime = 60;
+			CreateEnemyHpText();
+			WaveTime = TimeBeforeFirstWave;
 			WaveEnded = true;
 		}
 		void CreateWaveQueue()
@@ -201,10 +207,22 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			text.UI_Alignment = UI_Renderer.Alignment.CenterUp;
 			text.Pivot = new(0.5f, 0);
 			WaveText = text;
+		}	
+		private void CreateEnemyHpText()
+		{
+			GameObject texto = MyScene.CreateSceneObject("ENEMY HP TEXT");
+			var text = texto.AddComponent<UI_Text>();
+			text.Color = new(1, 1, 1, 1);
+			text.transform.Position = new(0f, -30f, 0f);
+			text.FontSize = 1;
+			text.UI_Alignment = UI_Renderer.Alignment.DownCenter;
+			text.Pivot = new(0.5f, 1);
+			EnemyHpDisplayText = text;
 		}
 		public override void Update()
 		{
 			base.Update();
+			RaycastTargetLogic();
 			WaveLogic();
 			if (HealthBar != null)
 			{
@@ -222,7 +240,34 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 				else
 					WaveText.Text = $"WAVE {wave}";
 			}
+
+			if(EnemyHpDisplayText != null)
+			{
+				if (hoveredEnemy!=null)
+				{
+					EnemyHpDisplayText.Text = $"HP: {hoveredEnemy.Health}";
+				}
+				else if (!WaveEnded && _gamestarted)
+				{
+					EnemyHpDisplayText.Text = $"HOVER ON ENEMY TO SEE THEIR HEALTH.";
+				}
+				else
+				{
+					EnemyHpDisplayText.Text = $"";
+				}
+			}
 		}
+
+		private void RaycastTargetLogic()
+		{
+			var mousePosition = Mouse.MousePosition;
+			if (Physics.RayCast_Triangle(CameraComponent.activeCamera, mousePosition, 1000f, out RayCastHit hitInfo))
+			{
+				CurrentMouseTarget = hitInfo.gameObject;
+			}else
+				CurrentMouseTarget = null;
+		}
+
 		public Enemy SpawnEnemy(int hp, float speed)
 		{
 			var enemy = SceneManager.ActiveScene.CreateSceneObject("ENEMY");
