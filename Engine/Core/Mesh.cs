@@ -44,17 +44,12 @@ namespace PGK2.Engine.Core
 			this.indices = indices;
 			this.textures = textures;
 			Material = mat;
-			Console.WriteLine($"INIT MESH: {vertices.Count}, {indices.Count}, {textures.Count}");
+			//Console.WriteLine($"INIT MESH: {vertices.Count}, {indices.Count}, {textures.Count}");
 			setupMesh();
 		}
-		public void Draw(Matrix4 modelMatrix, Matrix4 viewMatrix, Matrix4 projectionMatrix, List<Light> Lights, CameraComponent camera, Material? overrideMaterial = null)
+		public void Draw(Matrix4 modelMatrix, Matrix4 viewMatrix, Matrix4 projectionMatrix, List<Light> Lights, CameraComponent camera, Material? overrideMaterial)
 		{
-			//Console.WriteLine($"MESH {VAO}, {VBO}, {EBO}, VERTS: {vertices.Count}, INDICES: {indices.Count}");
-			Material mat = Material;
-			if(overrideMaterial != null)
-			{
-				mat = overrideMaterial;
-			}
+			Material mat = overrideMaterial ?? Material;
 			mat.Shader.SetMatrix4("model", modelMatrix);
 			mat.Shader.SetMatrix4("view", viewMatrix);
 			mat.Shader.SetMatrix4("projection", projectionMatrix);
@@ -66,20 +61,20 @@ namespace PGK2.Engine.Core
 				for (int i = 0; i < lightsnum; i++)
 				{
 					Light l = Lights[i];
-					Material.Shader.SetVector3($"lights[{i}].position", l.Position);
-					Material.Shader.SetVector3($"lights[{i}].ambient", l.Ambient);
-					Material.Shader.SetVector3($"lights[{i}].diffuse", l.Diffuse);
-					Material.Shader.SetVector3($"lights[{i}].specular", l.Specular);
+					mat.Shader.SetVector3($"lights[{i}].position", l.Position);
+					mat.Shader.SetVector3($"lights[{i}].ambient", l.Ambient);
+					mat.Shader.SetVector3($"lights[{i}].diffuse", l.Diffuse);
+					mat.Shader.SetVector3($"lights[{i}].specular", l.Specular);
 				}
-				Material.Shader.SetInt("numLights", lightsnum);
-				Material.Shader.SetVector3($"viewPos", camera.transform.Position);
-				Material.Use();
+				mat.Shader.SetInt("numLights", lightsnum);
+				mat.Shader.SetVector3($"viewPos", camera.transform.Position);
+				mat.Use();
 			}
 			GL.BindVertexArray(VAO);
 			GL.DrawElements(BeginMode.Triangles, indices.Count, DrawElementsType.UnsignedInt, 0);
 			GL.BindVertexArray(0);
 			if(usednormal)
-				Material.Unuse();
+				mat.Unuse();
 		}
 		void setupMesh()
 		{

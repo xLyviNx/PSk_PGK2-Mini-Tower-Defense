@@ -3,7 +3,7 @@
   "GameObjects": [
     {
       "name": "LOCK CONTROLLER",
-      "Id": "f7f492c4-0d40-4b21-8e17-760c8eb8c068",
+      "Id": "746c7725-e245-4421-870c-9ded578d39d6",
       "Components": {
         "All": [
           {
@@ -40,7 +40,7 @@
     },
     {
       "name": "CAMERA PARENT",
-      "Id": "2cf86273-ee60-4733-9505-b96504ade36a",
+      "Id": "26009681-998a-4736-95b1-bda253c7409e",
       "Components": {
         "All": [
           {
@@ -61,7 +61,7 @@
               "Roll": 0,
               "Children": {
                 "All": [
-                  "b072b52b-3e8a-4370-9b60-03d974a57fe1"
+                  "ae679559-ce2c-4353-9c88-1bb9b2b0b264"
                 ]
               }
             }
@@ -73,7 +73,7 @@
     },
     {
       "name": "CAMERA OBJECT",
-      "Id": "b072b52b-3e8a-4370-9b60-03d974a57fe1",
+      "Id": "ae679559-ce2c-4353-9c88-1bb9b2b0b264",
       "Components": {
         "All": [
           {
@@ -129,7 +129,7 @@
     },
     {
       "name": "MAP OBJECT",
-      "Id": "03a2f015-08cc-4a3c-a7b7-a95265a37d66",
+      "Id": "91b0f6b4-01c7-4e6d-8703-4a9615904cde",
       "Components": {
         "All": [
           {
@@ -178,7 +178,7 @@
     },
     {
       "name": "Light Object",
-      "Id": "17a23fe7-8266-4418-8a96-dc53fd41f193",
+      "Id": "43ce418b-32e7-466d-9e46-719dec1da4d2",
       "Components": {
         "All": [
           {
@@ -231,7 +231,7 @@
     },
     {
       "name": "Light Object 2",
-      "Id": "9f0fda74-d45d-4529-889b-d1935b167f3c",
+      "Id": "2af211db-ab83-4aac-95ed-0e92a7ab4772",
       "Components": {
         "All": [
           {
@@ -284,7 +284,7 @@
     },
     {
       "name": "ai_target",
-      "Id": "f517092e-3392-4fa6-884d-526f95ec68ab",
+      "Id": "abfcc819-35ad-4d28-8e56-403a069c0a55",
       "Components": {
         "All": [
           {
@@ -315,7 +315,7 @@
     },
     {
       "name": "Game Manager",
-      "Id": "d64e5d6f-94ae-42fb-a7a1-3c17cf7133b6",
+      "Id": "997e7b77-33da-4dc1-9928-28ff55e651e7",
       "Components": {
         "All": [
           {

@@ -5,6 +5,7 @@ using PGK2.Engine.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,6 +22,8 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		GameManager? gameManager = null;
 		public bool isHovered;
 		public float TimeLived;
+		bool instantiatedmaterials = false;
+		bool Damaged;
 		public override void Awake()
 		{
 			base.Awake();
@@ -43,6 +46,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 				return;
 			TimeLived += Time.deltaTime;
 			isHovered = gameManager.CurrentMouseTarget == gameObject;
+			DamagedUpdate();
 			if (isHovered)
 			{
 				transform.LocalScale = Vector3.One * 1.1f;
@@ -62,12 +66,44 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 
 			float dist = Vector3.Distance(myAgent.transform.Position, myAgent.TargetPosition);
 			//Console.WriteLine(dist);
+
+			var kb = EngineWindow.instance.KeyboardState;
+			if(kb.IsKeyPressed(OpenTK.Windowing.GraphicsLibraryFramework.Keys.L))
+			{
+				Console.WriteLine("DAMAGE");
+				Damage(0);
+			}
+
 			if (dist < 0.05f)
 			{
 				hasreached = true;
 				Reached();
 			}
 		}
+
+		private void DamagedUpdate()
+		{
+			if (!instantiatedmaterials) return;
+			for(int i = 0; i<myModelRenderer.Model.meshes.Count; i++)
+			{
+				Mesh mesh = myModelRenderer.Model.meshes[i];
+				int nummats = 1; //bo w aktualnej wersji nie ma wielu materialow na mesh
+				for (int j = 0; j<nummats; j++)
+				{
+					//Console.WriteLine("DAMAGED UPDATE 3");
+					Material defaultmat = myModelRenderer.Model.meshes[i].Material;
+					Material mat = myModelRenderer.OverrideMaterials[i + j];
+					Vector3 targetcolor = Damaged ? new(1, 0.0f, 0.0f) : defaultmat.Vector3Values["material.diffuse"];
+					if(mat!=null)
+					{
+
+						mat.Vector3Values["material.diffuse"] = Vector3.Lerp(mat.Vector3Values["material.diffuse"], targetcolor, Time.deltaTime * 20f);
+					}
+
+				}
+			}
+		}
+
 		public override void OnDestroy()
 		{
 			base.OnDestroy();
@@ -76,6 +112,29 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		private void Reached()
 		{
 			gameManager.EnemyReached(this);
+		}
+		public void Damage(int dmg)
+		{
+			DamageEffect();
+		}
+		private void InstantiateMaterials()
+		{
+			if (instantiatedmaterials) return;
+			instantiatedmaterials = true;
+
+			myModelRenderer.InstantiateAllMaterials();
+		}
+		private async void DamageEffect()
+		{
+			InstantiateMaterials();
+			Damaged = true;
+			Console.WriteLine("SETTING DAMAGED TO TRUE");
+			await Task.Delay(200);
+			if (!gameObject.isDestroyed)
+			{
+				Console.WriteLine("SETTING DAMAGED TO FALSE");
+				Damaged = false;
+			}
 		}
 	}
 }

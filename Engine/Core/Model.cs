@@ -32,18 +32,9 @@ namespace PGK2.Engine.Core
 			int i = 0;
 			foreach (var mesh in meshes)
 			{
-				Material? mat = RendererMaterials != null && RendererMaterials.Length>=i && RendererMaterials[i] != null ? RendererMaterials[i] : mesh.Material;
-				mat = mesh.Material;
-				string matstring = "";
-				try
-				{
-					matstring = $"{mat.Vector3Values["material.diffuse"]}";
-				}
-				catch(Exception ex)
-				{
-					matstring = ex.Message;
-				}
-				Console.WriteLine($"MAT:{(RendererMaterials != null && RendererMaterials.Length >= i && RendererMaterials[i] != null ? "OVERRIDED" : "NORMAL")}, {matstring}");
+				bool overrided = (RendererMaterials != null && RendererMaterials.Length >= i && RendererMaterials[i] != null);
+
+				Material? mat = overrided ? RendererMaterials[i] : mesh.Material;
 				bool Transparent = ((mesh.hasTransparentTextures || mat.HasTransparency) && RenderPass == EngineInstance.RenderPass.Transparent);
 				bool Opaque = (RenderPass == EngineInstance.RenderPass.Opaque && !mesh.hasTransparency);
 				bool Outline = (RenderPass == EngineInstance.RenderPass.Outline);
@@ -52,7 +43,7 @@ namespace PGK2.Engine.Core
 				if (Transparent || Opaque || Outline)
 				{
 
-					mesh.Draw(modelMatrix, viewMatrix, projectionMatrix, lights, camera, overrideMaterial != null? overrideMaterial : mat);
+					mesh.Draw(modelMatrix, viewMatrix, projectionMatrix, lights, camera, overrided? mat : null);
 				}
 				//Console.WriteLine($"DRAWN");
 				i++;

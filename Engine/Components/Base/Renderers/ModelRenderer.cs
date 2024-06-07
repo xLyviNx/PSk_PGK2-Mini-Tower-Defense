@@ -14,7 +14,8 @@ namespace PGK2.Engine.Components
 		[JsonIgnore]
 		public Core.Model? Model
 		{
-			get => _model; set
+			get => _model; 
+			set
 			{
 				SetModel(value);
 			}
@@ -37,7 +38,7 @@ namespace PGK2.Engine.Components
 		}
 		public void SetModel(Core.Model? model)
 		{
-			Console.WriteLine("Setting MODEL to " + (model != null ? model.ToString() : "NULL"));
+			//Console.WriteLine("Setting MODEL to " + (model != null ? model.ToString() : "NULL"));
 			_model = model;
 			int mats = 0;
 			foreach(Mesh m in model.meshes)
@@ -46,7 +47,18 @@ namespace PGK2.Engine.Components
 			}
 			OverrideMaterials = new Material?[mats];
 		}
-
+		public void InstantiateAllMaterials()
+		{
+			foreach(Mesh m in Model.meshes)
+			{
+				InstantiateMaterial(m);
+			}
+		}
+		public void InstantiateMaterial(Mesh mesh)
+		{
+			int index = Model.meshes.IndexOf(mesh);
+			OverrideMaterials[index] = mesh.Material.Instantiate();
+		}
 		protected override void Render(CameraComponent camera, EngineInstance.RenderPass RenderPass)
 		{
 			if (Model == null) return;

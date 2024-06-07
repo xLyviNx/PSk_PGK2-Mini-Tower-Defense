@@ -88,5 +88,36 @@ namespace PGK2.Engine.Core
 		{
 			Shader.Unuse();
 		}
+		public Material Instantiate()
+		{
+			Material newMaterial = new Material(this.Shader);
+
+			foreach (var kvp in this.Textures)
+			{
+				newMaterial.Textures.Add(kvp.Key, kvp.Value);
+			}
+
+			foreach (var kvp in this.FloatValues)
+			{
+				newMaterial.FloatValues.Add(kvp.Key, kvp.Value);
+			}
+
+			foreach (var kvp in this.Vector3Values)
+			{
+				newMaterial.Vector3Values.Add(kvp.Key, kvp.Value);
+			}
+
+			foreach (var kvp in this.IntValues)
+			{
+				newMaterial.IntValues.Add(kvp.Key, kvp.Value);
+			}
+
+			foreach (var kvp in this.ColorValues)
+			{
+				newMaterial.ColorValues.Add(kvp.Key, kvp.Value);
+			}
+
+			return newMaterial;
+		}
 	}
 }
