@@ -28,6 +28,7 @@ namespace PGK2.Engine.Components
 				_loadedModelPath = value;
 			}
 		}
+		public Material?[] OverrideMaterials;
 		[JsonIgnore]
 		internal string? _loadedModelPath;
 		public ModelRenderer()
@@ -38,6 +39,12 @@ namespace PGK2.Engine.Components
 		{
 			Console.WriteLine("Setting MODEL to " + (model != null ? model.ToString() : "NULL"));
 			_model = model;
+			int mats = 0;
+			foreach(Mesh m in model.meshes)
+			{
+				mats += 1; // jesli kiedys bedzie wiele materialow na mesh, to tu bedzie dodawane tyle ile materialow czy cos
+			}
+			OverrideMaterials = new Material?[mats];
 		}
 
 		protected override void Render(CameraComponent camera, EngineInstance.RenderPass RenderPass)
@@ -57,7 +64,7 @@ namespace PGK2.Engine.Components
 				GL.StencilFunc(StencilFunction.Always, 1, 0xFF);
 				GL.StencilMask(0x00);
 			}
-			Model.Draw(modelMatrix, viewMatrix, projectionMatrix, gameObject.MyScene.Lights, camera, RenderPass);			
+			Model.Draw(modelMatrix, viewMatrix, projectionMatrix, gameObject.MyScene.Lights, camera, RenderPass, null, OverrideMaterials);			
 		}
 		protected override void RenderOutline(CameraComponent camera)
 		{
@@ -76,7 +83,7 @@ namespace PGK2.Engine.Components
 				Vector3 Scale = transform.Scale;
 				transform.Scale = Scale * 1.05f;
 				OutlineMaterial.Use();
-				Model.Draw(transform.GetModelMatrix(), viewMatrix, projectionMatrix, new List<Light>(), camera, EngineInstance.RenderPass.Outline, OutlineMaterial);
+				Model.Draw(transform.GetModelMatrix(), viewMatrix, projectionMatrix, new List<Light>(), camera, EngineInstance.RenderPass.Outline, OutlineMaterial, null);
 				transform.Scale = Scale;
 				OutlineMaterial.Unuse();
 

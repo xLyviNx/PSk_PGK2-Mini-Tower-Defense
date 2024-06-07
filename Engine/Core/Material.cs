@@ -15,7 +15,17 @@ namespace PGK2.Engine.Core
 		public Dictionary<string, Vector3> Vector3Values { get; set; } = new Dictionary<string, Vector3>();
 		public Dictionary<string, int> IntValues { get; set; } = new Dictionary<string, int>();
 		public Dictionary<string, Color4> ColorValues { get; set; } = new Dictionary<string, Color4>();
-
+		public bool HasTransparency
+		{
+			get
+			{
+				if (FloatValues.ContainsKey("material.transparency") && FloatValues["material.transparency"] < 1f)
+				{
+					return true;
+				}
+				return false;
+			}
+		}
 		public Material(Shader shader)
 		{
 			Shader = shader;

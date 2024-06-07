@@ -2,6 +2,7 @@
 using PGK2.Engine.Components.Base;
 using Assimp.Configs;
 using OpenTK.Mathematics;
+using System.Diagnostics;
 
 namespace PGK2.Engine.Core
 {
@@ -26,19 +27,35 @@ namespace PGK2.Engine.Core
 		internal Model()
 		{
 		}
-		public void Draw(Matrix4 modelMatrix, Matrix4 viewMatrix, Matrix4 projectionMatrix, List<Light> lights, CameraComponent camera, EngineInstance.RenderPass RenderPass, Material? overrideMaterial = null)
+		public void Draw(Matrix4 modelMatrix, Matrix4 viewMatrix, Matrix4 projectionMatrix, List<Light> lights, CameraComponent camera, EngineInstance.RenderPass RenderPass, Material? overrideMaterial = null, Material?[]? RendererMaterials = null)
 		{
+			int i = 0;
 			foreach (var mesh in meshes)
 			{
-				bool Transparent = (mesh.hasTransparency && RenderPass == EngineInstance.RenderPass.Transparent);
+				Material? mat = RendererMaterials != null && RendererMaterials.Length>=i && RendererMaterials[i] != null ? RendererMaterials[i] : mesh.Material;
+				mat = mesh.Material;
+				string matstring = "";
+				try
+				{
+					matstring = $"{mat.Vector3Values["material.diffuse"]}";
+				}
+				catch(Exception ex)
+				{
+					matstring = ex.Message;
+				}
+				Console.WriteLine($"MAT:{(RendererMaterials != null && RendererMaterials.Length >= i && RendererMaterials[i] != null ? "OVERRIDED" : "NORMAL")}, {matstring}");
+				bool Transparent = ((mesh.hasTransparentTextures || mat.HasTransparency) && RenderPass == EngineInstance.RenderPass.Transparent);
 				bool Opaque = (RenderPass == EngineInstance.RenderPass.Opaque && !mesh.hasTransparency);
 				bool Outline = (RenderPass == EngineInstance.RenderPass.Outline);
 
 				//Console.WriteLine($"{Transparent}, {Opaque}");
 				if (Transparent || Opaque || Outline)
-					mesh.Draw(modelMatrix, viewMatrix, projectionMatrix, lights, camera, overrideMaterial);
-				//Console.WriteLine($"DRAWN");
+				{
 
+					mesh.Draw(modelMatrix, viewMatrix, projectionMatrix, lights, camera, overrideMaterial != null? overrideMaterial : mat);
+				}
+				//Console.WriteLine($"DRAWN");
+				i++;
 			}
 		}
 

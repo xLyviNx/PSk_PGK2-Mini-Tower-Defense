@@ -3,7 +3,7 @@
   "GameObjects": [
     {
       "name": "LOCK CONTROLLER",
-      "Id": "916ef133-aabe-4693-ad17-79ad93a3a1e4",
+      "Id": "f7f492c4-0d40-4b21-8e17-760c8eb8c068",
       "Components": {
         "All": [
           {
@@ -40,7 +40,7 @@
     },
     {
       "name": "CAMERA PARENT",
-      "Id": "5e7b57a5-696c-403b-917a-ef19d9c8998b",
+      "Id": "2cf86273-ee60-4733-9505-b96504ade36a",
       "Components": {
         "All": [
           {
@@ -61,7 +61,7 @@
               "Roll": 0,
               "Children": {
                 "All": [
-                  "27cf8722-4133-429d-bac5-f6faf3aec5e2"
+                  "b072b52b-3e8a-4370-9b60-03d974a57fe1"
                 ]
               }
             }
@@ -73,7 +73,7 @@
     },
     {
       "name": "CAMERA OBJECT",
-      "Id": "27cf8722-4133-429d-bac5-f6faf3aec5e2",
+      "Id": "b072b52b-3e8a-4370-9b60-03d974a57fe1",
       "Components": {
         "All": [
           {
@@ -129,7 +129,7 @@
     },
     {
       "name": "MAP OBJECT",
-      "Id": "4c74ab3d-b0e1-483e-9d86-fb7e33dcf300",
+      "Id": "03a2f015-08cc-4a3c-a7b7-a95265a37d66",
       "Components": {
         "All": [
           {
@@ -157,6 +157,10 @@
             "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Data": {
               "ModelPath": ".//..//..//..//Game/Assets/Models/Level1.fbx",
+              "OverrideMaterials": [
+                null,
+                null
+              ],
               "RenderTags": {},
               "OutlineColor": {
                 "R": 1,
@@ -174,7 +178,7 @@
     },
     {
       "name": "Light Object",
-      "Id": "75ba2c05-2965-41ce-aa00-486941bbebbc",
+      "Id": "17a23fe7-8266-4418-8a96-dc53fd41f193",
       "Components": {
         "All": [
           {
@@ -227,7 +231,7 @@
     },
     {
       "name": "Light Object 2",
-      "Id": "a2a5dbba-70f9-4fde-8085-da03f8158bd8",
+      "Id": "9f0fda74-d45d-4529-889b-d1935b167f3c",
       "Components": {
         "All": [
           {
@@ -280,7 +284,7 @@
     },
     {
       "name": "ai_target",
-      "Id": "d26bb929-a52a-471e-80bf-4c5489b88421",
+      "Id": "f517092e-3392-4fa6-884d-526f95ec68ab",
       "Components": {
         "All": [
           {
@@ -311,7 +315,7 @@
     },
     {
       "name": "Game Manager",
-      "Id": "b553afdf-8bff-4ac2-89bd-9928a88af3c7",
+      "Id": "d64e5d6f-94ae-42fb-a7a1-3c17cf7133b6",
       "Components": {
         "All": [
           {

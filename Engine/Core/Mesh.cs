@@ -12,27 +12,29 @@ namespace PGK2.Engine.Core
 		public List<MeshVertex> vertices;
 		public List<uint> indices;
 		public List<Texture> textures;
-		public bool hasTransparency
+		public bool hasTransparentTextures
 		{
 			get
 			{
-				if (Material.FloatValues.ContainsKey("material.transparency") && Material.FloatValues["material.transparency"] <1f)
-				{
-					return true;
-				}
-
-				foreach(Texture tex in textures)
+				foreach (Texture tex in textures)
 				{
 					if (tex.transparency)
 						return true;
 				}
-				foreach(var t in Material.Textures.Values)
+				foreach (var t in Material.Textures.Values)
 				{
 					if (t.transparency)
 						return true;
 				}
-
 				return false;
+			}
+		}
+		public bool hasTransparency
+		{
+			get
+			{
+				
+				return Material.HasTransparency || hasTransparentTextures;
 			}
 		}
 		public Material Material;
@@ -56,28 +58,27 @@ namespace PGK2.Engine.Core
 			mat.Shader.SetMatrix4("model", modelMatrix);
 			mat.Shader.SetMatrix4("view", viewMatrix);
 			mat.Shader.SetMatrix4("projection", projectionMatrix);
-			if (overrideMaterial==null)
+			bool usednormal = false;
+			if (mat.Shader != EngineWindow.lightShader && mat.Shader != EngineWindow.OutlineShader)
 			{
-				if (Material.Shader != EngineWindow.lightShader)
+				usednormal = true;
+				int lightsnum = (int)MathF.Min(8, Lights.Count);
+				for (int i = 0; i < lightsnum; i++)
 				{
-					int lightsnum = (int)MathF.Min(8, Lights.Count);
-					for (int i = 0; i < lightsnum; i++)
-					{
-						Light l = Lights[i];
-						Material.Shader.SetVector3($"lights[{i}].position", l.Position);
-						Material.Shader.SetVector3($"lights[{i}].ambient", l.Ambient);
-						Material.Shader.SetVector3($"lights[{i}].diffuse", l.Diffuse);
-						Material.Shader.SetVector3($"lights[{i}].specular", l.Specular);
-					}
-					Material.Shader.SetInt("numLights", lightsnum);
-					Material.Shader.SetVector3($"viewPos", camera.transform.Position);
+					Light l = Lights[i];
+					Material.Shader.SetVector3($"lights[{i}].position", l.Position);
+					Material.Shader.SetVector3($"lights[{i}].ambient", l.Ambient);
+					Material.Shader.SetVector3($"lights[{i}].diffuse", l.Diffuse);
+					Material.Shader.SetVector3($"lights[{i}].specular", l.Specular);
 				}
+				Material.Shader.SetInt("numLights", lightsnum);
+				Material.Shader.SetVector3($"viewPos", camera.transform.Position);
 				Material.Use();
 			}
 			GL.BindVertexArray(VAO);
 			GL.DrawElements(BeginMode.Triangles, indices.Count, DrawElementsType.UnsignedInt, 0);
 			GL.BindVertexArray(0);
-			if(overrideMaterial==null)
+			if(usednormal)
 				Material.Unuse();
 		}
 		void setupMesh()
