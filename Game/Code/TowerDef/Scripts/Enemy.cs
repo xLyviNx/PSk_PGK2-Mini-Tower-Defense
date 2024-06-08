@@ -24,6 +24,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		public float TimeLived;
 		bool instantiatedmaterials = false;
 		bool Damaged;
+		private CancellationTokenSource damageEffectCancellationTokenSource;
 		public override void Awake()
 		{
 			base.Awake();
@@ -81,7 +82,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			}
 		}
 
-		private void DamagedUpdate()
+		private void DamagedUpdate(bool lerp = true)
 		{
 			if (!instantiatedmaterials) return;
 			for(int i = 0; i<myModelRenderer.Model.meshes.Count; i++)
@@ -96,8 +97,10 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 					Vector3 targetcolor = Damaged ? new(1, 0.0f, 0.0f) : defaultmat.Vector3Values["material.diffuse"];
 					if(mat!=null)
 					{
-
-						mat.Vector3Values["material.diffuse"] = Vector3.Lerp(mat.Vector3Values["material.diffuse"], targetcolor, Time.deltaTime * 20f);
+						if (lerp)
+							mat.Vector3Values["material.diffuse"] = Vector3.Lerp(mat.Vector3Values["material.diffuse"], targetcolor, Time.deltaTime * 20f);
+						else
+							mat.Vector3Values["material.diffuse"] = mat.Vector3Values["material.diffuse"];
 					}
 
 				}
@@ -126,14 +129,28 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		}
 		private async void DamageEffect()
 		{
+
+			damageEffectCancellationTokenSource?.Cancel();
+			Damaged = false;
+			DamagedUpdate(false);
+			damageEffectCancellationTokenSource = new CancellationTokenSource();
+			CancellationToken token = damageEffectCancellationTokenSource.Token;
+
 			InstantiateMaterials();
 			Damaged = true;
 			Console.WriteLine("SETTING DAMAGED TO TRUE");
-			await Task.Delay(200);
-			if (!gameObject.isDestroyed)
+			try
 			{
-				Console.WriteLine("SETTING DAMAGED TO FALSE");
-				Damaged = false;
+				await Task.Delay(200, token);
+				if (!gameObject.isDestroyed)
+				{
+					Console.WriteLine("SETTING DAMAGED TO FALSE");
+					Damaged = false;
+				}
+			}
+			catch (TaskCanceledException)
+			{
+				
 			}
 		}
 	}
