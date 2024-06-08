@@ -6,17 +6,19 @@ using PGK2.Engine.Components.Base.Renderers;
 using PGK2.Engine.Core;
 using PGK2.Engine.Core.Physics;
 using PGK2.Engine.SceneSystem;
+using System.Text.Json.Serialization;
 
 namespace PGK2.Game.Code.TowerDef.Scripts
 {
 	public class GameManager : Component
 	{
-		public float TimePassed; // seconds
-		public float WaveTime;
-		public float WaveTimeLeft => MathHelper.Clamp(WaveTime - TimePassed, 0, float.MaxValue);
+		[JsonIgnore] public float TimePassed; // seconds
+		[JsonIgnore] public float WaveTime;
+		[JsonIgnore] public float WaveTimeLeft => MathHelper.Clamp(WaveTime - TimePassed, 0, float.MaxValue);
 		bool WaveEnded = false;
 		int wave = 0;
-		public List<Enemy> SpawnedEnemies = new();
+		[JsonIgnore] public List<Enemy> SpawnedEnemies = new();
+		[JsonIgnore]
 		public string TimeString // H:MM:SS
 		{
 			get
@@ -35,6 +37,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			}
 		}
 		private bool _gamestarted;
+		[JsonIgnore]
 		public bool IsGameStarted
 		{
 			get => _gamestarted;
@@ -48,7 +51,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 
 			}
 		}
-		public int Health;
+		[JsonIgnore] public int Health;
 		public int MaxHealth=1000;
 		UI_ProgressBar? HealthBar;
 		UI_Text? TimeText;
@@ -56,10 +59,11 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		UI_Text? MoneyText;
 
 		List<(float, int, float)> EnemiesQueue = new();
-		public GameObject? CurrentMouseTarget;
-		UI_Text? EnemyHpDisplayText;
-		public Enemy? hoveredEnemy;
-		public int Money = 0;
+		[JsonIgnore] public GameObject? CurrentMouseTarget;
+		[JsonIgnore] UI_Text? EnemyHpDisplayText;
+		[JsonIgnore] public Enemy? hoveredEnemy;
+		[JsonIgnore] public int Money = 0;
+		[JsonIgnore] public float TakenDamageTimer;
 
 		private static readonly int TimeBeforeFirstWave = 5;
 		private void OnGameStarted()
@@ -240,6 +244,10 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			base.Update();
 			RaycastTargetLogic();
 			WaveLogic();
+
+			if (TakenDamageTimer > 0f)
+				TakenDamageTimer -= Time.deltaTime;
+
 			if (MoneyText != null)
 				MoneyText.Text = $"$ {Money}";
 			if (HealthBar != null)
@@ -305,6 +313,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		{
 			enemy.gameObject.Destroy();
 			Health -= 30;
+			TakenDamageTimer = 0.15f;
 			if (Health<=0)
 			{
 				GameOver();

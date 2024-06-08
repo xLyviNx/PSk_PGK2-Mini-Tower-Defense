@@ -2,7 +2,7 @@
 
 namespace PGK2.Engine.Core
 {
-	public class TagsContainer
+	public struct TagsContainer
 	{
 		[JsonPropertyName("All")]
 		public List<string> All;

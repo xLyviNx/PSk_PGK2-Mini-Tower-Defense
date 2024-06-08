@@ -20,10 +20,14 @@ namespace PGK2.TowerDef.Scripts
 		private float CameraDistance;
 		private float CameraDistanceLerpSpeed = 5f;
 		private Vector2 CameraVelocity;
+		Vector3 NormalBackground = new(0.3f, 0.6f, 0.5f);
+		Vector3 DamageColor = new(0.7f, 0.1f, 0.0f);
+		GameManager? manager;
 		public override void Awake()
 		{
 			base.Awake();
 			myCamera = GetComponent<CameraComponent>();
+			manager = MyScene.FindObjectOfType<GameManager>();
 		}
 		public override void Update()
 		{
@@ -31,6 +35,10 @@ namespace PGK2.TowerDef.Scripts
 			Debug.Assert(transform.Parent != null);
 			Debug.Assert(EngineWindow.instance != null);
 			myCamera.FieldOfView = 30f;
+			Vector3 bgcolor = manager.TakenDamageTimer > 0f ? DamageColor : NormalBackground;
+			Vector3 curr = new(myCamera.BackgroundColor.R, myCamera.BackgroundColor.G, myCamera.BackgroundColor.B);
+			curr = Vector3.Lerp(curr, bgcolor, Time.deltaTime * 15f);
+			myCamera.BackgroundColor = new(curr.X, curr.Y, curr.Z, 1f);
 			if (EngineWindow.instance.IsFocused)
 			{
 				var mouse = EngineWindow.instance.MouseState;
@@ -65,7 +73,7 @@ namespace PGK2.TowerDef.Scripts
 		}
 		void OnMouseClick(Vector2 mousePosition)
 		{
-			Console.WriteLine(myCamera.ExcludeTags.Count);
+			
 		}
 	}
 }

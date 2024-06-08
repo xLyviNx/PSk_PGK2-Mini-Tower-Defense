@@ -32,6 +32,8 @@ namespace PGK2.Engine.Core
 		private bool changedFocus;
 		public float aspectRatio { get; private set; }
 		public static Queue<Component> StartQueue = new();
+		public event EventHandler EndOfFrame;
+
 		public CameraComponent? activeCamera {get=>CameraComponent.activeCamera; }
 		public EngineWindow(GameWindowSettings gws, NativeWindowSettings nws) : base(gws,nws)
 		{
@@ -56,8 +58,8 @@ namespace PGK2.Engine.Core
 			_imGuiController = new ImGuiController(ClientSize.X, ClientSize.Y);
 
 
-			SceneLoadTest();
-			//MakeGameScene();
+			//SceneLoadTest();
+			MakeGameScene();
 			//MakeMenuScene();
 
 		}
@@ -84,7 +86,7 @@ namespace PGK2.Engine.Core
 			GameObject newObject2 = scene.CreateSceneObject("MAP OBJECT");
 			var rend = newObject2.Components.Add<ModelRenderer>();
 			rend.Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/Level1.fbx");
-			rend.RenderTags.Add("map");
+			rend.gameObject.Tags.Add("map");
 			rend.OutlineColor = Color4.Transparent;
 			//rend.transform.Pitch = -90f;
 			rend.transform.LocalScale = Vector3.One * 1;
@@ -106,8 +108,23 @@ namespace PGK2.Engine.Core
 			ai_target.transform.Position = new(-5, 0.12f, -4.25f);
 			ai_target.transform.LocalScale = 0.001f * Vector3.One;
 
-			var Manager = scene.CreateSceneObject("Game Manager");
-			Manager.AddComponent<GameManager>();
+			var Manager = scene.CreateSceneObject("Game Manager").AddComponent<GameManager>();
+
+			var TurretPlaceRegion = scene.CreateSceneObject("TurretRegion").AddComponent<ModelRenderer>();
+			TurretPlaceRegion.gameObject.Tags.Add("TurretRegion");
+			TurretPlaceRegion.transform.LocalPosition = new(0, 0.01f, 0f);
+			TurretPlaceRegion.Model= Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/turretzone.fbx");
+
+			
+			var TurretPanel = scene.CreateSceneObject("Turret Main Panel").AddComponent<UI_Panel>();
+			TurretPanel.Size = new(200, 300);
+			TurretPanel.UI_Alignment = UI_Renderer.Alignment.DownLeft;
+			TurretPanel.transform.Position = new(10, -10, 0);
+			TurretPanel.Color = new(0, 0, 0, 0.5f);
+			TurretPanel.Pivot = new(0, 1);
+
+			var TurretManager = scene.CreateSceneObject("Turret Manager").AddComponent<TurretManager>();
+
 			scene.AddAwaitingObjects();
 			SceneManager.SaveSceneToFile(scene, $"{EngineInstance.ASSETS_PATH}/Scenes/GAME.lscn");
 			foreach(var obj in scene.GameObjects)
@@ -143,7 +160,7 @@ namespace PGK2.Engine.Core
 			var title = titleO.AddComponent<UI_Text>();
 			title.UI_Alignment = UI_Renderer.Alignment.CenterUp;
 			title.transform.Position = new Vector3(0, 30f, 0);
-			title.Text = "Tower Defense Basic Game";
+			title.Text = "Basic Tower Defense Game";
 			title.FontSize = 3f;
 			title.Pivot = new(0.5f, 0f);	
 			
@@ -163,10 +180,20 @@ namespace PGK2.Engine.Core
 			var btnO = scene.CreateSceneObject("PlayButton");
 			var btn = btnO.AddComponent<UI_Button>();
 			btn.UI_Alignment = UI_Renderer.Alignment.Center;
+			btn.transform.Position = new(0, -22.5f, 0);
 			btn.Text = "Play";
 			btn.FontSize = 1.5f;
 			btn.Padding.X = 70f;
 			btn.Pivot = new(0.5f, 0.5f);
+						
+			var QbtnO = scene.CreateSceneObject("QuitButton");
+			var Qbtn = QbtnO.AddComponent<UI_Button>();
+			Qbtn.UI_Alignment = UI_Renderer.Alignment.Center;
+			Qbtn.Text = "Quit";
+			Qbtn.transform.Position = new(0, 22.5f, 0);
+			Qbtn.FontSize = 1.5f;
+			Qbtn.Padding.X = 70f;
+			Qbtn.Pivot = new(0.5f, 0.5f);
 
 			var controller = scene.CreateSceneObject("Menu Controller").AddComponent<Menu>();
 
@@ -249,9 +276,29 @@ namespace PGK2.Engine.Core
 			// Render ImGui last to ensure it overlays correctly
 			_imGuiController.Render();
 			SwapBuffers();
+			OnEndOfFrame();
 		}
 
-		protected override void OnUnload()
+		protected virtual void OnEndOfFrame()
+		{
+			EndOfFrame?.Invoke(this, EventArgs.Empty);
+		}
+		public async Task WaitForEndOfFrame()
+		{
+			var tcs = new TaskCompletionSource<bool>();
+
+			EventHandler handler = null;
+			handler = (sender, args) =>
+			{
+				EndOfFrame -= handler;
+				tcs.SetResult(true);
+			};
+
+			EndOfFrame += handler;
+
+			await tcs.Task;
+		}
+	protected override void OnUnload()
 		{
 			base.OnUnload();
 			shader.Dispose();

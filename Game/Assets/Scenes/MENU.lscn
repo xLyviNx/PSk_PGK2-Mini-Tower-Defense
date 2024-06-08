@@ -3,7 +3,7 @@
   "GameObjects": [
     {
       "name": "CAMERA OBJECT",
-      "Id": "518d57d9-c7f0-4421-ba74-f683eb8b4d06",
+      "Id": "44658b7c-c634-4db0-8926-719684494e6a",
       "Components": {
         "All": [
           {
@@ -38,13 +38,23 @@
                 "B": 0,
                 "A": 1
               },
-              "IncludeTags": {},
-              "ExcludeTags": {},
+              "IncludeTags": {
+                "All": []
+              },
+              "ExcludeTags": {
+                "All": []
+              },
               "Priority": 0,
               "OrthoSize": 10,
               "NearClip": 0.1,
               "FarClip": 1000,
               "EnabledSelf": true
+            },
+            "IncludeTags": {
+              "All": []
+            },
+            "ExcludeTags": {
+              "All": []
             }
           },
           {
@@ -55,12 +65,14 @@
           }
         ]
       },
-      "Tags": {},
+      "Tags": {
+        "All": []
+      },
       "IsActiveSelf": true
     },
     {
       "name": "Light Object",
-      "Id": "46707932-3cba-4229-8fce-bb3e294b1e0e",
+      "Id": "7b918f29-4860-4f70-bbbb-8e4df4e6035b",
       "Components": {
         "All": [
           {
@@ -108,12 +120,14 @@
           }
         ]
       },
-      "Tags": {},
+      "Tags": {
+        "All": []
+      },
       "IsActiveSelf": true
     },
     {
       "name": "enemy",
-      "Id": "41085d41-14ff-4836-9f5f-6fb714121415",
+      "Id": "2f0ae509-2019-4d38-b868-f26e5e812bee",
       "Components": {
         "All": [
           {
@@ -151,7 +165,6 @@
                 null,
                 null
               ],
-              "RenderTags": {},
               "OutlineColor": {
                 "R": 1,
                 "G": 1,
@@ -163,12 +176,14 @@
           }
         ]
       },
-      "Tags": {},
+      "Tags": {
+        "All": []
+      },
       "IsActiveSelf": true
     },
     {
       "name": "Title",
-      "Id": "226081cf-59ce-4cd6-bbad-82090f94a818",
+      "Id": "46153c82-8a27-43d8-9c20-6dc374440d68",
       "Components": {
         "All": [
           {
@@ -195,7 +210,7 @@
           {
             "Type": "PGK2.Engine.Components.Base.Renderers.UI_Text, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Data": {
-              "Text": "Tower Defense Basic Game",
+              "Text": "Basic Tower Defense Game",
               "FontSize": 3,
               "HoverOnlyWindow": false,
               "Pivot": {
@@ -224,12 +239,14 @@
           }
         ]
       },
-      "Tags": {},
+      "Tags": {
+        "All": []
+      },
       "IsActiveSelf": true
     },
     {
       "name": "Title",
-      "Id": "1bf9cc34-5d79-4a02-b771-01cad7325638",
+      "Id": "913000ec-6e22-4b0c-86bd-b641690b1059",
       "Components": {
         "All": [
           {
@@ -285,12 +302,14 @@
           }
         ]
       },
-      "Tags": {},
+      "Tags": {
+        "All": []
+      },
       "IsActiveSelf": true
     },
     {
       "name": "PlayButton",
-      "Id": "3c027325-55ac-4484-9137-6f14d31148c9",
+      "Id": "798987a4-3075-4f9c-8fc2-57132bbbfca0",
       "Components": {
         "All": [
           {
@@ -298,7 +317,7 @@
             "Data": {
               "LocalPosition": {
                 "X": 0,
-                "Y": 0,
+                "Y": -22.5,
                 "Z": 0
               },
               "LocalScale": {
@@ -365,12 +384,96 @@
           }
         ]
       },
-      "Tags": {},
+      "Tags": {
+        "All": []
+      },
+      "IsActiveSelf": true
+    },
+    {
+      "name": "QuitButton",
+      "Id": "6fd3d235-d372-4204-8197-7af68aa4c917",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 0,
+                "Y": 22.5,
+                "Z": 0
+              },
+              "LocalScale": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "Text": "Quit",
+              "FontSize": 1.5,
+              "NormalColor": {
+                "X": 0.1,
+                "Y": 0.1,
+                "Z": 0.1,
+                "W": 0.2
+              },
+              "HoverColor": {
+                "X": 0.2,
+                "Y": 0.2,
+                "Z": 0.2,
+                "W": 0.5
+              },
+              "ClickColor": {
+                "X": 0.8,
+                "Y": 0.8,
+                "Z": 0.8,
+                "W": 0.9
+              },
+              "FadeSpeed": 15,
+              "HoverOnlyWindow": false,
+              "Pivot": {
+                "X": 0.5,
+                "Y": 0.5
+              },
+              "Size": {
+                "X": 0,
+                "Y": 0
+              },
+              "Padding": {
+                "X": 70,
+                "Y": 10
+              },
+              "UI_Alignment": 4,
+              "Color": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1,
+                "W": 1
+              },
+              "wasClicked": false,
+              "wasHovered": false,
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {
+        "All": []
+      },
       "IsActiveSelf": true
     },
     {
       "name": "Menu Controller",
-      "Id": "564a5d16-beca-4bd2-b620-ab0ba7a5fc66",
+      "Id": "686f387f-004b-4673-aec6-115bd6a4c525",
       "Components": {
         "All": [
           {
@@ -402,7 +505,9 @@
           }
         ]
       },
-      "Tags": {},
+      "Tags": {
+        "All": []
+      },
       "IsActiveSelf": true
     }
   ]

@@ -13,14 +13,21 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		public static string GameSceneFile =>  $"{EngineInstance.ASSETS_PATH}/Scenes/GAME.lscn";
 		public static string MenuSceneFile =>  $"{EngineInstance.ASSETS_PATH}/Scenes/MENU.lscn";
 		UI_Button? PlayButton;
+		UI_Button? QuitButton;
 		public override void Awake()
 		{
 			base.Awake();
 			PlayButton = MyScene.FindObjectByName("PlayButton")?.GetComponent<UI_Button>();
+			QuitButton = MyScene.FindObjectByName("QuitButton")?.GetComponent<UI_Button>();
 			if (PlayButton!=null)
-			{
 				PlayButton.OnClick += PlayClicked;
-			}
+			if (QuitButton!=null)
+				QuitButton.OnClick += QuitClicked;
+		}
+
+		private void QuitClicked()
+		{
+			EngineWindow.instance.Close();
 		}
 
 		private void PlayClicked()

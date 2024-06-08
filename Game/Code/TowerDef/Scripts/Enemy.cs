@@ -37,7 +37,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			hitboxObject.transform.Parent = transform;
 			var hitboxrend = hitboxObject.AddComponent<ModelRenderer>();
 			hitboxrend.Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/cube.fbx");
-			hitboxrend.RenderTags.Add("enemyhitbox");
+			hitboxrend.gameObject.Tags.Add("enemyhitbox");
 			hitboxObject.transform.LocalPosition = new(0,0.4f,0);
 			hitboxObject.transform.LocalRotation = Vector3.Zero;
 

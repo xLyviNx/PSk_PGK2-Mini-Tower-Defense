@@ -12,7 +12,7 @@ namespace PGK2.Engine.Core.Physics
 {
 	public static class Physics
 	{
-		public static bool RayCast_Triangle(CameraComponent camera, Vector2 MousePosition, float maxDistance, out RayCastHit hitInfo, TagsContainer tags = null)
+		public static bool RayCast_Triangle(CameraComponent camera, Vector2 MousePosition, float maxDistance, out RayCastHit hitInfo, TagsContainer tags)
 		{
 			if(camera==null)
 			{
@@ -26,7 +26,7 @@ namespace PGK2.Engine.Core.Physics
 			return RayCast_Triangle(rayOrigin, rayDirection, maxDistance, out hitInfo, tags);
 		}
 
-		public static bool RayCast_Triangle(Vector3 origin, Vector3 direction, float maxDistance, out RayCastHit hitInfo, TagsContainer tags = null)
+		public static bool RayCast_Triangle(Vector3 origin, Vector3 direction, float maxDistance, out RayCastHit hitInfo, TagsContainer tags)
 		{
 			hitInfo = new RayCastHit();
 			float closestDistance = maxDistance;
@@ -67,7 +67,7 @@ namespace PGK2.Engine.Core.Physics
 			return hit;
 		}
 
-		private static List<ModelRenderer> GetAllRenderers(TagsContainer tags = null)
+		private static List<ModelRenderer> GetAllRenderers(TagsContainer tags)
 		{
 			var models = new List<ModelRenderer>();
 
@@ -76,7 +76,7 @@ namespace PGK2.Engine.Core.Physics
 				if (rend != null)
 				{
 					if (rend.Model == null) continue;
-					if (tags == null || tags.Count == 0 || rend.RenderTags.HasAny(tags))
+					if ( tags.Count == 0 || rend.gameObject.Tags.HasAny(tags))
 					{
 						models.Add(rend);
 					}

@@ -25,10 +25,8 @@ namespace PGK2.Engine.Components
 				return _outlineMaterial;
 			}
 		}
-		public TagsContainer RenderTags { get; private set; }
 		protected Renderer()
 		{
-			RenderTags = new();
 			OnSceneTransfer += SceneTransfer;
 		}
 		public override void OnDestroy()
@@ -51,7 +49,7 @@ namespace PGK2.Engine.Components
 				return;
 
 			if (!EnabledInHierarchy) return;
-			bool pass = (camera.IncludeTags.isEmpty && !camera.ExcludeTags.HasAny(RenderTags))|| camera.IncludeTags.HasAny(RenderTags);
+			bool pass = (camera.IncludeTags.isEmpty && !camera.ExcludeTags.HasAny(gameObject.Tags))|| camera.IncludeTags.HasAny(gameObject.Tags);
 			if (pass)
 			{
 				Render(camera, RenderPass);
@@ -63,7 +61,7 @@ namespace PGK2.Engine.Components
 				return;
 
 			if (!EnabledInHierarchy) return;
-			bool pass = (camera.IncludeTags.isEmpty && !camera.ExcludeTags.HasAny(RenderTags)) || camera.IncludeTags.HasAny(RenderTags);
+			bool pass = (camera.IncludeTags.isEmpty && !camera.ExcludeTags.HasAny(gameObject.Tags)) || camera.IncludeTags.HasAny(gameObject.Tags);
 			if (pass)
 			{
 				RenderOutline(camera);

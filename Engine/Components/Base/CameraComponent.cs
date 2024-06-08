@@ -65,8 +65,8 @@ namespace PGK2.Engine.Components.Base
         /// <summary>
         /// Gets or sets the tags that the camera should render.
         /// </summary>
-        public TagsContainer IncludeTags { get; private set; }
-        public TagsContainer ExcludeTags { get; private set; }
+        public TagsContainer IncludeTags { get; internal set; }
+        public TagsContainer ExcludeTags { get; internal set; }
 
 
 

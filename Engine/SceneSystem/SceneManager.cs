@@ -27,8 +27,18 @@ namespace PGK2.Engine.SceneSystem
 			SetActiveScene(scene);
 		}
 
-		public static void UnloadScene(Scene scene)
+		public async static void UnloadScene(Scene scene)
 		{
+			if(CameraComponent.activeCamera!=null && CameraComponent.activeCamera.MyScene==scene)
+				CameraComponent.activeCamera = null;
+
+			await EngineWindow.instance.WaitForEndOfFrame();
+			scene.Cameras.Clear();
+			scene.GameObjects.Clear();
+			scene.Renderers.Clear();
+			scene.UI_Renderers.Clear();
+			scene.Lights.Clear();
+			scene.RemovingGameObjects.Clear();
 			if (scenes.Contains(scene))
 			{
 				scenes.Remove(scene);
@@ -133,7 +143,7 @@ namespace PGK2.Engine.SceneSystem
 						if (model != null)
 						{
 							RenderersList += "       TAGS:\n";
-							foreach(var rt in model.RenderTags.All )
+							foreach(var rt in model.gameObject.Tags.All )
 							{
 								RenderersList += $"         - {rt}";
 							}

@@ -166,6 +166,14 @@ namespace PGK2.Engine.Serialization.Converters
 							{
 								componentData[propertyName] = JsonDocument.ParseValue(ref reader).RootElement;
 							}
+							else if (propertyName == "IncludeTags")
+							{
+								componentData[propertyName] = JsonDocument.ParseValue(ref reader).RootElement;
+							}
+							else if (propertyName == "ExcludeTags")
+							{
+								componentData[propertyName] = JsonDocument.ParseValue(ref reader).RootElement;
+							}
 						}
 					}
 
@@ -179,6 +187,22 @@ namespace PGK2.Engine.Serialization.Converters
 							components.Add(component as Component);
 							(component as Component).gameObject = DeserializeContext.CurrentContext.GameObject;
 							(component as Component).OnSceneTransfer?.Invoke(null);
+
+							// Deserialize IncludeTags and ExcludeTags if present
+							if (componentData.ContainsKey("IncludeTags"))
+							{
+								var includeTagsJson = componentData["IncludeTags"].GetRawText();
+								var includeTags = JsonSerializer.Deserialize<TagsContainer>(includeTagsJson, options);
+								((CameraComponent)component).IncludeTags = includeTags;
+							}
+
+							if (componentData.ContainsKey("ExcludeTags"))
+							{
+								var excludeTagsJson = componentData["ExcludeTags"].GetRawText();
+								var excludeTags = JsonSerializer.Deserialize<TagsContainer>(excludeTagsJson, options);
+								((CameraComponent)component).ExcludeTags = excludeTags;
+							}
+
 							EngineWindow.StartQueue.Enqueue(component as Component);
 						}
 					}
@@ -201,13 +225,21 @@ namespace PGK2.Engine.Serialization.Converters
 				writer.WritePropertyName("Data");
 				JsonSerializer.Serialize(writer, component, component.GetType(), options);
 
+				// Serialize IncludeTags if present
+				if (component is CameraComponent cameraComponent)
+				{
+					writer.WritePropertyName("IncludeTags");
+					JsonSerializer.Serialize(writer, cameraComponent.IncludeTags, options);
+					writer.WritePropertyName("ExcludeTags");
+					JsonSerializer.Serialize(writer, cameraComponent.ExcludeTags, options);
+				}
+
 				writer.WriteEndObject();
 			}
 
 			writer.WriteEndArray();
 		}
 	}
-
 	public static class Utf8JsonWriterExtensions
 	{
 		public static void WriteGuid(this Utf8JsonWriter writer, string propertyName, Guid value)
@@ -231,7 +263,7 @@ namespace PGK2.Engine.Serialization.Converters
 			Guid id = Guid.Empty;
 			GameObjectComponents components = null;
 			TransformComponent transform = null;
-			TagsContainer tags = null;
+			TagsContainer tags = new();
 			bool isActiveSelf = true;
 
 			// Create a placeholder GameObject
