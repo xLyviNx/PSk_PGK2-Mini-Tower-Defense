@@ -11,8 +11,10 @@ namespace PGK2.Engine.Components.Base
 {
 	public class UI_Renderer : Component
 	{
+		public bool HoverOnlyWindow = false;
 		public Vector2 Pivot;
 		public Vector2 Size;
+		public Vector2 Padding = Vector2.One*10;
 		public enum Alignment
 		{
 			LeftUp,
@@ -73,7 +75,7 @@ namespace PGK2.Engine.Components.Base
 		public event Action OnClick = delegate { };
 		public event Action OnHover = delegate { };
 		public event Action OnExit = delegate { };
-
+		public bool wasClicked = false;
 		public bool wasHovered = false;
 
 		public UI_Renderer()
@@ -83,6 +85,7 @@ namespace PGK2.Engine.Components.Base
 
 		public virtual void Clicked()
 		{
+			wasClicked = true;
 			OnClick.Invoke();
 		}
 
@@ -122,10 +125,12 @@ namespace PGK2.Engine.Components.Base
 				Draw();
 		}
 
-		protected void HandleHoverState()
+		protected virtual void HandleHoverState()
 		{
-			if (ImGui.IsItemHovered())
+			bool hovered = HoverOnlyWindow ? ImGui.IsWindowHovered() : ImGui.IsItemHovered();
+			if (hovered)
 			{
+
 				if (!wasHovered)
 				{
 					Hovered();

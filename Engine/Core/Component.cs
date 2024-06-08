@@ -12,8 +12,8 @@ namespace PGK2.Engine.Core
 
 	public abstract class Component
     {
-        [JsonIgnore] internal bool CalledAwake = false;
-        [JsonIgnore] public static GameObject? assigningComponentTo;
+        internal bool CalledAwake = false;
+        internal static GameObject? assigningComponentTo;
 		[JsonIgnore] public GameObject gameObject;
         [JsonIgnore] public SceneSystem.Scene MyScene => gameObject.MyScene;
 		[JsonIgnore] public GameObjectComponents Components => gameObject.Components;

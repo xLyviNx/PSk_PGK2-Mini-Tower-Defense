@@ -54,7 +54,7 @@ namespace PGK2.Engine.Core
 				LightModel.Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/cube.fbx");
 				if (LightModel.Model != null)
 				{
-					LightModel.transform.Scale = Vector3.One * 0.001f;
+					LightModel.transform.LocalScale = Vector3.One * 0.001f;
 					LightModel.Model.meshes[0].Material = new Material(EngineWindow.lightShader);
 					LightModel.Model.meshes[0].Material.Vector3Values["lightcolor"] = Diffuse;
 				}

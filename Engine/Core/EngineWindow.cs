@@ -15,6 +15,7 @@ using PGK2.Engine.Components.Base.Renderers;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using PGK2.Game.Code.TowerDef.Scripts;
+using System.Net.NetworkInformation;
 
 namespace PGK2.Engine.Core
 {
@@ -40,7 +41,6 @@ namespace PGK2.Engine.Core
 		protected override void OnLoad()
 		{
 			base.OnLoad();
-			GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 			GL.Enable(EnableCap.DepthTest);
 			GL.Enable(EnableCap.Blend);
 			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
@@ -56,8 +56,9 @@ namespace PGK2.Engine.Core
 			_imGuiController = new ImGuiController(ClientSize.X, ClientSize.Y);
 
 
-			//SceneLoadTest();
-			SceneMakeTest();
+			SceneLoadTest();
+			//MakeGameScene();
+			//MakeMenuScene();
 
 		}
 		void SceneLoadTest()
@@ -65,11 +66,10 @@ namespace PGK2.Engine.Core
 			var scene = SceneManager.LoadSceneFromFile($"{EngineInstance.ASSETS_PATH}/Scenes/GAME.lscn");
 			SceneManager.LoadScene(scene);
 		}
-		void SceneMakeTest()
+		void MakeGameScene()
 		{
 			SceneSystem.Scene scene = new();
 			scene.SceneName = "Game Scene";
-			SceneManager.LoadScene(scene);
 			GameObject LockController = scene.CreateSceneObject("LOCK CONTROLLER");
 			LockController.AddComponent<MouseLockController>();
 
@@ -77,7 +77,8 @@ namespace PGK2.Engine.Core
 			GameObject CameraObject = scene.CreateSceneObject("CAMERA OBJECT");
 			CameraObject.transform.Parent=CamParent.transform;
 
-			CameraObject.Components.Add<CameraComponent>();
+			var maincam = CameraObject.Components.Add<CameraComponent>();
+			maincam.ExcludeTags.Add("enemyhitbox");
 			CameraObject.Components.Add<CameraController>();
 
 			GameObject newObject2 = scene.CreateSceneObject("MAP OBJECT");
@@ -86,7 +87,7 @@ namespace PGK2.Engine.Core
 			rend.RenderTags.Add("map");
 			rend.OutlineColor = Color4.Transparent;
 			//rend.transform.Pitch = -90f;
-			rend.transform.Scale = Vector3.One * 1;
+			rend.transform.LocalScale = Vector3.One * 1;
 
 
 			GameObject lightObj = scene.CreateSceneObject("Light Object");
@@ -103,13 +104,75 @@ namespace PGK2.Engine.Core
 
 			var ai_target = scene.CreateSceneObject("ai_target");
 			ai_target.transform.Position = new(-5, 0.12f, -4.25f);
-			ai_target.transform.Scale = 0.001f * Vector3.One;
+			ai_target.transform.LocalScale = 0.001f * Vector3.One;
 
 			var Manager = scene.CreateSceneObject("Game Manager");
 			Manager.AddComponent<GameManager>();
 			scene.AddAwaitingObjects();
-
 			SceneManager.SaveSceneToFile(scene, $"{EngineInstance.ASSETS_PATH}/Scenes/GAME.lscn");
+			foreach(var obj in scene.GameObjects)
+			{
+				Console.WriteLine(obj.name);
+			}
+			SceneManager.LoadScene(scene);
+		}
+		void MakeMenuScene()
+		{
+			SceneSystem.Scene scene = new();
+			scene.SceneName = "Menu Scene";
+			GameObject CameraObject = scene.CreateSceneObject("CAMERA OBJECT");
+			var maincam = CameraObject.Components.Add<CameraComponent>();
+			var fc = CameraObject.Components.Add<Freecam>();
+			maincam.BackgroundColor = new(0.2f, 0.5f, 0f, 1f);
+			maincam.FieldOfView = 20;
+
+			GameObject lightObj = scene.CreateSceneObject("Light Object");
+			Light light = lightObj.Components.Add<Light>();
+			lightObj.transform.Position = new Vector3(0f, 1f, -1f);
+			light.Diffuse = new Vector3(1, 0.8f, 0.8f);
+			light.Specular = new Vector3(1f, 0.9f, 0.9f);
+
+
+			var enemyO = scene.CreateSceneObject("enemy");
+			var enemyModel = enemyO.AddComponent<ModelRenderer>();
+			enemyModel.Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/enemy1.fbx");
+			enemyModel.transform.Position = new(0.4f, -0.6f, 0.7f);
+			enemyModel.transform.Yaw = 190;
+
+			var titleO = scene.CreateSceneObject("Title");
+			var title = titleO.AddComponent<UI_Text>();
+			title.UI_Alignment = UI_Renderer.Alignment.CenterUp;
+			title.transform.Position = new Vector3(0, 30f, 0);
+			title.Text = "Tower Defense Basic Game";
+			title.FontSize = 3f;
+			title.Pivot = new(0.5f, 0f);	
+			
+			
+			var creditsO = scene.CreateSceneObject("Title");
+			var credits = creditsO.AddComponent<UI_Text>();
+			credits.UI_Alignment = UI_Renderer.Alignment.DownLeft;
+			credits.transform.Position = new Vector3(0, 0, 0);
+			credits.Text = "2ID14B:\n" +
+				"Sygut Grzegorz\n" +
+				"Synowiec Adrian\n" +
+				"Szylinski Krzysztof\n" +
+				"Sieczkowski Dawid\n";
+			credits.FontSize = 1f;
+			credits.Pivot = new(0f, 1f);
+					
+			var btnO = scene.CreateSceneObject("PlayButton");
+			var btn = btnO.AddComponent<UI_Button>();
+			btn.UI_Alignment = UI_Renderer.Alignment.Center;
+			btn.Text = "Play";
+			btn.FontSize = 1.5f;
+			btn.Padding.X = 70f;
+			btn.Pivot = new(0.5f, 0.5f);
+
+			var controller = scene.CreateSceneObject("Menu Controller").AddComponent<Menu>();
+
+
+			scene.AddAwaitingObjects();
+			SceneManager.SaveSceneToFile(scene, $"{EngineInstance.ASSETS_PATH}/Scenes/MENU.lscn");
 			foreach(var obj in scene.GameObjects)
 			{
 				Console.WriteLine(obj.name);
@@ -120,11 +183,20 @@ namespace PGK2.Engine.Core
 		{
 			base.OnRenderFrame(e);
 			aspectRatio = (float)ClientSize.X / ClientSize.Y;
+			GL.ClearColor(CameraComponent.activeCamera != null? CameraComponent.activeCamera.BackgroundColor : Color4.Black);
+
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
-			if (Mouse.framesSinceLastMove>0)
+
+			// Upewnij się, że ustawienia OpenGL są poprawnie ustawione
+			GL.Enable(EnableCap.DepthTest);
+			GL.Enable(EnableCap.Blend);
+			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+
+			if (Mouse.framesSinceLastMove > 0)
 				Mouse.Delta = Vector2.Zero;
 			else
 				Mouse.framesSinceLastMove++;
+
 			if (SceneManager.ActiveScene != null)
 			{
 				bool interrupted = false;
@@ -141,6 +213,7 @@ namespace PGK2.Engine.Core
 						cam.RenderUpdate();
 					}
 				} while (interrupted);
+
 				if (activeCamera != null)
 				{
 					foreach (Renderer r in SceneManager.ActiveScene.Renderers)
@@ -165,14 +238,19 @@ namespace PGK2.Engine.Core
 						r.CallRenderOutline(activeCamera);
 					}
 				}
+
+				// Render UI components
 				foreach (UI_Renderer uir in SceneManager.ActiveScene.UI_Renderers)
 				{
 					uir.CallDraw();
 				}
 			}
+
+			// Render ImGui last to ensure it overlays correctly
 			_imGuiController.Render();
 			SwapBuffers();
 		}
+
 		protected override void OnUnload()
 		{
 			base.OnUnload();
@@ -180,7 +258,16 @@ namespace PGK2.Engine.Core
 			lightShader.Dispose();
 			OutlineShader.Dispose();
 			_imGuiController.Dispose();
-
+			foreach(var m in Model.LoadedModels.Values)
+			{
+				foreach(Mesh mesh in m.meshes)
+				{
+					mesh.indices.Clear();
+					mesh.vertices.Clear();
+				}
+				m.meshes.Clear();
+			}
+			Model.LoadedModels.Clear();
 		}
 		protected override void OnMouseMove(MouseMoveEventArgs e)
 		{

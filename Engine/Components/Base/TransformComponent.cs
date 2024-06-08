@@ -15,11 +15,14 @@ namespace PGK2.Engine.Components.Base
         public Vector3 LocalScale { get; set; } = Vector3.One;
 
         // Separate Euler angles
-        public float Pitch { get; set; } = 0f; // X
-        public float Yaw { get; set; } = 0f;   // Y
-        public float Roll { get; set; } = 0f;  // Z
+        private float _pitch { get; set; } = 0f; // X
+		private float _yaw { get; set; } = 0f;   // Y
+		private float _roll { get; set; } = 0f;  // Z
+		public float Pitch { get => _pitch; set { _pitch = value % 360; } }
+        public float Yaw { get => _yaw; set { _yaw = value % 360; } }
+		public float Roll { get => _roll; set { _roll = value % 360; } }
 
-        private TransformComponent? parent = null;
+		private TransformComponent? parent = null;
         
         public ChildrenContainer Children { get; internal set; }
 
@@ -31,12 +34,35 @@ namespace PGK2.Engine.Components.Base
         }
 		[JsonIgnore]
 		public Vector3 Scale
-        {
-            get { return parent != null ? parent.TransformVector(LocalScale) : LocalScale; }
-            set { LocalScale = parent != null ? parent.InverseTransformVector(value) : value; }
-        }
-
-        [JsonIgnore]
+		{
+			get
+			{
+				if (parent != null)
+				{
+					// Oblicz skalę w przestrzeni globalnej
+					Vector3 parentWorldScale = parent.Scale;
+					return Vector3.Multiply(LocalScale, parentWorldScale);
+				}
+				else
+				{
+					return LocalScale;
+				}
+			}
+			set
+			{
+				if (parent != null)
+				{
+					// Oblicz skalę lokalną dziecka
+					Vector3 parentWorldScale = parent.Scale;
+					LocalScale = Vector3.Divide(value, parentWorldScale);
+				}
+				else
+				{
+					LocalScale = value;
+				}
+			}
+		}
+		[JsonIgnore]
         public Vector3 Forward
         {
             get { return Vector3.Transform(Vector3.UnitZ, GetRotationMatrix().ExtractRotation()); }
@@ -187,9 +213,9 @@ namespace PGK2.Engine.Components.Base
 			get
 			{
 				if (parent != null)
-					return parent.WorldPitch + LocalRotation.X;
+					return parent.WorldPitch + Pitch;
 				else
-					return LocalRotation.X;
+					return Pitch;
 			}
 		}
 
@@ -199,9 +225,9 @@ namespace PGK2.Engine.Components.Base
 			get
 			{
 				if (parent != null)
-					return parent.WorldYaw + LocalRotation.Y;
+					return parent.WorldYaw + Yaw;
 				else
-					return LocalRotation.Y;
+					return Yaw;
 			}
 		}
 
@@ -210,9 +236,9 @@ namespace PGK2.Engine.Components.Base
 			get
 			{
 				if (parent != null)
-					return parent.WorldRoll + LocalRotation.Z;
+					return parent.WorldRoll + Roll;
 				else
-					return LocalRotation.Z;
+					return Roll;
 			}
 		}
 		public static Vector3 LookAtRotation(Vector3 eye, Vector3 target)
@@ -227,6 +253,44 @@ namespace PGK2.Engine.Components.Base
 
 			return new Vector3(-pitchDegrees, yawDegrees, 0f);
 		}
+		public static float LerpAngle(float a, float b, float t)
+		{
+			// Interpolacja kątów w zakresie od 0 do 360 stopni
+			float delta = b - a;
 
+			// Sprawdzenie, czy interpolacja musi odwrócić się przez granicę 360 stopni
+			if (Math.Abs(delta) > 180)
+			{
+				// Wybór kierunku interpolacji
+				if (delta > 0)
+					a += 360;
+				else
+					b += 360;
+			}
+
+			// Interpolacja
+			float angle = a + (b - a) * t;
+
+			// Zastosowanie operacji modulo, aby zapewnić, że wynik będzie w zakresie od 0 do 360 stopni
+			angle = (angle + 360) % 360;
+
+			return angle;
+		}
+		public void RotateTowards(Vector3 targetDirection, float speed)
+		{
+			Vector3 currentDirection = transform.LocalRotation;
+			Vector3 newRotation = LookAtRotation(transform.Position, targetDirection);
+
+			// Interpolacja rotacji
+			Vector3 lerpedRotation = new Vector3(
+				LerpAngle(currentDirection.X, newRotation.X, speed * Time.deltaTime),
+				LerpAngle(currentDirection.Y, newRotation.Y, speed * Time.deltaTime),
+				LerpAngle(currentDirection.Z, newRotation.Z, speed * Time.deltaTime)
+			);
+
+			// Ustawienie nowej rotacji
+			LocalRotation = lerpedRotation;
+		}
 	}
+
 }

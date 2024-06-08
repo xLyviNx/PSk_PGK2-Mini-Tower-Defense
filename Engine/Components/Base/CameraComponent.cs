@@ -65,7 +65,10 @@ namespace PGK2.Engine.Components.Base
         /// <summary>
         /// Gets or sets the tags that the camera should render.
         /// </summary>
-        public TagsContainer RenderTags { get; private set; }
+        public TagsContainer IncludeTags { get; private set; }
+        public TagsContainer ExcludeTags { get; private set; }
+
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CameraComponent"/> class with default values.
@@ -77,7 +80,8 @@ namespace PGK2.Engine.Components.Base
             IsOrthographic = false;
             FieldOfView = 45.0f;
             BackgroundColor = Color4.Black;
-            RenderTags = new TagsContainer();
+			IncludeTags = new TagsContainer();
+			ExcludeTags = new TagsContainer();
             Console.WriteLine("CAMERA CREATED");
             transform.Position = new Vector3(0.0f, 0.0f, 3.0f);
 			OnSceneTransfer += sceneTransfer;

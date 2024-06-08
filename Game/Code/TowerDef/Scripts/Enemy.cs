@@ -24,6 +24,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		public float TimeLived;
 		bool instantiatedmaterials = false;
 		bool Damaged;
+		GameObject hitboxObject;
 		private CancellationTokenSource damageEffectCancellationTokenSource;
 		public override void Awake()
 		{
@@ -32,6 +33,13 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			myModelRenderer = GetComponent<ModelRenderer>();
 			myModelRenderer.Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/" + ModelName);
 			gameManager = MyScene.FindObjectOfType<GameManager>();
+			hitboxObject = MyScene.CreateSceneObject("hitbox");
+			hitboxObject.transform.Parent = transform;
+			var hitboxrend = hitboxObject.AddComponent<ModelRenderer>();
+			hitboxrend.Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/cube.fbx");
+			hitboxrend.RenderTags.Add("enemyhitbox");
+			hitboxObject.transform.LocalPosition = new(0,0.4f,0);
+			hitboxObject.transform.LocalRotation = Vector3.Zero;
 
 		}
 		public override void Start()
@@ -46,7 +54,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			if (hasreached)
 				return;
 			TimeLived += Time.deltaTime;
-			isHovered = gameManager.CurrentMouseTarget == gameObject;
+			isHovered = gameManager.CurrentMouseTarget == hitboxObject;
 			DamagedUpdate();
 			if (isHovered)
 			{
@@ -61,8 +69,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			}
 			if (myAgent.waypoint < myAgent.Path.Count)
 			{
-				var targetrot = TransformComponent.LookAtRotation(transform.Position, myAgent.Path[myAgent.waypoint]);
-				transform.LocalRotation = Vector3.Lerp(transform.LocalRotation, targetrot, Time.deltaTime*LerpSpeed);
+				transform.RotateTowards(myAgent.Path[myAgent.waypoint], LerpSpeed);
 			}
 
 			float dist = Vector3.Distance(myAgent.transform.Position, myAgent.TargetPosition);

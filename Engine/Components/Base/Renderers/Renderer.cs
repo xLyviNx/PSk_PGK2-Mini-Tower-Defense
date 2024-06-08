@@ -51,7 +51,7 @@ namespace PGK2.Engine.Components
 				return;
 
 			if (!EnabledInHierarchy) return;
-			bool pass = camera.RenderTags.isEmpty || camera.RenderTags.HasAny(RenderTags);
+			bool pass = (camera.IncludeTags.isEmpty && !camera.ExcludeTags.HasAny(RenderTags))|| camera.IncludeTags.HasAny(RenderTags);
 			if (pass)
 			{
 				Render(camera, RenderPass);
@@ -63,7 +63,7 @@ namespace PGK2.Engine.Components
 				return;
 
 			if (!EnabledInHierarchy) return;
-			bool pass = camera.RenderTags.isEmpty || camera.RenderTags.HasAny(RenderTags);
+			bool pass = (camera.IncludeTags.isEmpty && !camera.ExcludeTags.HasAny(RenderTags)) || camera.IncludeTags.HasAny(RenderTags);
 			if (pass)
 			{
 				RenderOutline(camera);

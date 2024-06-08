@@ -279,7 +279,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		private void RaycastTargetLogic()
 		{
 			var mousePosition = Mouse.MousePosition;
-			if (Physics.RayCast_Triangle(CameraComponent.activeCamera, mousePosition, 1000f, out RayCastHit hitInfo))
+			TagsContainer tc = new();
+			tc.Add("enemyhitbox");
+			if (Physics.RayCast_Triangle(CameraComponent.activeCamera, mousePosition, 1000f, out RayCastHit hitInfo, tc))
 			{
 				CurrentMouseTarget = hitInfo.gameObject;
 			}else

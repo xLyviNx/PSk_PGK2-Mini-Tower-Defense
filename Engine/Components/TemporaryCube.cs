@@ -26,7 +26,7 @@ namespace PGK2.Engine.Components
 			cube.Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/cube.fbx");
 			if (cube.Model != null)
 			{
-				cube.transform.Scale = Vector3.One * 0.0005f;
+				cube.transform.LocalScale = Vector3.One * 0.0005f;
 			}
 		}
 		public override void Awake()
