@@ -32,7 +32,7 @@ public class PathFindingAgent : Component
 	{
 		TargetPosition = targetPosition;
 		var key = (transform.Position, targetPosition);
-		if (AStarPathfinding.pathCache.TryGetValue(key, out var cachedPath))
+		if (Pathfinding.pathCache.TryGetValue(key, out var cachedPath))
 		{
 			Path = cachedPath;
 			return;
@@ -43,7 +43,7 @@ public class PathFindingAgent : Component
 	private void CalculatePath()
 	{
 		Path.Clear();
-		Path = AStarPathfinding.FindPath(transform.Position, TargetPosition, StepOffset, 0.1f, InitialClearanceDistance, MinClearanceDistance, ClearanceStep);
+		Path = Pathfinding.FindPath(transform.Position, TargetPosition, StepOffset, 0.1f, InitialClearanceDistance, MinClearanceDistance, ClearanceStep);
 
 		if (Path == null || Path.Count == 0)
 		{
@@ -58,7 +58,7 @@ public class PathFindingAgent : Component
 			}
 			Console.WriteLine($"Pathfinding complete. Found {Path.Count} waypoints.");
 			var key = (transform.Position, TargetPosition);
-			AStarPathfinding.pathCache[key] = new List<Vector3>(Path); // Cache the found path
+			Pathfinding.pathCache[key] = new List<Vector3>(Path); // Cache the found path
 			//DrawPath();
 		}
 	}
@@ -113,7 +113,7 @@ public class PathFindingAgent : Component
 	}
 }
 
-public static class AStarPathfinding
+public static class Pathfinding
 {
 	internal static Dictionary<(Vector3, Vector3), List<Vector3>> pathCache = new Dictionary<(Vector3, Vector3), List<Vector3>>();
 
