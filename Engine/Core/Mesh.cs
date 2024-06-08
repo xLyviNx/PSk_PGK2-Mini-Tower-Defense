@@ -12,6 +12,7 @@ namespace PGK2.Engine.Core
 		public List<MeshVertex> vertices;
 		public List<uint> indices;
 		public List<Texture> textures;
+		public static List<Shader> Exclude = new List<Shader>() { EngineWindow.OutlineShader, EngineWindow.lightShader, EngineWindow.GridShader };
 		public bool hasTransparentTextures
 		{
 			get
@@ -54,7 +55,7 @@ namespace PGK2.Engine.Core
 			mat.Shader.SetMatrix4("view", viewMatrix);
 			mat.Shader.SetMatrix4("projection", projectionMatrix);
 			bool usednormal = false;
-			if (mat.Shader != EngineWindow.lightShader && mat.Shader != EngineWindow.OutlineShader)
+			if (!Exclude.Contains(mat.Shader))
 			{
 				usednormal = true;
 				int lightsnum = (int)MathF.Min(8, Lights.Count);
@@ -68,7 +69,11 @@ namespace PGK2.Engine.Core
 				}
 				mat.Shader.SetInt("numLights", lightsnum);
 				mat.Shader.SetVector3($"viewPos", camera.transform.Position);
+			}
+			if (mat.Shader != Exclude[0])
+			{
 				mat.Use();
+				usednormal = true;
 			}
 			GL.BindVertexArray(VAO);
 			GL.DrawElements(BeginMode.Triangles, indices.Count, DrawElementsType.UnsignedInt, 0);

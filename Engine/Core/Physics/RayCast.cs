@@ -101,24 +101,41 @@ namespace PGK2.Engine.Core.Physics
 			Vector3 v1 = Vector3.TransformPosition(mesh.vertices[i1].Position, modelTransform);
 			Vector3 v2 = Vector3.TransformPosition(mesh.vertices[i2].Position, modelTransform);
 
-			Triangle triangle = new Triangle(v0, v1, v2);
+			Vector3 edge1 = v1 - v0;
+			Vector3 edge2 = v2 - v0;
 
-			float t = (triangle.PlaneDistance - Vector3.Dot(ray.Origin, triangle.PlaneNormal)) / Vector3.Dot(ray.Direction, triangle.PlaneNormal);
+			Vector3 h = Vector3.Cross(ray.Direction, edge2);
+			float a = Vector3.Dot(edge1, h);
+			if (Math.Abs(a) < 0.00001f)
+			{
+				return false; // Promień jest równoległy do trójkąta
+			}
 
-			if (t < 0.00001f || float.IsNaN(t) || float.IsInfinity(t))
-				return false;
+			float f = 1.0f / a;
+			Vector3 s = ray.Origin - v0;
+			float u = f * Vector3.Dot(s, h);
+			if (u < 0.0f || u > 1.0f)
+			{
+				return false; // Punkt przecięcia jest poza trójkątem
+			}
 
-			Vector3 intersectionPointLocal = ray.Origin + t * ray.Direction;
+			Vector3 q = Vector3.Cross(s, edge1);
+			float v = f * Vector3.Dot(ray.Direction, q);
+			if (v < 0.0f || u + v > 1.0f)
+			{
+				return false; // Punkt przecięcia jest poza trójkątem
+			}
 
-			float u = Vector3.Dot(intersectionPointLocal - triangle.Vertices[0], triangle.PlaneUnitU);
-			float v = Vector3.Dot(intersectionPointLocal - triangle.Vertices[0], triangle.PlaneUnitV);
-
-			if (u < 0 || v < 0 || u > triangle.EdgeU || v > triangle.EdgeV || u + v > triangle.EdgeU + triangle.EdgeV)
-				return false;
-
-			distance = t;
-			intersectionPoint = intersectionPointLocal;
-			return true;
+			distance = f * Vector3.Dot(edge2, q);
+			if (distance > 0.00001f)
+			{
+				intersectionPoint = ray.Origin + distance * ray.Direction;
+				return true;
+			}
+			else
+			{
+				return false; // Punkt przecięcia jest za promieniem
+			}
 		}
 	}
 

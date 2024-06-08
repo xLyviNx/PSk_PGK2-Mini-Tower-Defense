@@ -14,7 +14,7 @@ namespace PGK2.Engine.Core
 		public Vector3 Specular;
 		[JsonIgnore]
 		public ModelRenderer? LightModel;
-		public bool CreateModelOnCreation = false;
+		public bool CreateModelOnCreation = true;
 		public Light()
 		{
 			MyScene.Lights.Add(this);
@@ -54,9 +54,9 @@ namespace PGK2.Engine.Core
 				LightModel.Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/cube.fbx");
 				if (LightModel.Model != null)
 				{
-					LightModel.transform.LocalScale = Vector3.One * 0.001f;
-					LightModel.Model.meshes[0].Material = new Material(EngineWindow.lightShader);
-					LightModel.Model.meshes[0].Material.Vector3Values["lightcolor"] = Diffuse;
+					LightModel.transform.LocalScale = Vector3.One * 0.5f;
+					LightModel.OverrideMaterials[0] = new Material(EngineWindow.lightShader);
+					LightModel.OverrideMaterials[0].Vector3Values["lightcolor"] = Diffuse;
 				}
 			}
 		}

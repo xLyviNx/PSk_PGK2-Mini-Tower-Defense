@@ -6,6 +6,7 @@ namespace PGK2.Engine.Core
 	public class Shader : IDisposable
 	{
 		public readonly int Handle;
+		public bool EnforceTransparencyPass = false;
 
 		private readonly Dictionary<string, int> _uniformLocations;
 

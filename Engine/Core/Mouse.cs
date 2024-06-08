@@ -28,7 +28,7 @@ namespace PGK2.Engine.Core
 					wasDiff = true;
 				}
 				_isLocked = value;
-				if(wasDiff)
+				/*if(wasDiff)
 				{
 					CenterMouse();
 					IgnoreDelta = true;
@@ -36,7 +36,7 @@ namespace PGK2.Engine.Core
 					{
 						GLFW.SetInputMode(EngineWindow.instance.WindowPtr, CursorStateAttribute.Cursor, IsLocked? CursorModeValue.CursorDisabled : CursorModeValue.CursorNormal);
 					}
-				}
+				}*/
 				
 			}
 		}

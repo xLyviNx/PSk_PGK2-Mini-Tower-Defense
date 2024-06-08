@@ -29,6 +29,7 @@ namespace PGK2.Engine.Core
 		public static Shader shader;
 		public static Shader lightShader;
 		public static Shader OutlineShader;
+		public static Shader GridShader;
 		private bool changedFocus;
 		public float aspectRatio { get; private set; }
 		public static Queue<Component> StartQueue = new();
@@ -55,6 +56,7 @@ namespace PGK2.Engine.Core
 			shader = new Shader($"{EngineInstance.ENGINE_PATH}/Shaders/shader.vert", $"{EngineInstance.ENGINE_PATH}/Shaders/shader.frag");
 			lightShader = new Shader($"{EngineInstance.ENGINE_PATH}/Shaders/lightShader.vert", $"{EngineInstance.ENGINE_PATH}/Shaders/lightShader.frag");
 			OutlineShader = new Shader($"{EngineInstance.ENGINE_PATH}/Shaders/outline.vert", $"{EngineInstance.ENGINE_PATH}/Shaders/outline.frag");
+			GridShader = new Shader($"{EngineInstance.ENGINE_PATH}/Shaders/grid.vert", $"{EngineInstance.ENGINE_PATH}/Shaders/grid.frag");
 			_imGuiController = new ImGuiController(ClientSize.X, ClientSize.Y);
 
 
@@ -81,6 +83,7 @@ namespace PGK2.Engine.Core
 
 			var maincam = CameraObject.Components.Add<CameraComponent>();
 			maincam.ExcludeTags.Add("enemyhitbox");
+			maincam.ExcludeTags.Add("hide");
 			CameraObject.Components.Add<CameraController>();
 
 			GameObject newObject2 = scene.CreateSceneObject("MAP OBJECT");
@@ -91,6 +94,12 @@ namespace PGK2.Engine.Core
 			//rend.transform.Pitch = -90f;
 			rend.transform.LocalScale = Vector3.One * 1;
 
+
+			GameObject obstacle = scene.CreateSceneObject("MAP OBSTACLE");
+			var obstaclerend = obstacle.Components.Add<ModelRenderer>();
+			obstaclerend.Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/obstacle.fbx");
+			obstacle.Tags.Add("map");
+			obstacle.Tags.Add("hide");
 
 			GameObject lightObj = scene.CreateSceneObject("Light Object");
 			Light light = lightObj.Components.Add<Light>();
@@ -114,8 +123,9 @@ namespace PGK2.Engine.Core
 			TurretPlaceRegion.gameObject.Tags.Add("TurretRegion");
 			TurretPlaceRegion.transform.LocalPosition = new(0, 0.01f, 0f);
 			TurretPlaceRegion.Model= Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/turretzone.fbx");
+			TurretPlaceRegion.transform.LocalScale = Vector3.One;
 
-			
+
 			var TurretPanel = scene.CreateSceneObject("Turret Main Panel").AddComponent<UI_Panel>();
 			TurretPanel.Size = new(200, 300);
 			TurretPanel.UI_Alignment = UI_Renderer.Alignment.DownLeft;

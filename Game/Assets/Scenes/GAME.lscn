@@ -3,7 +3,7 @@
   "GameObjects": [
     {
       "name": "LOCK CONTROLLER",
-      "Id": "bf73a0fd-df6f-4719-87b8-121e39e83487",
+      "Id": "889c05cd-80bf-4aef-b262-f93124ce883f",
       "Components": {
         "All": [
           {
@@ -42,7 +42,7 @@
     },
     {
       "name": "CAMERA PARENT",
-      "Id": "de96b13a-a46a-4170-b76b-c533fb3790f7",
+      "Id": "0fc9462f-f6a3-47ee-bba5-f6b51e86853c",
       "Components": {
         "All": [
           {
@@ -63,7 +63,7 @@
               "Roll": 0,
               "Children": {
                 "All": [
-                  "96ca12f5-c130-4f23-862c-3e146ee6e343"
+                  "681111d5-06aa-41de-9421-6db2317d9181"
                 ]
               }
             }
@@ -77,7 +77,7 @@
     },
     {
       "name": "CAMERA OBJECT",
-      "Id": "96ca12f5-c130-4f23-862c-3e146ee6e343",
+      "Id": "681111d5-06aa-41de-9421-6db2317d9181",
       "Components": {
         "All": [
           {
@@ -117,7 +117,8 @@
               },
               "ExcludeTags": {
                 "All": [
-                  "enemyhitbox"
+                  "enemyhitbox",
+                  "hide"
                 ]
               },
               "Priority": 0,
@@ -131,7 +132,8 @@
             },
             "ExcludeTags": {
               "All": [
-                "enemyhitbox"
+                "enemyhitbox",
+                "hide"
               ]
             }
           },
@@ -150,7 +152,7 @@
     },
     {
       "name": "MAP OBJECT",
-      "Id": "c93edcd4-fb0e-4eb0-a87d-9e3849846fe0",
+      "Id": "a53563f0-669a-4ced-a74d-3dbc6c9860bc",
       "Components": {
         "All": [
           {
@@ -201,8 +203,60 @@
       "IsActiveSelf": true
     },
     {
+      "name": "MAP OBSTACLE",
+      "Id": "08fd43fc-6ae1-4e12-8223-c4e94028c03d",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "LocalScale": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "ModelPath": ".//..//..//..//Game/Assets/Models/obstacle.fbx",
+              "OverrideMaterials": [
+                null
+              ],
+              "OutlineColor": {
+                "R": 1,
+                "G": 1,
+                "B": 1,
+                "A": 0
+              },
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {
+        "All": [
+          "map",
+          "hide"
+        ]
+      },
+      "IsActiveSelf": true
+    },
+    {
       "name": "Light Object",
-      "Id": "6f38934d-f0c4-46c5-8bfe-b5b87584aacd",
+      "Id": "9bfd741e-9227-491f-b7f9-546317bf576e",
       "Components": {
         "All": [
           {
@@ -244,7 +298,7 @@
                 "Y": 1,
                 "Z": 1
               },
-              "CreateModelOnCreation": false,
+              "CreateModelOnCreation": true,
               "EnabledSelf": true
             }
           }
@@ -257,7 +311,7 @@
     },
     {
       "name": "Light Object 2",
-      "Id": "120f0ae4-be78-40f7-9bb1-88f07dbe76c9",
+      "Id": "daa4e9f1-f1f3-4a0e-80c5-1ab0b80e57dc",
       "Components": {
         "All": [
           {
@@ -299,7 +353,7 @@
                 "Y": 1,
                 "Z": 1
               },
-              "CreateModelOnCreation": false,
+              "CreateModelOnCreation": true,
               "EnabledSelf": true
             }
           }
@@ -312,7 +366,7 @@
     },
     {
       "name": "ai_target",
-      "Id": "c91f6a0a-0e38-4dc0-a1e5-eafaaa15a3e6",
+      "Id": "3362de60-a0bd-4936-be7e-d55ee6276c6d",
       "Components": {
         "All": [
           {
@@ -345,7 +399,7 @@
     },
     {
       "name": "Game Manager",
-      "Id": "2a06456d-3522-4714-b09b-c7d3621af994",
+      "Id": "6ddfb74e-5b28-45d4-a76f-90547d5a809c",
       "Components": {
         "All": [
           {
@@ -385,7 +439,7 @@
     },
     {
       "name": "TurretRegion",
-      "Id": "c157c194-be43-47b4-96fe-241c7be7d369",
+      "Id": "950aa242-f421-48f1-94c1-f90494e4c898",
       "Components": {
         "All": [
           {
@@ -436,7 +490,7 @@
     },
     {
       "name": "Turret Main Panel",
-      "Id": "98ba69cd-341b-4e57-9417-ab7961ff3146",
+      "Id": "a95e099f-bf43-4dd7-bfc9-33351b128319",
       "Components": {
         "All": [
           {
@@ -485,6 +539,45 @@
               },
               "wasClicked": false,
               "wasHovered": false,
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {
+        "All": []
+      },
+      "IsActiveSelf": true
+    },
+    {
+      "name": "Turret Manager",
+      "Id": "65f30f9e-5938-40f9-9b84-c2be9f386ca5",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "LocalScale": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Game.Code.TowerDef.Scripts.TurretManager, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
               "EnabledSelf": true
             }
           }

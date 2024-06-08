@@ -14,6 +14,7 @@ namespace PGK2.TowerDef.Scripts
 {
 	public class CameraController : Component
 	{
+		public static CameraController instance;
 		float MouseSens = 3f;
 		private CameraComponent? myCamera;
 		private float TargetCameraDistance = 12f;
@@ -28,6 +29,7 @@ namespace PGK2.TowerDef.Scripts
 			base.Awake();
 			myCamera = GetComponent<CameraComponent>();
 			manager = MyScene.FindObjectOfType<GameManager>();
+			instance = this;
 		}
 		public override void Update()
 		{
