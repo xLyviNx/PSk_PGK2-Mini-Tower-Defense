@@ -3,7 +3,7 @@
   "GameObjects": [
     {
       "name": "LOCK CONTROLLER",
-      "Id": "8a0dd82a-c50c-4362-9341-dea99fd678d5",
+      "Id": "efeae3ae-d8ec-4139-9d37-55e609d583c9",
       "Components": {
         "All": [
           {
@@ -35,12 +35,14 @@
           }
         ]
       },
-      "Tags": {},
+      "Tags": {
+        "All": []
+      },
       "IsActiveSelf": true
     },
     {
       "name": "CAMERA PARENT",
-      "Id": "72120266-29e3-4a21-96b5-f49ac6d63c10",
+      "Id": "e79f3c14-8ed4-4f6f-a1bc-bfd887bb4fd5",
       "Components": {
         "All": [
           {
@@ -61,19 +63,21 @@
               "Roll": 0,
               "Children": {
                 "All": [
-                  "a4fc937e-165e-45d8-a6ac-25f42df77d9e"
+                  "b464ec71-1af4-448f-a7ef-deb75ddfa458"
                 ]
               }
             }
           }
         ]
       },
-      "Tags": {},
+      "Tags": {
+        "All": []
+      },
       "IsActiveSelf": true
     },
     {
       "name": "CAMERA OBJECT",
-      "Id": "a4fc937e-165e-45d8-a6ac-25f42df77d9e",
+      "Id": "b464ec71-1af4-448f-a7ef-deb75ddfa458",
       "Components": {
         "All": [
           {
@@ -108,8 +112,14 @@
                 "B": 0,
                 "A": 1
               },
-              "IncludeTags": {},
-              "ExcludeTags": {},
+              "IncludeTags": {
+                "All": []
+              },
+              "ExcludeTags": {
+                "All": [
+                  "enemyhitbox"
+                ]
+              },
               "Priority": 0,
               "OrthoSize": 10,
               "NearClip": 0.1,
@@ -125,12 +135,14 @@
           }
         ]
       },
-      "Tags": {},
+      "Tags": {
+        "All": []
+      },
       "IsActiveSelf": true
     },
     {
       "name": "MAP OBJECT",
-      "Id": "232add20-b8e0-4f42-a234-5ecaaeb9a350",
+      "Id": "0158d709-2a95-43c4-acfd-0ba5828d6961",
       "Components": {
         "All": [
           {
@@ -162,7 +174,11 @@
                 null,
                 null
               ],
-              "RenderTags": {},
+              "RenderTags": {
+                "All": [
+                  "map"
+                ]
+              },
               "OutlineColor": {
                 "R": 1,
                 "G": 1,
@@ -174,12 +190,14 @@
           }
         ]
       },
-      "Tags": {},
+      "Tags": {
+        "All": []
+      },
       "IsActiveSelf": true
     },
     {
       "name": "Light Object",
-      "Id": "e5339e72-3012-4e8e-a83a-9584183a7a6f",
+      "Id": "7902ed20-daf4-43a8-bda6-66c9b0e00717",
       "Components": {
         "All": [
           {
@@ -227,12 +245,14 @@
           }
         ]
       },
-      "Tags": {},
+      "Tags": {
+        "All": []
+      },
       "IsActiveSelf": true
     },
     {
       "name": "Light Object 2",
-      "Id": "fcf166f5-900a-4fb8-b4e0-fd15197af6a6",
+      "Id": "78736038-240e-4373-84b7-f6c9a3efad01",
       "Components": {
         "All": [
           {
@@ -280,12 +300,14 @@
           }
         ]
       },
-      "Tags": {},
+      "Tags": {
+        "All": []
+      },
       "IsActiveSelf": true
     },
     {
       "name": "ai_target",
-      "Id": "c573aa78-d4c0-452e-a3df-a5a6ef71ecab",
+      "Id": "4e737c4c-3cbc-4ffa-82af-f8879cfc2301",
       "Components": {
         "All": [
           {
@@ -311,12 +333,14 @@
           }
         ]
       },
-      "Tags": {},
+      "Tags": {
+        "All": []
+      },
       "IsActiveSelf": true
     },
     {
       "name": "Game Manager",
-      "Id": "59d438b7-31d6-4f77-9f03-e922424a0813",
+      "Id": "0758b436-7603-40fc-a8a4-8458a9c97ec8",
       "Components": {
         "All": [
           {
@@ -357,7 +381,9 @@
           }
         ]
       },
-      "Tags": {},
+      "Tags": {
+        "All": []
+      },
       "IsActiveSelf": true
     }
   ]

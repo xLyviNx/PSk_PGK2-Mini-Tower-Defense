@@ -67,6 +67,8 @@ namespace PGK2.Engine.SceneSystem
 					new GameObjectComponentsConverter(),
 					new ChildrenContainerConverter(),
 					new TransformComponentConverter(),
+					new TagsContainerConverter(),
+
 				},
 						WriteIndented = true,
 						DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
@@ -102,6 +104,8 @@ namespace PGK2.Engine.SceneSystem
 					new GameObjectComponentsConverter(),
 					new ChildrenContainerConverter(),
 					new TransformComponentConverter(),
+					new TagsContainerConverter(),
+
 				},
 						WriteIndented = true,
 						DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
@@ -116,16 +120,32 @@ namespace PGK2.Engine.SceneSystem
 					RestoreHierarchy(loadedScene);
 					LoadAllModels(loadedScene);
 					string GameObjectList = "";
+					string RenderersList = "";
 					foreach (var go in loadedScene.GameObjects)
 						GameObjectList += $"   - {go.name}\n";	
 					foreach (var go in loadedScene.AwaitingGameObjects)
 						GameObjectList += $"   * {go.name}\n";
+
+					foreach (var go in loadedScene.Renderers)
+					{
+						RenderersList += $"   - {go.gameObject.name}\n";
+						var model = go as ModelRenderer;
+						if (model != null)
+						{
+							RenderersList += "       TAGS:\n";
+							foreach(var rt in model.RenderTags.All )
+							{
+								RenderersList += $"         - {rt}";
+							}
+						}
+					}
 
 					Console.WriteLine($"Scene Loaded.\n" +
 									  $" Scene Name: {loadedScene.SceneName}\n" +
 									  $" GameObjects: {loadedScene.GameObjects.Count}\n" +
 									  GameObjectList +
 									  $" Renderers: {loadedScene.Renderers.Count}\n" +
+									  RenderersList +
 									  $" UI Renderers: {loadedScene.UI_Renderers.Count}\n" +
 									  $" Lights: {loadedScene.Lights.Count}\n");
 					DeserializeContext.CurrentContext = null;

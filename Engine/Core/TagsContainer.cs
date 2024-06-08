@@ -4,7 +4,8 @@ namespace PGK2.Engine.Core
 {
 	public class TagsContainer
 	{
-		protected List<string> All;
+		[JsonPropertyName("All")]
+		public List<string> All;
 		public TagsContainer()
 		{
 			All = new();

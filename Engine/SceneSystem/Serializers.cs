@@ -552,5 +552,45 @@ namespace PGK2.Engine.Serialization.Converters
 			writer.WriteEndObject();
 		}
 	}
+	public class TagsContainerConverter : JsonConverter<TagsContainer>
+	{
+		public override TagsContainer Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			Console.WriteLine("== READING TAGS CONTAINER == ");
+			var tags = new List<string>();
 
+			while (reader.Read())
+			{
+				if (reader.TokenType == JsonTokenType.EndObject)
+				{
+					break;
+				}
+
+				if (reader.TokenType != JsonTokenType.PropertyName)
+				{
+					continue;
+				}
+
+				var propertyName = reader.GetString();
+				reader.Read();
+				if (propertyName == "All")
+				{
+					Console.WriteLine($" TAGS LIST DESERIALIZATION FOR {DeserializeContext.CurrentContext.GameObject.name}");
+					tags = JsonSerializer.Deserialize<List<string>>(ref reader, options);
+					Console.WriteLine($"  found {tags.Count}");
+
+				}
+			}
+
+			return new TagsContainer { All = tags };
+		}
+
+		public override void Write(Utf8JsonWriter writer, TagsContainer value, JsonSerializerOptions options)
+		{
+			writer.WriteStartObject();
+			writer.WritePropertyName("All");
+			JsonSerializer.Serialize(writer, value.All, options);
+			writer.WriteEndObject();
+		}
+	}
 }

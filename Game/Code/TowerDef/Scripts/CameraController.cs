@@ -65,7 +65,7 @@ namespace PGK2.TowerDef.Scripts
 		}
 		void OnMouseClick(Vector2 mousePosition)
 		{
-	
+			Console.WriteLine(myCamera.ExcludeTags.Count);
 		}
 	}
 }
