@@ -293,6 +293,16 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 					EnemiesQueue.Add((25f, 1000, 1f));
 
 					break;
+				case 6:
+					WaveTime = 40;
+					for(int i = 0; i< WaveTime; i++)
+						EnemiesQueue.Add((i, 500, 1f));
+					break;
+				case 7:
+					WaveTime = 60;
+					for (int i = 0; i < WaveTime; i++)
+						EnemiesQueue.Add((i, 600, 1.1f));
+					break;
 				default:
 					return;
 			}
@@ -315,21 +325,16 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			}
 			else
 			{
-				if(!WaveEnded && WaveTimeLeft==0 && SpawnedEnemies.Count==0)
+				if (!WaveEnded && WaveTimeLeft == 0 && SpawnedEnemies.Count == 0)
 				{
-					if (wave < 5)
-					{
-						Console.WriteLine("Wave Ended");
-						TimePassed = 0;
-						WaveEnded = true;
-						WaveTime = 20;
-					}
-					else
-					{
-						Win();
-					}
+
+					Console.WriteLine("Wave Ended");
+					TimePassed = 0;
+					WaveEnded = true;
+					WaveTime = 20;
+
 				}
-				else if(WaveTimeLeft==0 && WaveEnded)
+				else if (WaveTimeLeft == 0 && WaveEnded)
 				{
 					NextWave();
 				}
@@ -342,13 +347,12 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		{
 			WaveEnded = false;
 			TimePassed = 0;
-			if(wave>=3)
+			wave++;
+			if (wave >= 8)
 			{
-				wave = 0;
-				IsGameStarted = false;
+				Win();
 				return;
 			}
-			wave++;
 			CreateWaveQueue();
 			Console.WriteLine($"STARTING WAVE {wave}");
 		}
@@ -543,7 +547,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		/// <param name="enemy">Przeciwnik, który został zabity.</param>
 		public void KilledEnemy(Enemy enemy)
 		{
-			Money += (int)(3 * (MathHelper.Clamp(50f - enemy.TimeLived, 1f, 50f)));
+			Money += (int)(5 * (MathHelper.Clamp(50f - enemy.TimeLived, 1f, 50f)));
 			enemy.gameObject.Destroy();
 		}
 		/// <summary>

@@ -155,7 +155,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		private void TargetAttack()
 		{
 			if (CurrentTarget == null) return;
-			CurrentTarget.Damage(Damage + (5 * Level));
+			CurrentTarget.Damage(Damage + (8 * Level));
 		}
 		/// <summary>
 		/// Atak obszarowy.

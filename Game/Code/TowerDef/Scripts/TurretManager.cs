@@ -275,7 +275,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		/// </summary>
 		int UpgradePrice(Turret turr)
 		{
-			int p = 1000;
+			int p = 500;
 			p += turr.Level * 250;
 			return p;
 		}
@@ -460,20 +460,20 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			{
 				case 1:
 					Turret.Range = 2f;
-					Turret.Damage = 10;
+					Turret.Damage = 8;
 					Turret.ShootingSpeed = 2f;
 					Turret.IsRangeTurret = true;
 					TurretRenderer.Model = Turret1Model;
 					break;
 				case 2:
 					Turret.Range = 3.5f;
-					Turret.Damage = 25;
+					Turret.Damage = 13;
 					Turret.ShootingSpeed = 1.5f;
 					TurretRenderer.Model = Turret2Model;
 					break;
 				case 3:
 					Turret.Range = 1.25f;
-					Turret.Damage = 70;
+					Turret.Damage = 32;
 					Turret.ShootingSpeed = 3.25f;
 					TurretRenderer.Model = Turret3Model;
 					break;
