@@ -3,7 +3,7 @@
   "GameObjects": [
     {
       "name": "CAMERA OBJECT",
-      "Id": "a3d87684-86f5-4b82-9961-8089ad4f3579",
+      "Id": "2713ba9e-388e-49f7-98f4-3c86be0f9dc0",
       "Components": {
         "All": [
           {
@@ -72,7 +72,7 @@
     },
     {
       "name": "Title",
-      "Id": "5b6b39d2-5250-41ad-af20-35c538c94336",
+      "Id": "81911daa-458a-45c0-91ce-38ff65721122",
       "Components": {
         "All": [
           {
@@ -136,7 +136,7 @@
     },
     {
       "name": "ReturnButton",
-      "Id": "ac6362a1-4033-4d37-8f35-7cd0cce8f385",
+      "Id": "4778b056-d8a0-4bc0-ac00-b3f9b6660070",
       "Components": {
         "All": [
           {
@@ -161,7 +161,7 @@
             }
           },
           {
-            "Type": "UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Type": "PGK2.Engine.Components.Base.Renderers.UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Data": {
               "Text": "Return to Menu",
               "FontSize": 1.5,
@@ -219,7 +219,7 @@
     },
     {
       "name": "GameOver Controller",
-      "Id": "8e445807-d660-4b2f-9e10-6759e806ff01",
+      "Id": "8c456d48-bf7d-40f8-b728-1137d0064c60",
       "Components": {
         "All": [
           {

@@ -3,7 +3,7 @@
   "GameObjects": [
     {
       "name": "CAMERA OBJECT",
-      "Id": "1615bf5b-5665-4d55-8f4c-783543ca16e6",
+      "Id": "7929849a-c6df-472f-ac73-de00faf2a5bf",
       "Components": {
         "All": [
           {
@@ -66,7 +66,7 @@
     },
     {
       "name": "Light Object",
-      "Id": "a686aaea-744b-4ebe-b80d-e2ddc441a850",
+      "Id": "9a3ce13c-8407-4fe5-96d9-8033edd665ac",
       "Components": {
         "All": [
           {
@@ -121,7 +121,7 @@
     },
     {
       "name": "enemy",
-      "Id": "7a7884c7-8d97-4d18-a2dd-d422862aea87",
+      "Id": "fdc1d9a4-7802-4241-9ad1-01beddc1e20b",
       "Components": {
         "All": [
           {
@@ -177,7 +177,7 @@
     },
     {
       "name": "Title",
-      "Id": "ec8b0c9d-94b1-473a-b501-df4ad840b1e4",
+      "Id": "956ded3b-a47d-471b-9f73-0870e3ad6af0",
       "Components": {
         "All": [
           {
@@ -241,7 +241,7 @@
     },
     {
       "name": "Title",
-      "Id": "043127f1-8d71-46d7-8c54-122861c86218",
+      "Id": "e7cf49b1-3e0e-41cb-9fe7-699240f90b19",
       "Components": {
         "All": [
           {
@@ -305,7 +305,7 @@
     },
     {
       "name": "PlayButton",
-      "Id": "b3403f59-dc03-4404-a43b-d4ed56435df5",
+      "Id": "87635da7-a668-40e8-bf1e-46358257b2b2",
       "Components": {
         "All": [
           {
@@ -330,7 +330,7 @@
             }
           },
           {
-            "Type": "UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Type": "PGK2.Engine.Components.Base.Renderers.UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Data": {
               "Text": "Play",
               "FontSize": 1.5,
@@ -388,7 +388,7 @@
     },
     {
       "name": "QuitButton",
-      "Id": "c02869bb-3b55-4e53-8561-5d93d9db7ec6",
+      "Id": "58b98592-6807-4a91-bbfd-902b9362d051",
       "Components": {
         "All": [
           {
@@ -413,7 +413,7 @@
             }
           },
           {
-            "Type": "UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Type": "PGK2.Engine.Components.Base.Renderers.UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Data": {
               "Text": "Quit",
               "FontSize": 1.5,
@@ -471,7 +471,7 @@
     },
     {
       "name": "Menu Controller",
-      "Id": "fff2903d-369e-41a5-b52f-e09c58f7f982",
+      "Id": "9af1243f-01b4-455e-b4df-0e7dd43199e3",
       "Components": {
         "All": [
           {

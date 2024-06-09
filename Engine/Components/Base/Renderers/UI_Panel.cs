@@ -2,32 +2,43 @@
 using PGK2.Engine.Components.Base;
 using PGK2.Engine.Core;
 using System.Numerics;
-
-public class UI_Panel : UI_Renderer
+namespace PGK2.Engine.Components.Base.Renderers
 {
-	public override void Awake()
+	/// <summary>
+	/// Klasa reprezentująca panel w interfejsie użytkownika.
+	/// </summary>
+	public class UI_Panel : UI_Renderer
 	{
-		base.Awake();
-		HoverOnlyWindow = true;
-	}
-	internal override void Draw()
-	{
-		ImGui.SetNextWindowPos(DrawPosition, ImGuiCond.Always);
-		ImGui.SetNextWindowSize(Size, ImGuiCond.Always);
-
-		ImGui.PushStyleColor(ImGuiCol.WindowBg, Color);
-
-		ImGui.Begin($"panel_{gameObject.Id}", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoCollapse);
-
-		// Handle click and hover events
-		if (wasClicked)
+		/// <summary>
+		/// Metoda wywoływana podczas uruchomienia komponentu.
+		/// </summary>
+		public override void Awake()
 		{
-			Clicked();
+			base.Awake();
+			HoverOnlyWindow = true;
 		}
-		HandleHoverState();
-		wasClicked = wasHovered && ImGui.IsMouseClicked(ImGuiMouseButton.Left);
+		/// <summary>
+		/// Metoda, która rysuje panel.
+		/// </summary>
+		internal override void Draw()
+		{
+			ImGui.SetNextWindowPos(DrawPosition, ImGuiCond.Always);
+			ImGui.SetNextWindowSize(Size, ImGuiCond.Always);
 
-		ImGui.End();
-		ImGui.PopStyleColor(); // Pop the background color	}
+			ImGui.PushStyleColor(ImGuiCol.WindowBg, Color);
+
+			ImGui.Begin($"panel_{gameObject.Id}", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoCollapse);
+
+			// Handle click and hover events
+			if (wasClicked)
+			{
+				Clicked();
+			}
+			HandleHoverState();
+			wasClicked = wasHovered && ImGui.IsMouseClicked(ImGuiMouseButton.Left);
+
+			ImGui.End();
+			ImGui.PopStyleColor(); // Pop the background color	}
+		}
 	}
 }

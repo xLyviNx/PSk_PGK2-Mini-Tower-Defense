@@ -9,12 +9,30 @@ using System.Text.Json.Serialization;
 
 namespace PGK2.Engine.Components.Base
 {
+	/// <summary>
+	/// Klasa bazowa odpowiedzialna za renderowanie interfejsu użytkownika (UI).
+	/// </summary>
 	public class UI_Renderer : Component
 	{
+		/// <summary>
+		/// Określa, czy najeżdżanie wykrywane jest na całe okno obiektu (a nie tylko np. tekst).
+		/// </summary>
 		public bool HoverOnlyWindow = false;
+		/// <summary>
+		/// Punkt odniesienia do pozycji.
+		/// </summary>
 		public Vector2 Pivot;
+		/// <summary>
+		/// Rozmiar elementu UI. Zwykle ustalany wewnętrznie przy rysowaniu.
+		/// </summary>
 		public Vector2 Size;
+		// <summary>
+		/// Margines wokół elementu UI.
+		/// </summary>
 		public Vector2 Padding = Vector2.One*10;
+		/// <summary>
+		/// Wyrównanie elementu UI.
+		/// </summary>
 		public enum Alignment
 		{
 			LeftUp,
@@ -27,7 +45,13 @@ namespace PGK2.Engine.Components.Base
 			DownCenter,
 			DownRight
 		}
+		/// <summary>
+		/// Określa wyrównanie elementu UI.
+		/// </summary>
 		public Alignment UI_Alignment;
+		/// <summary>
+		/// Pozycja obiektu po wyrównaniu.
+		/// </summary>
 		internal Vector2 AlignmentPosition
 		{
 			get
@@ -60,6 +84,9 @@ namespace PGK2.Engine.Components.Base
 				}
 			}
 		}
+		/// <summary>
+		/// Pozycja do rysowania.
+		/// </summary>
 		internal Vector2 DrawPosition
 		{
 			get
@@ -69,38 +96,70 @@ namespace PGK2.Engine.Components.Base
 				return pos;
 			}
 		}
-
+		/// <summary>
+		/// Kolor elementu UI.
+		/// </summary>
 		public Vector4 Color = new Vector4(1, 1, 1, 1);
-
+		/// <summary>
+		/// Zdarzenie wywoływane po kliknięciu na element UI.
+		/// </summary>
 		public event Action OnClick = delegate { };
+		/// <summary>
+		/// Zdarzenie wywoływane po najechaniu myszką na element UI.
+		/// </summary>
 		public event Action OnHover = delegate { };
+		/// <summary>
+		/// Zdarzenie wywoływane po opuszczeniu elementu UI myszką.
+		/// </summary>
 		public event Action OnExit = delegate { };
+		/// <summary>
+		/// Określa, czy element UI był kliknięty.
+		/// </summary>
 		public bool wasClicked = false;
+		/// <summary>
+		/// Określa, czy myszka najechała na element UI.
+		/// </summary>
 		public bool wasHovered = false;
+		/// <summary>
+		/// Aktualnie najechany element UI.
+		/// </summary>
 		public static UI_Renderer CurrentHovered;
+		/// <summary>
+		/// Określa indeks warstwy renderowania.
+		/// </summary>
 		public short Z_Index;
-
+		/// <summary>
+		/// Inicjalizuje nową instancję klasy UI_Renderer.
+		/// </summary>
 		public UI_Renderer()
 		{
 			OnSceneTransfer += SceneTransfer;
 		}
-
+		/// <summary>
+		/// Obsługuje zdarzenie kliknięcia na element UI.
+		/// </summary>
 		public virtual void Clicked()
 		{
 			wasClicked = true;
 			OnClick.Invoke();
 		}
-
+		/// <summary>
+		/// Obsługuje zdarzenie najechania myszką na element UI.
+		/// </summary>
 		public virtual void Hovered()
 		{
 			OnHover.Invoke();
 		}
-
+		/// <summary>
+		/// Obsługuje zdarzenie opuszczenia elementu UI myszką.
+		/// </summary>
 		public virtual void Exited()
 		{
 			OnExit.Invoke();
 		}
-
+		/// <summary>
+		/// Wywoływane podczas niszczenia komponentu.
+		/// </summary>
 		public override void OnDestroy()
 		{
 			if (OnSceneTransfer != null)
@@ -109,7 +168,10 @@ namespace PGK2.Engine.Components.Base
 				CurrentHovered = null;
 			base.OnDestroy();
 		}
-
+		/// <summary>
+		/// Przenosi komponent UI do nowej sceny.
+		/// </summary>
+		/// <param name="oldscene">Stara scena, z której komponent UI jest przenoszony.</param>
 		private void SceneTransfer(Scene? oldscene)
 		{
 			if (oldscene != null)
@@ -119,17 +181,23 @@ namespace PGK2.Engine.Components.Base
 			if (MyScene.UI_Renderers.Contains(this)) return;
 			MyScene.UI_Renderers.Add(this);
 		}
-
+		/// <summary>
+		/// Metoda wywoływana do rysowania komponentu UI.
+		/// </summary>
 		internal virtual void Draw()
 		{
 		}
-
+		/// <summary>
+		/// Wywołuje metodę rysowania komponentu UI, jeśli jest włączony w hierarchii.
+		/// </summary>
 		internal void CallDraw()
 		{
 			if (EnabledInHierarchy)
 				Draw();
 		}
-
+		/// <summary>
+		/// Obsługuje stan najechania myszką na element UI.
+		/// </summary>
 		protected virtual void HandleHoverState()
 		{
 			if (CurrentHovered == this)

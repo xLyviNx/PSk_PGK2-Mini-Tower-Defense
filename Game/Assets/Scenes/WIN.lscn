@@ -3,7 +3,7 @@
   "GameObjects": [
     {
       "name": "CAMERA OBJECT",
-      "Id": "1d6fa4b9-40e4-4b4e-a421-42296975843a",
+      "Id": "4640f190-27ce-4bbe-a5a2-cec41a374191",
       "Components": {
         "All": [
           {
@@ -72,7 +72,7 @@
     },
     {
       "name": "Title",
-      "Id": "10cd378d-ac6e-4966-9d88-7564dc53e604",
+      "Id": "e2ce73c5-717f-4e4a-aae4-4debce4bcd32",
       "Components": {
         "All": [
           {
@@ -136,7 +136,7 @@
     },
     {
       "name": "MenuButton",
-      "Id": "83c6151f-9097-4d4f-bc07-aea2920aa2fb",
+      "Id": "262fef0b-b7bb-46b8-861c-e76dad2e86bb",
       "Components": {
         "All": [
           {
@@ -161,7 +161,7 @@
             }
           },
           {
-            "Type": "UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Type": "PGK2.Engine.Components.Base.Renderers.UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Data": {
               "Text": "Return to Menu",
               "FontSize": 1.5,
@@ -219,7 +219,7 @@
     },
     {
       "name": "ReplayButton",
-      "Id": "1f83e14d-8bee-442e-93dd-e99a6dcfb94c",
+      "Id": "13ce848b-4ba6-4ea7-8ce5-c77e3814541e",
       "Components": {
         "All": [
           {
@@ -244,7 +244,7 @@
             }
           },
           {
-            "Type": "UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Type": "PGK2.Engine.Components.Base.Renderers.UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Data": {
               "Text": "Replay",
               "FontSize": 1.5,
@@ -302,7 +302,7 @@
     },
     {
       "name": "Win Controller",
-      "Id": "04ecbb2a-a68f-4cc2-8267-cfadde0b936f",
+      "Id": "d6f47a8c-8a4b-4bdd-8ba1-dd130c1f7c85",
       "Components": {
         "All": [
           {

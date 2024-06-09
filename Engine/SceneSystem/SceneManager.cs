@@ -7,16 +7,30 @@ using System.Text.Json.Serialization;
 
 namespace PGK2.Engine.SceneSystem
 {
+	/// <summary>
+	/// Klasa zarządzająca scenami w grze.
+	/// </summary>
 	public class SceneManager
 	{
+		/// <summary>
+		/// Lista scen w grze.
+		/// </summary>
 		private static List<Scene> scenes = new List<Scene>();
+
+		/// <summary>
+		/// Aktualna aktywna scena.
+		/// </summary>
 		private static Scene? activeScene;
 
-		public static Scene? ActiveScene
-		{
-			get { return activeScene; }
-		}
+		/// <summary>
+		/// Aktywna scena.
+		/// </summary>
+		public static Scene? ActiveScene => activeScene;
 
+		/// <summary>
+		/// Ładuje scenę jako aktywną.
+		/// </summary>
+		/// <param name="scene">Ładowana scena.</param>
 		public static void LoadScene(Scene scene)
 		{
 			if (!scenes.Contains(scene))
@@ -26,6 +40,10 @@ namespace PGK2.Engine.SceneSystem
 
 			SetActiveScene(scene);
 		}
+		/// <summary>
+		/// Asynchronicznie zmienia aktualną scenę.
+		/// </summary>
+		/// <param name="newScene">Nowa scena.</param>
 		public async static void ChangeSceneAsync(Scene newScene)
 		{
 			if (activeScene != null)
@@ -41,12 +59,19 @@ namespace PGK2.Engine.SceneSystem
 			SetActiveScene(newScene);
 		}
 
+		/// <summary>
+		/// Asynchronicznie usuwa scenę i czeka na zakończenie klatki.
+		/// </summary>
+		/// <param name="scene">Scena do usunięcia.</param>
 		private async static Task UnloadSceneAsync(Scene scene)
 		{
 			UnloadScene(scene);
 			await EngineWindow.instance.WaitForEndOfFrame();
 		}
-
+		/// <summary>
+		/// Usuwa scenę po zakończeniu klatki.
+		/// </summary>
+		/// <param name="scene">Scena do usunięcia.</param>
 		public async static void UnloadScene(Scene scene)
 		{
 			await EngineWindow.instance.WaitForEndOfFrame();
@@ -67,7 +92,10 @@ namespace PGK2.Engine.SceneSystem
 				activeScene = null;
 			}
 		}
-
+		/// <summary>
+		/// Ustawia aktywną scenę.
+		/// </summary>
+		/// <param name="scene">Scena do ustawienia jako aktywna.</param>
 		private static void SetActiveScene(Scene? scene)
 		{
 			if (scenes.Contains(scene) || scene == null)
@@ -75,7 +103,11 @@ namespace PGK2.Engine.SceneSystem
 				activeScene = scene;
 			}
 		}
-
+		/// <summary>
+		/// Zapisuje scenę do pliku.
+		/// </summary>
+		/// <param name="scene">Zapisywana scena.</param>
+		/// <param name="filePath">Ścieżka do pliku.</param>
 		public static void SaveSceneToFile(Scene scene, string filePath)
 		{
 			try
@@ -111,6 +143,11 @@ namespace PGK2.Engine.SceneSystem
 			}
 		}
 
+		/// <summary>
+		/// Ładuje scenę z pliku.
+		/// </summary>
+		/// <param name="filePath">Ścieżka do pliku.</param>
+		/// <returns>Ładowana scena.</returns>
 		public static Scene? LoadSceneFromFile(string filePath)
 		{
 			Scene? loadedScene = null;
@@ -185,7 +222,10 @@ namespace PGK2.Engine.SceneSystem
 			}
 			return loadedScene;
 		}
-
+		/// <summary>
+		/// Ładuje modele dla wszystkich rendererów w scenie.
+		/// </summary>
+		/// <param name="loadedScene">Ładowana scena.</param>
 		private static void LoadAllModels(Scene loadedScene)
 		{
 			Console.WriteLine("\n== SCENE MODEL LOADING STARTED ==");
@@ -201,7 +241,10 @@ namespace PGK2.Engine.SceneSystem
 
 			Console.WriteLine("== SCENE MODEL LOADING ENDED ==\n");
 		}
-
+		/// <summary>
+		/// Przywraca hierarchię obiektów w scenie.
+		/// </summary>
+		/// <param name="scene">Scena, dla której przywracana jest hierarchia.</param>
 		internal static void RestoreHierarchy(Scene scene)
 		{
 			Console.WriteLine("\n== STARTING RESTORING SCENE HIERARCHY ==");

@@ -7,11 +7,16 @@ using System.Diagnostics;
 
 namespace PGK2.Engine.Components
 {
+	/// <summary>
+	/// Klasa odpowiedzialna za renderowanie modelu w scenie.
+	/// </summary>
 	[Serializable]
 	public class ModelRenderer : Renderer
 	{
 		private Core.Model? _model;
-
+		// <summary>
+		/// Model do renderowania.
+		/// </summary>
 		[JsonIgnore]
 		public Core.Model? Model
 		{
@@ -21,6 +26,9 @@ namespace PGK2.Engine.Components
 				SetModel(value);
 			}
 		}
+		/// <summary>
+		/// Ścieżka do pliku modelu.
+		/// </summary>
 		[JsonInclude]
 		public string? ModelPath
 		{
@@ -30,16 +38,29 @@ namespace PGK2.Engine.Components
 				_loadedModelPath = value;
 			}
 		}
+		/// <summary>
+		/// Tablica materiałów zastępczych (instancjonowanych itd.)
+		/// </summary>
 		public Material?[] OverrideMaterials;
+		/// <summary>
+		/// Załadowana ścieżka modelu ze sceny.
+		/// </summary>
 		[JsonIgnore]
 		internal string? _loadedModelPath;
+		/// <summary>
+		/// Konstruktor klasy ModelRenderer.
+		/// </summary>
 		public ModelRenderer()
 		{
 			_model = null;
 		}
+
+		/// <summary>
+		/// Ustawia model do renderowania.
+		/// </summary>
+		/// <param name="model">Model do ustawienia.</param>
 		public void SetModel(Core.Model? model)
 		{
-			//Console.WriteLine("Setting MODEL to " + (model != null ? model.ToString() : "NULL"));
 			_model = model;
 			int mats = 0;
 			foreach(Mesh m in model.meshes)
@@ -48,6 +69,9 @@ namespace PGK2.Engine.Components
 			}
 			OverrideMaterials = new Material?[mats];
 		}
+		/// <summary>
+		/// Instancjonuje wszystkie materiały modelu.
+		/// </summary>
 		public void InstantiateAllMaterials()
 		{
 			foreach(Mesh m in Model.meshes)
@@ -55,11 +79,20 @@ namespace PGK2.Engine.Components
 				InstantiateMaterial(m);
 			}
 		}
+		/// <summary>
+		/// Instancjonuje materiał dla danego meshu.
+		/// </summary>
+		/// <param name="mesh">Mesh, dla którego instancjonowany jest materiał.</param>
 		public void InstantiateMaterial(Mesh mesh)
 		{
 			int index = Model.meshes.IndexOf(mesh);
 			OverrideMaterials[index] = mesh.Material.Instantiate();
 		}
+		/// <summary>
+		/// Metoda renderująca model.
+		/// </summary>
+		/// <param name="camera">Kamera, z której widoku renderowany jest model.</param>
+		/// <param name="RenderPass">Aktualny etap/typ renderowania.</param>
 		protected override void Render(CameraComponent camera, EngineInstance.RenderPass RenderPass)
 		{
 			if (Model == null) return;
@@ -79,6 +112,10 @@ namespace PGK2.Engine.Components
 			}
 			Model.Draw(modelMatrix, viewMatrix, projectionMatrix, gameObject.MyScene.Lights, camera, RenderPass, null, OverrideMaterials);			
 		}
+		/// <summary>
+		/// Pobiera Bounding Box modelu.
+		/// </summary>
+		/// <returns>Bounding Box Modelu.</returns>
 		public virtual BoundingBox GetBoundingBox()
 		{
 			if (Model == null || Model.meshes == null || Model.meshes.Count == 0)
@@ -97,6 +134,10 @@ namespace PGK2.Engine.Components
 
 			return new BoundingBox(min, max);
 		}
+		/// <summary>
+		/// Metoda renderująca obrys modelu.
+		/// </summary>
+		/// <param name="camera">Kamera, z której widoku renderowany jest obrys modelu.</param>
 		protected override void RenderOutline(CameraComponent camera)
 		{
 			if (Model == null) return;

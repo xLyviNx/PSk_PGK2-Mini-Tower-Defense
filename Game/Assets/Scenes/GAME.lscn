@@ -3,7 +3,7 @@
   "GameObjects": [
     {
       "name": "LOCK CONTROLLER",
-      "Id": "d5402c60-36b2-494b-a587-7bc4da8ed462",
+      "Id": "4c598a59-ebfe-40f1-8605-d65ba3433c3b",
       "Components": {
         "All": [
           {
@@ -42,7 +42,7 @@
     },
     {
       "name": "CAMERA PARENT",
-      "Id": "01d29ea6-3f92-4848-9296-2cea1e5b33b2",
+      "Id": "5c9648c3-bc05-4b81-9597-1423f04b6ad0",
       "Components": {
         "All": [
           {
@@ -63,7 +63,7 @@
               "Roll": 0,
               "Children": {
                 "All": [
-                  "abe47eb8-4c03-468d-8f51-3d5294735ad6"
+                  "91d8c94b-6ef8-4eef-91e8-c189f50398d7"
                 ]
               }
             }
@@ -77,7 +77,7 @@
     },
     {
       "name": "CAMERA OBJECT",
-      "Id": "abe47eb8-4c03-468d-8f51-3d5294735ad6",
+      "Id": "91d8c94b-6ef8-4eef-91e8-c189f50398d7",
       "Components": {
         "All": [
           {
@@ -153,7 +153,7 @@
     },
     {
       "name": "MAP OBJECT",
-      "Id": "fd4f2484-772e-4c91-88b8-24b26368531e",
+      "Id": "e52d2e78-320a-4ea7-aa82-fc20abda727c",
       "Components": {
         "All": [
           {
@@ -205,7 +205,7 @@
     },
     {
       "name": "MAP OBSTACLE",
-      "Id": "d7087cd7-024c-49c3-86b8-80d910285870",
+      "Id": "dd0f17a9-7415-493b-8d41-9ff42e58e3fb",
       "Components": {
         "All": [
           {
@@ -257,7 +257,7 @@
     },
     {
       "name": "Light Object",
-      "Id": "cb8cf00f-7fdb-42d9-927c-2403ae961928",
+      "Id": "13b93385-5065-42fc-bdd9-8e534b0f8fe1",
       "Components": {
         "All": [
           {
@@ -312,7 +312,7 @@
     },
     {
       "name": "Light Object 2",
-      "Id": "6edcfc8b-082e-4855-8815-572b5e4ba84d",
+      "Id": "7c2a4177-2464-4624-a289-086c74a41ade",
       "Components": {
         "All": [
           {
@@ -367,7 +367,7 @@
     },
     {
       "name": "Light 3",
-      "Id": "ff19de7a-c1f9-4f89-9d7f-b6276772f936",
+      "Id": "d364cf5b-81e3-40e8-813b-d553a29b9ec2",
       "Components": {
         "All": [
           {
@@ -422,7 +422,7 @@
     },
     {
       "name": "ai_target",
-      "Id": "53e4f56d-129b-435d-8377-0868244775d5",
+      "Id": "010eeae8-6d9b-42ce-ac35-7be358ef3994",
       "Components": {
         "All": [
           {
@@ -455,7 +455,7 @@
     },
     {
       "name": "Game Manager",
-      "Id": "7ce0d3f7-3cd5-44fc-8966-c12994414d4e",
+      "Id": "0508625e-dccb-4ed0-8492-64e7d7bc5413",
       "Components": {
         "All": [
           {
@@ -496,7 +496,7 @@
     },
     {
       "name": "TurretRegion",
-      "Id": "6f9f13fb-9f08-4071-8ccf-6b5997d11bec",
+      "Id": "665f1d64-0801-436a-a55e-6e0b1765d16d",
       "Components": {
         "All": [
           {
@@ -547,7 +547,7 @@
     },
     {
       "name": "Turret Main Panel",
-      "Id": "18853ac2-86f3-4f56-b970-fe33148213fd",
+      "Id": "69eab0f1-55f1-4b12-bdef-820a87e0a54c",
       "Components": {
         "All": [
           {
@@ -568,15 +568,15 @@
               "Roll": 0,
               "Children": {
                 "All": [
-                  "82a51c75-71bf-4aea-9d16-4b192d2f67e2",
-                  "4b57499c-4a1e-458d-b073-087244ac58c7",
-                  "f11821a1-ee5b-42fd-bf31-ddc0b1d1ae97"
+                  "17cddce1-f559-4f96-b760-c2fb43ae2c55",
+                  "bdd78930-ed33-4c01-ab24-be037a62c136",
+                  "cd052dbd-3e7c-4377-b851-2092fcc25117"
                 ]
               }
             }
           },
           {
-            "Type": "UI_Panel, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Type": "PGK2.Engine.Components.Base.Renderers.UI_Panel, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Data": {
               "HoverOnlyWindow": false,
               "Pivot": {
@@ -613,7 +613,7 @@
     },
     {
       "name": "Turret1Button",
-      "Id": "82a51c75-71bf-4aea-9d16-4b192d2f67e2",
+      "Id": "17cddce1-f559-4f96-b760-c2fb43ae2c55",
       "Components": {
         "All": [
           {
@@ -638,7 +638,7 @@
             }
           },
           {
-            "Type": "UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Type": "PGK2.Engine.Components.Base.Renderers.UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Data": {
               "Text": "Area Turret ($1000)",
               "FontSize": 1,
@@ -696,7 +696,7 @@
     },
     {
       "name": "Turret2Button",
-      "Id": "4b57499c-4a1e-458d-b073-087244ac58c7",
+      "Id": "bdd78930-ed33-4c01-ab24-be037a62c136",
       "Components": {
         "All": [
           {
@@ -721,7 +721,7 @@
             }
           },
           {
-            "Type": "UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Type": "PGK2.Engine.Components.Base.Renderers.UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Data": {
               "Text": "Standard Turret ($500)",
               "FontSize": 1,
@@ -779,7 +779,7 @@
     },
     {
       "name": "Turret3Button",
-      "Id": "f11821a1-ee5b-42fd-bf31-ddc0b1d1ae97",
+      "Id": "cd052dbd-3e7c-4377-b851-2092fcc25117",
       "Components": {
         "All": [
           {
@@ -804,7 +804,7 @@
             }
           },
           {
-            "Type": "UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Type": "PGK2.Engine.Components.Base.Renderers.UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Data": {
               "Text": "Short-Range Turret ($800)",
               "FontSize": 1,
@@ -862,7 +862,7 @@
     },
     {
       "name": "TurretButton",
-      "Id": "1f9fc2c0-b548-482a-8222-be7364da6b1c",
+      "Id": "911ef2e6-6dc4-453d-b67e-3aeef2d7052c",
       "Components": {
         "All": [
           {
@@ -887,7 +887,7 @@
             }
           },
           {
-            "Type": "UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Type": "PGK2.Engine.Components.Base.Renderers.UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Data": {
               "Text": "BUILD",
               "FontSize": 1.5,
@@ -945,7 +945,7 @@
     },
     {
       "name": "Turret Manager",
-      "Id": "617f0149-54a5-4477-b5ad-592f5c35d820",
+      "Id": "a49e443f-59c2-4c13-b69b-a94de5230880",
       "Components": {
         "All": [
           {
