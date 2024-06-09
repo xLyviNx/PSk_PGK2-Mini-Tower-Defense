@@ -88,12 +88,12 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			switch (wave)
 			{
 				case 1:
-					WaveTime = 25f;
+					WaveTime = 8;
 					EnemiesQueue.Add((1f, 70, 0.9f));
 					EnemiesQueue.Add((8f, 70, 0.9f));
 					break;
 				case 2:
-					WaveTime = 50f;
+					WaveTime = 40f;
 					EnemiesQueue.Add((0, 100, 1f));
 					EnemiesQueue.Add((5, 100, 1f));
 					EnemiesQueue.Add((10, 100, 1f));
@@ -172,7 +172,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 					EnemiesQueue.Add((69, 800, 1f));
 					break;
 				case 5:
-					WaveTime = 30;
+					WaveTime = 25;
 					EnemiesQueue.Add((1f, 300, 1.5f));
 					EnemiesQueue.Add((3f, 300, 1.5f));
 					EnemiesQueue.Add((5f, 300, 1.5f));

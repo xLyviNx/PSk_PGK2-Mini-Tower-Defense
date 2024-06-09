@@ -3,7 +3,7 @@
   "GameObjects": [
     {
       "name": "CAMERA OBJECT",
-      "Id": "4e246aa5-a41c-4ed0-8f4e-5eaf930d102f",
+      "Id": "1615bf5b-5665-4d55-8f4c-783543ca16e6",
       "Components": {
         "All": [
           {
@@ -12,7 +12,7 @@
               "LocalPosition": {
                 "X": 0,
                 "Y": 0,
-                "Z": 3
+                "Z": -1.5
               },
               "LocalScale": {
                 "X": 1,
@@ -56,12 +56,6 @@
             "ExcludeTags": {
               "All": []
             }
-          },
-          {
-            "Type": "PGK2.Engine.Components.Freecam, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-            "Data": {
-              "EnabledSelf": true
-            }
           }
         ]
       },
@@ -72,7 +66,7 @@
     },
     {
       "name": "Light Object",
-      "Id": "bd7caf29-99b5-4c79-8f09-9f32d4462635",
+      "Id": "a686aaea-744b-4ebe-b80d-e2ddc441a850",
       "Components": {
         "All": [
           {
@@ -114,7 +108,7 @@
                 "Y": 0.9,
                 "Z": 0.9
               },
-              "CreateModelOnCreation": true,
+              "CreateModelOnCreation": false,
               "EnabledSelf": true
             }
           }
@@ -127,7 +121,7 @@
     },
     {
       "name": "enemy",
-      "Id": "ba9edb44-894f-4b00-9e66-cb5f27b79a39",
+      "Id": "7a7884c7-8d97-4d18-a2dd-d422862aea87",
       "Components": {
         "All": [
           {
@@ -183,7 +177,7 @@
     },
     {
       "name": "Title",
-      "Id": "2e6fd797-ef2b-4afc-ac8c-aa7d56ad3e93",
+      "Id": "ec8b0c9d-94b1-473a-b501-df4ad840b1e4",
       "Components": {
         "All": [
           {
@@ -247,7 +241,7 @@
     },
     {
       "name": "Title",
-      "Id": "b0c07505-bf19-430c-b784-88a855508d27",
+      "Id": "043127f1-8d71-46d7-8c54-122861c86218",
       "Components": {
         "All": [
           {
@@ -311,7 +305,7 @@
     },
     {
       "name": "PlayButton",
-      "Id": "7cc2cc7a-51ca-4f97-a824-337745a70069",
+      "Id": "b3403f59-dc03-4404-a43b-d4ed56435df5",
       "Components": {
         "All": [
           {
@@ -394,7 +388,7 @@
     },
     {
       "name": "QuitButton",
-      "Id": "2b3da651-5800-4978-b481-c2faf5722dba",
+      "Id": "c02869bb-3b55-4e53-8561-5d93d9db7ec6",
       "Components": {
         "All": [
           {
@@ -477,7 +471,7 @@
     },
     {
       "name": "Menu Controller",
-      "Id": "218b4691-be36-457d-9565-873d472765cb",
+      "Id": "fff2903d-369e-41a5-b52f-e09c58f7f982",
       "Components": {
         "All": [
           {

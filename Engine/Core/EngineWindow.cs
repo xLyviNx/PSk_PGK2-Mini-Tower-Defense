@@ -189,7 +189,7 @@ namespace PGK2.Engine.Core
 			scene.SceneName = "Menu Scene";
 			GameObject CameraObject = scene.CreateSceneObject("CAMERA OBJECT");
 			var maincam = CameraObject.Components.Add<CameraComponent>();
-			var fc = CameraObject.Components.Add<Freecam>();
+			maincam.transform.Position = new Vector3(0, 0, -1.5f);
 			maincam.BackgroundColor = new(0.2f, 0.5f, 0f, 1f);
 			maincam.FieldOfView = 20;
 
