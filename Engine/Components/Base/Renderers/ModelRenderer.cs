@@ -77,26 +77,21 @@ namespace PGK2.Engine.Components
 				GL.StencilFunc(StencilFunction.Always, 1, 0xFF);
 				GL.StencilMask(0x00);
 			}
-			Console.WriteLine($"OBJECT: {gameObject.name}");
 			Model.Draw(modelMatrix, viewMatrix, projectionMatrix, gameObject.MyScene.Lights, camera, RenderPass, null, OverrideMaterials);			
 		}
 		public virtual BoundingBox GetBoundingBox()
 		{
 			if (Model == null || Model.meshes == null || Model.meshes.Count == 0)
 			{
-				Console.WriteLine("NULL");
-				// Return a small default bounding box at object's position
-				float size = 0.1f; // Adjust the size as needed
-				Vector3 center = gameObject.transform.Position; // Use object's position as center
-				Vector3 halfExtents = new Vector3(size / 2, size / 2, size / 2); // Half size
+				float size = 0.1f;
+				Vector3 center = gameObject.transform.Position;
+				Vector3 halfExtents = new Vector3(size / 2, size / 2, size / 2);
 
-				// Calculate min and max points for the bounding box
 				Vector3 minx = center - halfExtents;
 				Vector3 maxx = center + halfExtents;
 
 				return new BoundingBox(minx, maxx);
 			}
-			// Transform the bounding box based on the object's transformation
 			Vector3 min = Vector3.TransformPosition(Model.ModelBoundingBox.Min, gameObject.transform.GetModelMatrix());
 			Vector3 max = Vector3.TransformPosition(Model.ModelBoundingBox.Max, gameObject.transform.GetModelMatrix());
 

@@ -73,14 +73,6 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			}
 
 			float dist = Vector3.Distance(myAgent.transform.Position, myAgent.TargetPosition);
-			//Console.WriteLine(dist);
-
-			var kb = EngineWindow.instance.KeyboardState;
-			if(kb.IsKeyPressed(OpenTK.Windowing.GraphicsLibraryFramework.Keys.L))
-			{
-				Console.WriteLine("DAMAGE");
-				Damage(0);
-			}
 
 			if (dist < 0.05f)
 			{
@@ -98,7 +90,6 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 				int nummats = 1; //bo w aktualnej wersji nie ma wielu materialow na mesh
 				for (int j = 0; j<nummats; j++)
 				{
-					//Console.WriteLine("DAMAGED UPDATE 3");
 					Material defaultmat = myModelRenderer.Model.meshes[i].Material;
 					Material mat = myModelRenderer.OverrideMaterials[i + j];
 					Vector3 targetcolor = Damaged ? new(1, 0.0f, 0.0f) : defaultmat.Vector3Values["material.diffuse"];
@@ -128,9 +119,10 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		public void Damage(int dmg)
 		{
 			Health -= dmg;
+			Console.WriteLine($"{gameObject.name} TAKEN {dmg} DMG");
 			if(Health<=0)
 			{
-				gameObject.Destroy();
+				gameManager.KilledEnemy(this);
 			}
 			else
 			{
@@ -155,13 +147,11 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 
 			InstantiateMaterials();
 			Damaged = true;
-			Console.WriteLine("SETTING DAMAGED TO TRUE");
 			try
 			{
 				await Task.Delay(120, token);
 				if (!gameObject.isDestroyed)
 				{
-					Console.WriteLine("SETTING DAMAGED TO FALSE");
 					Damaged = false;
 				}
 			}

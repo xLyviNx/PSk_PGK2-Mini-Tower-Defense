@@ -3,7 +3,7 @@
   "GameObjects": [
     {
       "name": "LOCK CONTROLLER",
-      "Id": "9bd1a685-8126-470b-a13d-e09658b29dcc",
+      "Id": "ef62adaa-173c-42ce-99c0-579fc4f2e71f",
       "Components": {
         "All": [
           {
@@ -42,7 +42,7 @@
     },
     {
       "name": "CAMERA PARENT",
-      "Id": "85d1c76a-2f1c-4c3e-b395-96e9d2879006",
+      "Id": "a43af915-d728-45ae-b57c-bc6df8c2c223",
       "Components": {
         "All": [
           {
@@ -63,7 +63,7 @@
               "Roll": 0,
               "Children": {
                 "All": [
-                  "a6fdace4-e950-4500-899c-9f2c46abb1af"
+                  "55c4e59b-f9db-4c79-894c-8196bd5dd45f"
                 ]
               }
             }
@@ -77,7 +77,7 @@
     },
     {
       "name": "CAMERA OBJECT",
-      "Id": "a6fdace4-e950-4500-899c-9f2c46abb1af",
+      "Id": "55c4e59b-f9db-4c79-894c-8196bd5dd45f",
       "Components": {
         "All": [
           {
@@ -140,6 +140,7 @@
           {
             "Type": "PGK2.TowerDef.Scripts.CameraController, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Data": {
+              "blockMovement": false,
               "EnabledSelf": true
             }
           }
@@ -152,7 +153,7 @@
     },
     {
       "name": "MAP OBJECT",
-      "Id": "3d455e2e-63ca-4b22-b48d-2772a2e35c52",
+      "Id": "8c80112c-b63d-4063-ae9a-9c19477677d4",
       "Components": {
         "All": [
           {
@@ -204,7 +205,7 @@
     },
     {
       "name": "MAP OBSTACLE",
-      "Id": "6c3b9f3b-1049-41a1-bd99-628667d7916b",
+      "Id": "d92faa7a-aa10-4cd3-b395-dfc5d1d62e1f",
       "Components": {
         "All": [
           {
@@ -256,7 +257,7 @@
     },
     {
       "name": "Light Object",
-      "Id": "9c8c9e3f-6579-43fd-99b9-cedcd62bb5b8",
+      "Id": "c8c23fdb-74f9-4576-ab31-97740fcbaac9",
       "Components": {
         "All": [
           {
@@ -311,7 +312,7 @@
     },
     {
       "name": "Light Object 2",
-      "Id": "f77cb463-1d8a-4559-8af7-5809a6cd7c9c",
+      "Id": "1187af1f-357d-42ad-9ecd-a2f6866f45dd",
       "Components": {
         "All": [
           {
@@ -366,7 +367,7 @@
     },
     {
       "name": "Light 3",
-      "Id": "80887db5-fba6-4a95-8a69-2f0d027a87a8",
+      "Id": "1fb68597-4400-4060-ae37-762e38fb9ff2",
       "Components": {
         "All": [
           {
@@ -421,7 +422,7 @@
     },
     {
       "name": "ai_target",
-      "Id": "b5e019b2-2931-4355-9825-3113650c86c5",
+      "Id": "8f5dc6d1-e358-4fe9-a539-40590927b162",
       "Components": {
         "All": [
           {
@@ -454,7 +455,7 @@
     },
     {
       "name": "Game Manager",
-      "Id": "46383b24-c6a7-48c8-af10-cbf21ce95342",
+      "Id": "8eafc551-1e3d-4d52-b111-215a34cc4e6f",
       "Components": {
         "All": [
           {
@@ -495,7 +496,7 @@
     },
     {
       "name": "TurretRegion",
-      "Id": "0605b0e9-ef2a-4fd3-862d-36f1870fdddf",
+      "Id": "e8ba9b56-086f-4c8a-a957-116bd3161bbc",
       "Components": {
         "All": [
           {
@@ -546,7 +547,7 @@
     },
     {
       "name": "Turret Main Panel",
-      "Id": "b340af37-90ca-4a7f-9681-9d6464442c12",
+      "Id": "fa8ebe90-a697-48e1-9fb6-4cdfc1e3a6c0",
       "Components": {
         "All": [
           {
@@ -567,9 +568,9 @@
               "Roll": 0,
               "Children": {
                 "All": [
-                  "14626692-ccd9-4be4-a58c-a01ed1b92da1",
-                  "89eadc15-0e4b-4fc6-8670-f9f1f985bddb",
-                  "282c63a7-ebae-433a-bf75-23c223de69cf"
+                  "4b41f12d-f0aa-479b-8334-ab14fce63172",
+                  "7f6a6743-1e98-4cbd-9cf9-558da4ccf719",
+                  "2f8feb47-df7e-4972-b875-1c1372d75d92"
                 ]
               }
             }
@@ -612,7 +613,7 @@
     },
     {
       "name": "Turret1Button",
-      "Id": "14626692-ccd9-4be4-a58c-a01ed1b92da1",
+      "Id": "4b41f12d-f0aa-479b-8334-ab14fce63172",
       "Components": {
         "All": [
           {
@@ -695,7 +696,7 @@
     },
     {
       "name": "Turret2Button",
-      "Id": "89eadc15-0e4b-4fc6-8670-f9f1f985bddb",
+      "Id": "7f6a6743-1e98-4cbd-9cf9-558da4ccf719",
       "Components": {
         "All": [
           {
@@ -778,7 +779,7 @@
     },
     {
       "name": "Turret3Button",
-      "Id": "282c63a7-ebae-433a-bf75-23c223de69cf",
+      "Id": "2f8feb47-df7e-4972-b875-1c1372d75d92",
       "Components": {
         "All": [
           {
@@ -861,7 +862,7 @@
     },
     {
       "name": "TurretButton",
-      "Id": "e45be7ef-a6a7-46eb-b00a-70b9ee54271c",
+      "Id": "9b5310ae-af6e-49cf-afdd-320245acc31c",
       "Components": {
         "All": [
           {
@@ -944,7 +945,7 @@
     },
     {
       "name": "Turret Manager",
-      "Id": "e06d7b22-0194-4a36-ada0-3a386371215b",
+      "Id": "79a7c4b0-c0c1-4e83-baa2-cbc2fba6e453",
       "Components": {
         "All": [
           {

@@ -40,12 +40,10 @@ namespace PGK2.Engine.Core
 				bool Opaque = (RenderPass == EngineInstance.RenderPass.Opaque && !transparentmat);
 				bool Outline = (RenderPass == EngineInstance.RenderPass.Outline);
 
-				//Console.WriteLine($"{Transparent}, {Opaque}");
 				if (Transparent || Opaque || Outline)
 				{
 					mesh.Draw(modelMatrix, viewMatrix, projectionMatrix, lights, camera, overrided? mat : null);
 				}
-				//Console.WriteLine($"DRAWN");
 				i++;
 			}
 		}

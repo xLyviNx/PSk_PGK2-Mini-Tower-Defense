@@ -31,6 +31,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		Model Sphere;
 		Model Turret1Model;
 		Model Turret2Model;
+		Model Turret3Model;
 		int ChosenTurret;
 		public static int[] TurretPrices = { 0, 1000, 500, 800 };
 		GameObject RangeDisplayObject;
@@ -50,7 +51,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			TurretZone = MyScene.FindObjectByName("TurretRegion");
 			gridMaterial = new(EngineWindow.GridShader);
 			gridMaterial.FloatValues["gridWidth"] = 0.03f;
-			gridMaterial.FloatValues["gridSpacing"] = 0.8f;
+			gridMaterial.FloatValues["gridSpacing"] = 0.5f;
 			gridMaterial.Vector3Values["gridColor"] = new(0,1,1);
 			TurretZone.GetComponent<ModelRenderer>().OverrideMaterials[0] = gridMaterial;
 
@@ -66,6 +67,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 
 			Turret1Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/turret1.fbx");
 			Turret2Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/turret2.fbx");
+			Turret3Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/turret3.fbx");
 			RangeDisplayObject = MyScene.CreateSceneObject("RANGE DISPLAY");
 			var rdm = RangeDisplayObject.AddComponent<ModelRenderer>();
 			rdm.Model = Sphere;
@@ -107,6 +109,11 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 				{
 					mdl = Turret2Model;
 					range = 3.5f;
+				}	
+				else if (ChosenTurret == 3)
+				{
+					mdl = Turret3Model;
+					range = 1.25f;
 				}
 				MouseTargetRenderer.Model = mdl;
 				RangeDisplayObject.transform.LocalScale = Vector3.One*range;
@@ -118,7 +125,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 				MouseTargetRenderer.OutlineColor = Color4.Black;
 				RangeDisplayObject.transform.Position = pos;
 
-				if (PlacedTurrets.ContainsKey(pos))
+				if (PlacedTurrets.ContainsKey(pos) || gameManager.Money < TurretPrices[ChosenTurret])
 				{
 					ShowRangeMaterial.Vector3Values["gridColor"] = new(1, 0, 0);
 					SetMatColor(new(1,0, 0));
@@ -181,6 +188,12 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 					Turret.Damage = 25;
 					Turret.ShootingSpeed = 1.5f;
 					TurretRenderer.Model = Turret2Model;
+					break;
+				case 3:
+					Turret.Range = 1.25f;
+					Turret.Damage = 70;
+					Turret.ShootingSpeed = 3.25f;
+					TurretRenderer.Model = Turret3Model;
 					break;
 			}
 		}

@@ -26,6 +26,26 @@ namespace PGK2.Engine.SceneSystem
 
 			SetActiveScene(scene);
 		}
+		public async static void ChangeSceneAsync(Scene newScene)
+		{
+			if (activeScene != null)
+			{
+				await UnloadSceneAsync(activeScene);
+			}
+
+			if (!scenes.Contains(newScene))
+			{
+				scenes.Add(newScene);
+			}
+
+			SetActiveScene(newScene);
+		}
+
+		private async static Task UnloadSceneAsync(Scene scene)
+		{
+			UnloadScene(scene);
+			await EngineWindow.instance.WaitForEndOfFrame();
+		}
 
 		public async static void UnloadScene(Scene scene)
 		{

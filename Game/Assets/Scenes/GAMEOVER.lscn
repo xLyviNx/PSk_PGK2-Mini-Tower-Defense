@@ -1,0 +1,260 @@
+{
+  "SceneName": "Game Over Scene",
+  "GameObjects": [
+    {
+      "name": "CAMERA OBJECT",
+      "Id": "a3d87684-86f5-4b82-9961-8089ad4f3579",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 0,
+                "Y": 0,
+                "Z": 3
+              },
+              "LocalScale": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.Base.CameraComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "IsOrthographic": false,
+              "FieldOfView": 20,
+              "BackgroundColor": {
+                "R": 0.1,
+                "G": 0.1,
+                "B": 0.1,
+                "A": 1
+              },
+              "IncludeTags": {
+                "All": []
+              },
+              "ExcludeTags": {
+                "All": []
+              },
+              "Priority": 0,
+              "OrthoSize": 10,
+              "NearClip": 0.1,
+              "FarClip": 1000,
+              "EnabledSelf": true
+            },
+            "IncludeTags": {
+              "All": []
+            },
+            "ExcludeTags": {
+              "All": []
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.Freecam, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {
+        "All": []
+      },
+      "IsActiveSelf": true
+    },
+    {
+      "name": "Title",
+      "Id": "5b6b39d2-5250-41ad-af20-35c538c94336",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 0,
+                "Y": 30,
+                "Z": 0
+              },
+              "LocalScale": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Components.Base.Renderers.UI_Text, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "Text": "Game Over",
+              "FontSize": 3,
+              "HoverOnlyWindow": false,
+              "Pivot": {
+                "X": 0.5,
+                "Y": 0
+              },
+              "Size": {
+                "X": 0,
+                "Y": 0
+              },
+              "Padding": {
+                "X": 10,
+                "Y": 10
+              },
+              "UI_Alignment": 1,
+              "Color": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1,
+                "W": 1
+              },
+              "wasClicked": false,
+              "wasHovered": false,
+              "Z_Index": 0,
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {
+        "All": []
+      },
+      "IsActiveSelf": true
+    },
+    {
+      "name": "ReturnButton",
+      "Id": "ac6362a1-4033-4d37-8f35-7cd0cce8f385",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 0,
+                "Y": -22.5,
+                "Z": 0
+              },
+              "LocalScale": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "Text": "Return to Menu",
+              "FontSize": 1.5,
+              "NormalColor": {
+                "X": 0.1,
+                "Y": 0.1,
+                "Z": 0.1,
+                "W": 0.2
+              },
+              "HoverColor": {
+                "X": 0.2,
+                "Y": 0.2,
+                "Z": 0.2,
+                "W": 0.5
+              },
+              "ClickColor": {
+                "X": 0.8,
+                "Y": 0.8,
+                "Z": 0.8,
+                "W": 0.9
+              },
+              "FadeSpeed": 15,
+              "HoverOnlyWindow": false,
+              "Pivot": {
+                "X": 0.5,
+                "Y": 0.5
+              },
+              "Size": {
+                "X": 0,
+                "Y": 0
+              },
+              "Padding": {
+                "X": 70,
+                "Y": 10
+              },
+              "UI_Alignment": 4,
+              "Color": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1,
+                "W": 1
+              },
+              "wasClicked": false,
+              "wasHovered": false,
+              "Z_Index": 0,
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {
+        "All": []
+      },
+      "IsActiveSelf": true
+    },
+    {
+      "name": "GameOver Controller",
+      "Id": "8e445807-d660-4b2f-9e10-6759e806ff01",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 0,
+                "Y": 0,
+                "Z": 0
+              },
+              "LocalScale": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Game.Code.TowerDef.Scripts.GameOverController, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {
+        "All": []
+      },
+      "IsActiveSelf": true
+    }
+  ]
+}

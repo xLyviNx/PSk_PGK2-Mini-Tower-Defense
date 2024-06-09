@@ -1,4 +1,4 @@
-﻿using Assimp;
+﻿using OpenTK.Graphics.ES20;
 using OpenTK.Mathematics;
 using PGK2.Engine.Components;
 using PGK2.Engine.Components.Base;
@@ -6,6 +6,7 @@ using PGK2.Engine.Components.Base.Renderers;
 using PGK2.Engine.Core;
 using PGK2.Engine.Core.Physics;
 using PGK2.Engine.SceneSystem;
+using PGK2.TowerDef.Scripts;
 using System.Text.Json.Serialization;
 
 namespace PGK2.Game.Code.TowerDef.Scripts
@@ -67,6 +68,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		[JsonIgnore] public float TakenDamageTimer;
 
 		private static readonly int TimeBeforeFirstWave = 5;
+		UI_Panel pauseMenuPanel;
 		private void OnGameStarted()
 		{
 			Health = MaxHealth;
@@ -134,6 +136,57 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 					EnemiesQueue.Add((55, 100, 1.0f));
 					EnemiesQueue.Add((60, 500, 0.3f));
 					break;
+				case 4:
+					WaveTime = 70;
+					EnemiesQueue.Add((1f, 130, 1f));
+					EnemiesQueue.Add((2f, 130, 1f));
+					EnemiesQueue.Add((3f, 130, 1f));
+
+					EnemiesQueue.Add((5, 500, 0.7f));
+
+					EnemiesQueue.Add((8f, 150, 0.9f));
+					EnemiesQueue.Add((9f, 150, 0.9f));
+					EnemiesQueue.Add((10f, 150, 0.9f));
+
+					EnemiesQueue.Add((14f, 50, 4));
+					EnemiesQueue.Add((14.5f, 50, 4));
+					EnemiesQueue.Add((15, 50, 4));
+
+					EnemiesQueue.Add((20f, 100, 2));
+					EnemiesQueue.Add((21f, 100, 2));
+					EnemiesQueue.Add((22f, 100, 2));
+					EnemiesQueue.Add((23f, 100, 2));
+					EnemiesQueue.Add((24f, 100, 2));
+					EnemiesQueue.Add((25f, 100, 2));
+
+					EnemiesQueue.Add((30f, 100, 1.8f));
+					EnemiesQueue.Add((32f, 120, 1.8f));
+					EnemiesQueue.Add((34f, 120, 1.8f));
+					EnemiesQueue.Add((36f, 120, 1.8f));
+					EnemiesQueue.Add((38f, 120, 1.8f));
+					EnemiesQueue.Add((40f, 120, 1.8f));
+
+					for (int i = 42; i < 68; i++)
+						EnemiesQueue.Add((i, 130, 1.5f));
+
+					EnemiesQueue.Add((69, 800, 1f));
+					break;
+				case 5:
+					WaveTime = 30;
+					EnemiesQueue.Add((1f, 300, 1.5f));
+					EnemiesQueue.Add((3f, 300, 1.5f));
+					EnemiesQueue.Add((5f, 300, 1.5f));
+					EnemiesQueue.Add((10f, 350, 1.6f));
+					EnemiesQueue.Add((12f, 360, 1.7f));
+					EnemiesQueue.Add((15f, 370, 1.8f));
+					EnemiesQueue.Add((20f, 400, 2f));
+					EnemiesQueue.Add((21f, 400, 2f));
+					EnemiesQueue.Add((22f, 400, 2f));
+					EnemiesQueue.Add((23f, 400, 2f));
+
+					EnemiesQueue.Add((25f, 1000, 1f));
+
+					break;
 				default:
 					return;
 			}
@@ -147,7 +200,6 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			{
 				if (TimePassed >= EnemiesQueue[0].Item1)
 				{
-					Console.WriteLine($"Spawning Enemy of Time {EnemiesQueue[0].Item1}");
 					SpawnEnemy(EnemiesQueue[0].Item2, EnemiesQueue[0].Item3);
 					EnemiesQueue.RemoveAt(0);
 				}
@@ -156,10 +208,17 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			{
 				if(!WaveEnded && WaveTimeLeft==0 && SpawnedEnemies.Count==0)
 				{
-					Console.WriteLine("Wave Ended");
-					TimePassed = 0;
-					WaveEnded = true;
-					WaveTime = 20;
+					if (wave < 1)
+					{
+						Console.WriteLine("Wave Ended");
+						TimePassed = 0;
+						WaveEnded = true;
+						WaveTime = 20;
+					}
+					else
+					{
+						Win();
+					}
 				}
 				else if(WaveTimeLeft==0 && WaveEnded)
 				{
@@ -179,7 +238,6 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			}
 			wave++;
 			CreateWaveQueue();
-			Console.WriteLine($"QUEUE CREATED WITH SIZE: {EnemiesQueue.Count}");
 			Console.WriteLine($"STARTING WAVE {wave}");
 		}
 		private void CreateHealthBar()
@@ -240,12 +298,25 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			text.Pivot = new(0.5f, 1);
 			EnemyHpDisplayText = text;
 		}
+		public override void Awake()
+		{
+			base.Awake();
+			CreatePauseMenu(MyScene);
+		}
 		public override void Update()
 		{
 			base.Update();
 			RaycastTargetLogic();
 			WaveLogic();
-
+			if(EngineWindow.instance.KeyboardState.IsKeyPressed(OpenTK.Windowing.GraphicsLibraryFramework.Keys.Escape))
+			{
+				pauseMenuPanel.gameObject.IsActiveSelf = !pauseMenuPanel.gameObject.IsActiveSelf;
+				if (pauseMenuPanel.gameObject.IsActiveSelf)
+					Time.timeScale = 0;
+				else
+					Time.timeScale = 1;
+			}
+			CameraController.instance.blockMovement = pauseMenuPanel.gameObject.IsActiveSelf;
 			if (TakenDamageTimer > 0f)
 				TakenDamageTimer -= Time.deltaTime;
 
@@ -316,7 +387,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		public void EnemyReached(Enemy enemy)
 		{
 			enemy.gameObject.Destroy();
-			Health -= 30;
+			Health -= 75;
 			TakenDamageTimer = 0.15f;
 			if (Health<=0)
 			{
@@ -325,16 +396,64 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		}
 		public void KilledEnemy(Enemy enemy)
 		{
-			Money += (int)(500 * (MathHelper.Clamp(50f - enemy.TimeLived, 1f, 50f)));
+			Money += (int)(3 * (MathHelper.Clamp(50f - enemy.TimeLived, 1f, 50f)));
+			enemy.gameObject.Destroy();
 		}
 		void GameOver()
 		{
-			IsGameStarted = false;
+			var GameOver = SceneManager.LoadSceneFromFile(Menu.GameOverScene);
+			SceneManager.ChangeSceneAsync(GameOver);
+		}	
+		void Win()
+		{
+			var scene = SceneManager.LoadSceneFromFile(Menu.WinScene);
+			SceneManager.ChangeSceneAsync(scene);
 		}
 		public override void Start()
 		{
 			base.Start();
 			IsGameStarted = true;
+		}
+		void CreatePauseMenu(Scene scene)
+		{
+			pauseMenuPanel = scene.CreateSceneObject("PauseMenuPanel").AddComponent<UI_Panel>();
+			pauseMenuPanel.UI_Alignment = UI_Renderer.Alignment.Center;
+			pauseMenuPanel.Size = new (300, 200);
+			pauseMenuPanel.Color = new (0, 0, 0, 0.5f);
+			pauseMenuPanel.transform.Position = new Vector3(0, 0, 0);
+			pauseMenuPanel.Pivot = new (0.5f, 0.5f);
+			pauseMenuPanel.Z_Index = 100; // Ensure it's on top of other UI elements
+
+			var exitButton = scene.CreateSceneObject("ExitButton").AddComponent<UI_Button>();
+			exitButton.UI_Alignment = UI_Renderer.Alignment.Center;
+			exitButton.Text = "Exit to Menu";
+			exitButton.FontSize = 1.5f;
+			exitButton.Padding = new (20, 10);
+			exitButton.Pivot = new (0.5f, 0.5f);
+			exitButton.transform.Parent = pauseMenuPanel.transform;
+			exitButton.transform.Position = new Vector3(0, -50, 0);
+			exitButton.OnClick += () =>
+			{
+				var scene = SceneManager.LoadSceneFromFile($"{EngineInstance.ASSETS_PATH}/Scenes/MENU.lscn");
+				SceneManager.ChangeSceneAsync(scene);
+			};
+
+			var resumeButton = scene.CreateSceneObject("ResumeButton").AddComponent<UI_Button>();
+			resumeButton.UI_Alignment = UI_Renderer.Alignment.Center;
+			resumeButton.Text = "Resume";
+			resumeButton.FontSize = 1.5f;
+			resumeButton.Padding = new (20, 10);
+			resumeButton.Pivot = new (0.5f, 0.5f);
+			resumeButton.transform.Parent = pauseMenuPanel.transform;
+			resumeButton.transform.Position = new Vector3(0, 50, 0);
+			resumeButton.OnClick += () =>
+			{
+				// Logic to unpause the game
+				Time.timeScale = 1;
+				pauseMenuPanel.gameObject.IsActiveSelf = (false);
+			};
+
+			pauseMenuPanel.gameObject.IsActiveSelf = (false);
 		}
 	}
 }

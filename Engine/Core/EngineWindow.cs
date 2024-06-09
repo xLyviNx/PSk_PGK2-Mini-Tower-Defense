@@ -13,7 +13,7 @@ using PGK2.Game.Code.TowerDef.Scripts;
 
 namespace PGK2.Engine.Core
 {
-	public class EngineWindow : GameWindow
+    public class EngineWindow : GameWindow
 	{
 		public static EngineWindow? instance;
 		private TP_IMGUI.ImGuiController _imGuiController;
@@ -55,16 +55,20 @@ namespace PGK2.Engine.Core
 			_imGuiController = new ImGuiController(ClientSize.X, ClientSize.Y);
 
 
-			//SceneLoadTest();
-			MakeGameScene();
+			LoadStartScene();
+			//nie usuwaj tych linijek Krzysztof. Co najwyzej tu jak napisalem zebys nie usuwal to tylko to xd
+			//MakeGameScene();
+			//MakeGameOverScene();
+			//MakeWinScene();
 			//MakeMenuScene();
 
 		}
-		void SceneLoadTest()
+		void LoadStartScene()
 		{
-			var scene = SceneManager.LoadSceneFromFile($"{EngineInstance.ASSETS_PATH}/Scenes/GAME.lscn");
+			var scene = SceneManager.LoadSceneFromFile($"{EngineInstance.ASSETS_PATH}/Scenes/MENU.lscn");
 			SceneManager.LoadScene(scene);
 		}
+		#region MAKE_SCENES
 		void MakeGameScene()
 		{
 			SceneSystem.Scene scene = new();
@@ -249,6 +253,91 @@ namespace PGK2.Engine.Core
 
 			SceneManager.LoadScene(scene);
 		}
+		void MakeGameOverScene()
+		{
+			SceneSystem.Scene scene = new();
+			scene.SceneName = "Game Over Scene";
+
+			GameObject CameraObject = scene.CreateSceneObject("CAMERA OBJECT");
+			var maincam = CameraObject.Components.Add<CameraComponent>();
+			var fc = CameraObject.Components.Add<Freecam>();
+			maincam.BackgroundColor = new(0.1f, 0.1f, 0.1f, 1f); 
+			maincam.FieldOfView = 20;
+
+			// Game Over Title
+			var titleO = scene.CreateSceneObject("Title");
+			var title = titleO.AddComponent<UI_Text>();
+			title.UI_Alignment = UI_Renderer.Alignment.CenterUp;
+			title.transform.Position = new Vector3(0, 30f, 0);
+			title.Text = "Game Over";
+			title.FontSize = 3f;
+			title.Pivot = new(0.5f, 0f);
+
+			// Return to Menu Button
+			var btnO = scene.CreateSceneObject("ReturnButton");
+			var btn = btnO.AddComponent<UI_Button>();
+			btn.UI_Alignment = UI_Renderer.Alignment.Center;
+			btn.transform.Position = new(0, -22.5f, 0);
+			btn.Text = "Return to Menu";
+			btn.FontSize = 1.5f;
+			btn.Padding.X = 70f;
+			btn.Pivot = new(0.5f, 0.5f);
+
+			var controller = scene.CreateSceneObject("GameOver Controller").AddComponent<GameOverController>();
+
+			scene.AddAwaitingObjects();
+			SceneManager.SaveSceneToFile(scene, $"{EngineInstance.ASSETS_PATH}/Scenes/GAMEOVER.lscn");
+
+			SceneManager.LoadScene(scene);
+		}
+		void MakeWinScene()
+		{
+			SceneSystem.Scene scene = new();
+			scene.SceneName = "Win Scene";
+			GameObject CameraObject = scene.CreateSceneObject("CAMERA OBJECT");
+			var maincam = CameraObject.Components.Add<CameraComponent>();
+			var fc = CameraObject.Components.Add<Freecam>();
+			maincam.BackgroundColor = new(0.2f, 0.7f, 0.2f, 1f);  // Greenish background for winning
+			maincam.FieldOfView = 20;
+
+			// Win Title
+			var titleO = scene.CreateSceneObject("Title");
+			var title = titleO.AddComponent<UI_Text>();
+			title.UI_Alignment = UI_Renderer.Alignment.CenterUp;
+			title.transform.Position = new Vector3(0, 30f, 0);
+			title.Text = "You Win!";
+			title.FontSize = 3f;
+			title.Pivot = new(0.5f, 0f);
+
+			// Return to Menu Button
+			var menuBtnO = scene.CreateSceneObject("MenuButton");
+			var menuBtn = menuBtnO.AddComponent<UI_Button>();
+			menuBtn.UI_Alignment = UI_Renderer.Alignment.Center;
+			menuBtn.transform.Position = new(0, -22.5f, 0);
+			menuBtn.Text = "Return to Menu";
+			menuBtn.FontSize = 1.5f;
+			menuBtn.Padding.X = 70f;
+			menuBtn.Pivot = new(0.5f, 0.5f);
+
+
+			// Replay Game Button
+			var replayBtnO = scene.CreateSceneObject("ReplayButton");
+			var replayBtn = replayBtnO.AddComponent<UI_Button>();
+			replayBtn.UI_Alignment = UI_Renderer.Alignment.Center;
+			replayBtn.transform.Position = new(0, 22.5F, 0);
+			replayBtn.Text = "Replay";
+			replayBtn.FontSize = 1.5f;
+			replayBtn.Padding.X = 70f;
+			replayBtn.Pivot = new(0.5f, 0.5f);
+
+			var controller = scene.CreateSceneObject("Win Controller").AddComponent<WinController>();
+
+
+			scene.AddAwaitingObjects();
+			SceneManager.SaveSceneToFile(scene, $"{EngineInstance.ASSETS_PATH}/Scenes/WIN.lscn");
+			SceneManager.LoadScene(scene);
+		}
+		#endregion
 		protected override void OnRenderFrame(FrameEventArgs e)
 		{
 			base.OnRenderFrame(e);
@@ -293,8 +382,6 @@ namespace PGK2.Engine.Core
 					List<ModelRenderer> onlyModelsList = SceneManager.ActiveScene.Renderers
 						.OfType<ModelRenderer>()
 						.ToList();
-					onlyModelsList.Sort(new RendererComparer(activeCamera.transform.Position));
-
 					TransparentPass();
 
 					foreach (Renderer r in SceneManager.ActiveScene.Renderers)
@@ -303,15 +390,12 @@ namespace PGK2.Engine.Core
 					}
 				}
 
-				//Console.WriteLine("UI DRAW CALLS");
 				foreach (UI_Renderer uir in SceneManager.ActiveScene.UI_Renderers.OrderBy(u => u.Z_Index))
 				{
 					uir.CallDraw();
-					//Console.WriteLine($" - {uir.gameObject.name}");
 				}
 			}
 
-			// Render ImGui last to ensure it overlays correctly
 			_imGuiController.Render();
 			SwapBuffers();
 			OnEndOfFrame();
@@ -442,7 +526,6 @@ namespace PGK2.Engine.Core
 						Cursor* cursor = GLFW.CreateStandardCursor(CursorShape.Arrow);
 					}
 					//Mouse.LockDelta = Mouse.ScreenCenter - Mouse.MousePosition;
-					//Console.WriteLine($"POS: {Mouse.MousePosition}, CENTER: {Mouse.ScreenCenter}, DELTA: {Mouse.Delta}");
 				}
 				else
 					changedFocus=false;

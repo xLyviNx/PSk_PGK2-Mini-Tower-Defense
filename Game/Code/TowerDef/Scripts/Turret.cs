@@ -12,21 +12,17 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		public float ShootingSpeed;
 		public int Damage;
 		public float Range;
+		public int Level;
 		ModelRenderer? mymodel;
 		GameManager? gameManager;
 		public bool IsRangeTurret;
 		float shootCooldown;
 		public Enemy? CurrentTarget;
-
-		GameObject test;
 		public override void Awake()
 		{
 			base.Awake();
 			mymodel = GetComponent<ModelRenderer>();
 			gameManager=MyScene.FindObjectOfType<GameManager>();
-			test = MyScene.CreateSceneObject("Test");
-			test.AddComponent<ModelRenderer>().Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/cube.fbx");
-
 		}
 		public override void Start()
 		{
@@ -38,14 +34,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			base.Update();
 			var raycastTags = new TagsContainer();
 			raycastTags.Add("map");
-			if (!MouseLockController.isLocked && Physics.RayCast_Triangle(CameraComponent.activeCamera, Mouse.MousePosition, 200f, out var hit, raycastTags))
+			if (CurrentTarget != null)
 			{
-				test.transform.Position = hit.Point;
-				float dist = Vector3.Distance(transform.Position, hit.Point);
-				if (dist < Range)
-					test.transform.Scale = Vector3.One * 0.5f;
-				else
-					test.transform.Scale = Vector3.One * 0.2f;
+				transform.LocalRotation = TransformComponent.LookAtRotation(transform.Position, CurrentTarget.transform.Position);
 			}
 
 			if (gameManager == null)
@@ -66,14 +57,27 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			}
 
 			if (shootCooldown > 0)
+			{
+
 				shootCooldown -= Time.deltaTime;
+			}
 			else
 			{
 				if (IsRangeTurret)
-					RangeAttack();
-				else
+				{
+					var enemies = FindEnemiesInRange();
+					if (enemies.Length > 0)
+					{
+						RangeAttack(enemies);
+						shootCooldown = ShootingSpeed;
+
+					}
+				}
+				else if (CurrentTarget != null)
+				{
 					TargetAttack();
-				shootCooldown = ShootingSpeed;
+					shootCooldown = ShootingSpeed;
+				}
 			}
 		}
 
@@ -83,9 +87,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			CurrentTarget.Damage(Damage);
 		}
 
-		private void RangeAttack()
+		private void RangeAttack(Enemy[] enemies)
 		{
-			foreach(Enemy en in FindEnemiesInRange())
+			foreach(Enemy en in enemies)
 			{
 				en.Damage(Damage);
 			}

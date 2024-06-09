@@ -12,6 +12,8 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 	{
 		public static string GameSceneFile =>  $"{EngineInstance.ASSETS_PATH}/Scenes/GAME.lscn";
 		public static string MenuSceneFile =>  $"{EngineInstance.ASSETS_PATH}/Scenes/MENU.lscn";
+		public static string GameOverScene =>  $"{EngineInstance.ASSETS_PATH}/Scenes/GAMEOVER.lscn";
+		public static string WinScene =>  $"{EngineInstance.ASSETS_PATH}/Scenes/WIN.lscn";
 		UI_Button? PlayButton;
 		UI_Button? QuitButton;
 		public override void Awake()

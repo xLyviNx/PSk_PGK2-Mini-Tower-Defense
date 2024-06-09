@@ -1,9 +1,9 @@
 {
-  "SceneName": "Menu Scene",
+  "SceneName": "Win Scene",
   "GameObjects": [
     {
       "name": "CAMERA OBJECT",
-      "Id": "4e246aa5-a41c-4ed0-8f4e-5eaf930d102f",
+      "Id": "1d6fa4b9-40e4-4b4e-a421-42296975843a",
       "Components": {
         "All": [
           {
@@ -34,8 +34,8 @@
               "FieldOfView": 20,
               "BackgroundColor": {
                 "R": 0.2,
-                "G": 0.5,
-                "B": 0,
+                "G": 0.7,
+                "B": 0.2,
                 "A": 1
               },
               "IncludeTags": {
@@ -71,119 +71,8 @@
       "IsActiveSelf": true
     },
     {
-      "name": "Light Object",
-      "Id": "bd7caf29-99b5-4c79-8f09-9f32d4462635",
-      "Components": {
-        "All": [
-          {
-            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-            "Data": {
-              "LocalPosition": {
-                "X": 0,
-                "Y": 1,
-                "Z": -1
-              },
-              "LocalScale": {
-                "X": 1,
-                "Y": 1,
-                "Z": 1
-              },
-              "Pitch": 0,
-              "Yaw": 0,
-              "Roll": 0,
-              "Children": {
-                "All": []
-              }
-            }
-          },
-          {
-            "Type": "PGK2.Engine.Core.Light, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-            "Data": {
-              "Ambient": {
-                "X": 0,
-                "Y": 0,
-                "Z": 0
-              },
-              "Diffuse": {
-                "X": 1,
-                "Y": 0.8,
-                "Z": 0.8
-              },
-              "Specular": {
-                "X": 1,
-                "Y": 0.9,
-                "Z": 0.9
-              },
-              "CreateModelOnCreation": true,
-              "EnabledSelf": true
-            }
-          }
-        ]
-      },
-      "Tags": {
-        "All": []
-      },
-      "IsActiveSelf": true
-    },
-    {
-      "name": "enemy",
-      "Id": "ba9edb44-894f-4b00-9e66-cb5f27b79a39",
-      "Components": {
-        "All": [
-          {
-            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-            "Data": {
-              "LocalPosition": {
-                "X": 0.4,
-                "Y": -0.6,
-                "Z": 0.7
-              },
-              "LocalScale": {
-                "X": 1,
-                "Y": 1,
-                "Z": 1
-              },
-              "Pitch": 0,
-              "Yaw": 190,
-              "Roll": 0,
-              "Children": {
-                "All": []
-              }
-            }
-          },
-          {
-            "Type": "PGK2.Engine.Components.ModelRenderer, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-            "Data": {
-              "ModelPath": ".//..//..//..//Game/Assets/Models/enemy1.fbx",
-              "OverrideMaterials": [
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-              ],
-              "OutlineColor": {
-                "R": 1,
-                "G": 1,
-                "B": 1,
-                "A": 0
-              },
-              "EnabledSelf": true
-            }
-          }
-        ]
-      },
-      "Tags": {
-        "All": []
-      },
-      "IsActiveSelf": true
-    },
-    {
       "name": "Title",
-      "Id": "2e6fd797-ef2b-4afc-ac8c-aa7d56ad3e93",
+      "Id": "10cd378d-ac6e-4966-9d88-7564dc53e604",
       "Components": {
         "All": [
           {
@@ -210,7 +99,7 @@
           {
             "Type": "PGK2.Engine.Components.Base.Renderers.UI_Text, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Data": {
-              "Text": "Basic Tower Defense Game",
+              "Text": "You Win!",
               "FontSize": 3,
               "HoverOnlyWindow": false,
               "Pivot": {
@@ -246,72 +135,8 @@
       "IsActiveSelf": true
     },
     {
-      "name": "Title",
-      "Id": "b0c07505-bf19-430c-b784-88a855508d27",
-      "Components": {
-        "All": [
-          {
-            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-            "Data": {
-              "LocalPosition": {
-                "X": 0,
-                "Y": 0,
-                "Z": 0
-              },
-              "LocalScale": {
-                "X": 1,
-                "Y": 1,
-                "Z": 1
-              },
-              "Pitch": 0,
-              "Yaw": 0,
-              "Roll": 0,
-              "Children": {
-                "All": []
-              }
-            }
-          },
-          {
-            "Type": "PGK2.Engine.Components.Base.Renderers.UI_Text, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-            "Data": {
-              "Text": "2ID14B:\nSygut Grzegorz\nSynowiec Adrian\nSzylinski Krzysztof\nSieczkowski Dawid\n",
-              "FontSize": 1,
-              "HoverOnlyWindow": false,
-              "Pivot": {
-                "X": 0,
-                "Y": 1
-              },
-              "Size": {
-                "X": 0,
-                "Y": 0
-              },
-              "Padding": {
-                "X": 10,
-                "Y": 10
-              },
-              "UI_Alignment": 6,
-              "Color": {
-                "X": 1,
-                "Y": 1,
-                "Z": 1,
-                "W": 1
-              },
-              "wasClicked": false,
-              "wasHovered": false,
-              "Z_Index": 0,
-              "EnabledSelf": true
-            }
-          }
-        ]
-      },
-      "Tags": {
-        "All": []
-      },
-      "IsActiveSelf": true
-    },
-    {
-      "name": "PlayButton",
-      "Id": "7cc2cc7a-51ca-4f97-a824-337745a70069",
+      "name": "MenuButton",
+      "Id": "83c6151f-9097-4d4f-bc07-aea2920aa2fb",
       "Components": {
         "All": [
           {
@@ -338,7 +163,7 @@
           {
             "Type": "UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Data": {
-              "Text": "Play",
+              "Text": "Return to Menu",
               "FontSize": 1.5,
               "NormalColor": {
                 "X": 0.1,
@@ -393,8 +218,8 @@
       "IsActiveSelf": true
     },
     {
-      "name": "QuitButton",
-      "Id": "2b3da651-5800-4978-b481-c2faf5722dba",
+      "name": "ReplayButton",
+      "Id": "1f83e14d-8bee-442e-93dd-e99a6dcfb94c",
       "Components": {
         "All": [
           {
@@ -421,7 +246,7 @@
           {
             "Type": "UI_Button, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Data": {
-              "Text": "Quit",
+              "Text": "Replay",
               "FontSize": 1.5,
               "NormalColor": {
                 "X": 0.1,
@@ -476,8 +301,8 @@
       "IsActiveSelf": true
     },
     {
-      "name": "Menu Controller",
-      "Id": "218b4691-be36-457d-9565-873d472765cb",
+      "name": "Win Controller",
+      "Id": "04ecbb2a-a68f-4cc2-8267-cfadde0b936f",
       "Components": {
         "All": [
           {
@@ -502,7 +327,7 @@
             }
           },
           {
-            "Type": "PGK2.Game.Code.TowerDef.Scripts.Menu, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Type": "PGK2.Game.Code.TowerDef.Scripts.WinController, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Data": {
               "EnabledSelf": true
             }

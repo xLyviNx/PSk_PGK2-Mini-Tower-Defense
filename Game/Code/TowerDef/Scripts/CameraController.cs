@@ -24,6 +24,7 @@ namespace PGK2.TowerDef.Scripts
 		Vector3 NormalBackground = new(0.3f, 0.6f, 0.5f);
 		Vector3 DamageColor = new(0.7f, 0.1f, 0.0f);
 		GameManager? manager;
+		public bool blockMovement;
 		public override void Awake()
 		{
 			base.Awake();
@@ -36,23 +37,24 @@ namespace PGK2.TowerDef.Scripts
 			Debug.Assert(myCamera != null);
 			Debug.Assert(transform.Parent != null);
 			Debug.Assert(EngineWindow.instance != null);
+
 			myCamera.FieldOfView = 30f;
 			Vector3 bgcolor = manager.TakenDamageTimer > 0f ? DamageColor : NormalBackground;
 			Vector3 curr = new(myCamera.BackgroundColor.R, myCamera.BackgroundColor.G, myCamera.BackgroundColor.B);
-			curr = Vector3.Lerp(curr, bgcolor, Time.deltaTime * 15f);
+			curr = Vector3.Lerp(curr, bgcolor, Time.unscaledDeltaTime * 15f);
 			myCamera.BackgroundColor = new(curr.X, curr.Y, curr.Z, 1f);
 			if (EngineWindow.instance.IsFocused)
 			{
 				var mouse = EngineWindow.instance.MouseState;
-				MouseLockController.HoldingCamera = mouse.IsButtonDown(MouseButton.Button2);
+				MouseLockController.HoldingCamera = !blockMovement && mouse.IsButtonDown(MouseButton.Button2);
 				KeyboardState input = EngineWindow.instance.KeyboardState;
 				if (MouseLockController.HoldingCamera && Mouse.IsLocked) 
 				{
 					CameraVelocity = Vector2.Zero;
 					if (Mouse.Delta.X != 0f)
-						CameraVelocity.X -= Mouse.Delta.X * Time.deltaTime * MouseSens * 10f;
+						CameraVelocity.X -= Mouse.Delta.X * Time.unscaledDeltaTime * MouseSens * 10f;
 					if (Mouse.Delta.Y != 0f)
-						CameraVelocity.Y -= Mouse.Delta.Y * Time.deltaTime * MouseSens * 10f;
+						CameraVelocity.Y -= Mouse.Delta.Y * Time.unscaledDeltaTime * MouseSens * 10f;
 				}
 				TargetCameraDistance -= mouse.ScrollDelta.Y * 0.5f;
 				TargetCameraDistance = Math.Clamp(TargetCameraDistance, 3f, 25f);
@@ -64,9 +66,9 @@ namespace PGK2.TowerDef.Scripts
 			transform.Parent.Yaw += CameraVelocity.X;
 			transform.Parent.Pitch += CameraVelocity.Y;
 			transform.Parent.Pitch = Math.Clamp(transform.Parent.Pitch, -44.9f, 134.9f);
-			CameraVelocity = Vector2.Lerp(CameraVelocity, Vector2.Zero, Time.deltaTime * 2f);
+			CameraVelocity = Vector2.Lerp(CameraVelocity, Vector2.Zero, Time.unscaledDeltaTime * 2f);
 			if (MathF.Abs(CameraDistance - TargetCameraDistance) > 0.005f)
-				CameraDistance = MathHelper.Lerp(CameraDistance, TargetCameraDistance, Time.deltaTime * CameraDistanceLerpSpeed);
+				CameraDistance = MathHelper.Lerp(CameraDistance, TargetCameraDistance, Time.unscaledDeltaTime * CameraDistanceLerpSpeed);
 			else
 				CameraDistance = TargetCameraDistance;
 			transform.LocalPosition = new(0, CameraDistance, CameraDistance);

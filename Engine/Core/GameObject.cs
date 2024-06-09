@@ -64,7 +64,7 @@ namespace PGK2.Engine.Core
         public GameObject(string name) : this(name, Guid.NewGuid()) { }
         public GameObject(string name, Guid GUID)
         {
-            Console.WriteLine("MADE OBJECT");
+            //Console.WriteLine("MADE OBJECT");
             Components = new GameObjectComponents(this);
             transform = Components.Add<TransformComponent>();
             Tags = new();
