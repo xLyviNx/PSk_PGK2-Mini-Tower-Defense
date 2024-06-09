@@ -3,7 +3,7 @@
   "GameObjects": [
     {
       "name": "LOCK CONTROLLER",
-      "Id": "c74da31e-d0bc-47bf-8a7d-6c32c2cb78be",
+      "Id": "9bd1a685-8126-470b-a13d-e09658b29dcc",
       "Components": {
         "All": [
           {
@@ -42,7 +42,7 @@
     },
     {
       "name": "CAMERA PARENT",
-      "Id": "62b060bc-af3f-4d24-abcb-eb06e8452a55",
+      "Id": "85d1c76a-2f1c-4c3e-b395-96e9d2879006",
       "Components": {
         "All": [
           {
@@ -63,7 +63,7 @@
               "Roll": 0,
               "Children": {
                 "All": [
-                  "b7787d9e-bb7b-4895-bd99-3bf3effaac57"
+                  "a6fdace4-e950-4500-899c-9f2c46abb1af"
                 ]
               }
             }
@@ -77,7 +77,7 @@
     },
     {
       "name": "CAMERA OBJECT",
-      "Id": "b7787d9e-bb7b-4895-bd99-3bf3effaac57",
+      "Id": "a6fdace4-e950-4500-899c-9f2c46abb1af",
       "Components": {
         "All": [
           {
@@ -152,7 +152,7 @@
     },
     {
       "name": "MAP OBJECT",
-      "Id": "0589eb82-3008-4b3a-82bb-533659674113",
+      "Id": "3d455e2e-63ca-4b22-b48d-2772a2e35c52",
       "Components": {
         "All": [
           {
@@ -204,7 +204,7 @@
     },
     {
       "name": "MAP OBSTACLE",
-      "Id": "cc84ad19-0364-4745-ad59-1a5681c3aca1",
+      "Id": "6c3b9f3b-1049-41a1-bd99-628667d7916b",
       "Components": {
         "All": [
           {
@@ -256,7 +256,7 @@
     },
     {
       "name": "Light Object",
-      "Id": "0462fab9-cb02-4ef7-a47f-be088fad8410",
+      "Id": "9c8c9e3f-6579-43fd-99b9-cedcd62bb5b8",
       "Components": {
         "All": [
           {
@@ -311,7 +311,7 @@
     },
     {
       "name": "Light Object 2",
-      "Id": "5bb6f286-fc13-4850-8769-68443bd338b1",
+      "Id": "f77cb463-1d8a-4559-8af7-5809a6cd7c9c",
       "Components": {
         "All": [
           {
@@ -365,8 +365,63 @@
       "IsActiveSelf": true
     },
     {
+      "name": "Light 3",
+      "Id": "80887db5-fba6-4a95-8a69-2f0d027a87a8",
+      "Components": {
+        "All": [
+          {
+            "Type": "PGK2.Engine.Components.Base.TransformComponent, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "LocalPosition": {
+                "X": 0,
+                "Y": 1,
+                "Z": 10
+              },
+              "LocalScale": {
+                "X": 1,
+                "Y": 1,
+                "Z": 1
+              },
+              "Pitch": 0,
+              "Yaw": 0,
+              "Roll": 0,
+              "Children": {
+                "All": []
+              }
+            }
+          },
+          {
+            "Type": "PGK2.Engine.Core.Light, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Data": {
+              "Ambient": {
+                "X": 0.1,
+                "Y": 0.1,
+                "Z": 0.1
+              },
+              "Diffuse": {
+                "X": 0.6,
+                "Y": 0.6,
+                "Z": 0.6
+              },
+              "Specular": {
+                "X": 0.6,
+                "Y": 0.6,
+                "Z": 0.6
+              },
+              "CreateModelOnCreation": true,
+              "EnabledSelf": true
+            }
+          }
+        ]
+      },
+      "Tags": {
+        "All": []
+      },
+      "IsActiveSelf": true
+    },
+    {
       "name": "ai_target",
-      "Id": "4c5387c8-fd52-44be-8eb4-73ff0a3f75cc",
+      "Id": "b5e019b2-2931-4355-9825-3113650c86c5",
       "Components": {
         "All": [
           {
@@ -399,7 +454,7 @@
     },
     {
       "name": "Game Manager",
-      "Id": "61a6d7c2-5613-404c-a47d-8cd68fda215b",
+      "Id": "46383b24-c6a7-48c8-af10-cbf21ce95342",
       "Components": {
         "All": [
           {
@@ -426,6 +481,7 @@
           {
             "Type": "PGK2.Game.Code.TowerDef.Scripts.GameManager, PGK2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Data": {
+              "TimeString": "0:00",
               "MaxHealth": 1000,
               "EnabledSelf": true
             }
@@ -439,7 +495,7 @@
     },
     {
       "name": "TurretRegion",
-      "Id": "e3050f27-141e-48c3-b97d-ad99919335c5",
+      "Id": "0605b0e9-ef2a-4fd3-862d-36f1870fdddf",
       "Components": {
         "All": [
           {
@@ -490,7 +546,7 @@
     },
     {
       "name": "Turret Main Panel",
-      "Id": "d42051df-b633-4239-9d19-b485cde53da0",
+      "Id": "b340af37-90ca-4a7f-9681-9d6464442c12",
       "Components": {
         "All": [
           {
@@ -511,9 +567,9 @@
               "Roll": 0,
               "Children": {
                 "All": [
-                  "b47ee4fc-d760-421d-9f28-6dda2c6c7ce9",
-                  "5d479114-f50a-4eca-9946-b3ab5f465239",
-                  "9874d804-f7ef-4958-ae9a-4013a7146a8e"
+                  "14626692-ccd9-4be4-a58c-a01ed1b92da1",
+                  "89eadc15-0e4b-4fc6-8670-f9f1f985bddb",
+                  "282c63a7-ebae-433a-bf75-23c223de69cf"
                 ]
               }
             }
@@ -556,7 +612,7 @@
     },
     {
       "name": "Turret1Button",
-      "Id": "b47ee4fc-d760-421d-9f28-6dda2c6c7ce9",
+      "Id": "14626692-ccd9-4be4-a58c-a01ed1b92da1",
       "Components": {
         "All": [
           {
@@ -639,7 +695,7 @@
     },
     {
       "name": "Turret2Button",
-      "Id": "5d479114-f50a-4eca-9946-b3ab5f465239",
+      "Id": "89eadc15-0e4b-4fc6-8670-f9f1f985bddb",
       "Components": {
         "All": [
           {
@@ -722,7 +778,7 @@
     },
     {
       "name": "Turret3Button",
-      "Id": "9874d804-f7ef-4958-ae9a-4013a7146a8e",
+      "Id": "282c63a7-ebae-433a-bf75-23c223de69cf",
       "Components": {
         "All": [
           {
@@ -805,7 +861,7 @@
     },
     {
       "name": "TurretButton",
-      "Id": "0787d27c-204b-42a3-aae8-83f55f3646d3",
+      "Id": "e45be7ef-a6a7-46eb-b00a-70b9ee54271c",
       "Components": {
         "All": [
           {
@@ -888,7 +944,7 @@
     },
     {
       "name": "Turret Manager",
-      "Id": "7c208ba1-2f28-4598-a002-14b5a4d19b7c",
+      "Id": "e06d7b22-0194-4a36-ada0-3a386371215b",
       "Components": {
         "All": [
           {

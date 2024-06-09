@@ -10,7 +10,7 @@ namespace PGK2.Engine.Core
 	{
 		public static Dictionary<string, Model> LoadedModels = new();
 		public string Path;
-		
+		public BoundingBox ModelBoundingBox;
 		public static Model LoadFromFile(string path)
 		{
 			if (LoadedModels.ContainsKey(path) && LoadedModels[path] != null)
@@ -35,14 +35,14 @@ namespace PGK2.Engine.Core
 				bool overrided = (RendererMaterials != null && RendererMaterials.Length >= i && RendererMaterials[i] != null);
 
 				Material? mat = overrided ? RendererMaterials[i] : mesh.Material;
-				bool Transparent = ((mesh.hasTransparentTextures || mat.HasTransparency) && RenderPass == EngineInstance.RenderPass.Transparent);
-				bool Opaque = (RenderPass == EngineInstance.RenderPass.Opaque && !mesh.hasTransparency);
+				bool transparentmat = (mesh.hasTransparentTextures || mat.HasTransparency);
+				bool Transparent = (transparentmat && RenderPass == EngineInstance.RenderPass.Transparent);
+				bool Opaque = (RenderPass == EngineInstance.RenderPass.Opaque && !transparentmat);
 				bool Outline = (RenderPass == EngineInstance.RenderPass.Outline);
 
 				//Console.WriteLine($"{Transparent}, {Opaque}");
 				if (Transparent || Opaque || Outline)
 				{
-
 					mesh.Draw(modelMatrix, viewMatrix, projectionMatrix, lights, camera, overrided? mat : null);
 				}
 				//Console.WriteLine($"DRAWN");
@@ -74,12 +74,28 @@ namespace PGK2.Engine.Core
 			for (int i = 0; i < node.MeshCount; i++)
 			{
 				Assimp.Mesh mesh = scene.Meshes[node.MeshIndices[i]];
-				meshes.Add(processMesh(mesh, scene));
+				Mesh processedMesh = processMesh(mesh, scene);
+				meshes.Add(processedMesh);
+
+				// Update the model bounding box
+				UpdateModelBoundingBox(processedMesh.CalculateBoundingBox());
 			}
+
 			// then do the same for each of its children
 			for (int i = 0; i < node.ChildCount; i++)
 			{
 				processNode(node.Children[i], scene);
+			}
+		}
+
+		private void UpdateModelBoundingBox(BoundingBox meshBoundingBox)
+		{
+			if (ModelBoundingBox == null)
+				ModelBoundingBox = new BoundingBox(meshBoundingBox.Min, meshBoundingBox.Max);
+			else
+			{
+				ModelBoundingBox.Min = Vector3.ComponentMin(ModelBoundingBox.Min, meshBoundingBox.Min);
+				ModelBoundingBox.Max = Vector3.ComponentMax(ModelBoundingBox.Max, meshBoundingBox.Max);
 			}
 		}
 

@@ -3,7 +3,6 @@ using OpenTK;
 using PGK2.Engine.Core;
 using PGK2.Engine.SceneSystem;
 using OpenTK.Mathematics;
-using System.Linq;
 
 namespace PGK2.Engine.Components
 {
@@ -25,6 +24,15 @@ namespace PGK2.Engine.Components
 				return _outlineMaterial;
 			}
 		}
+		internal bool CanDraw(CameraComponent camera)
+		{
+			if (camera == null || !camera.EnabledInHierarchy)
+				return false;
+
+			if (!EnabledInHierarchy) return false;
+			bool pass = (camera.IncludeTags.isEmpty && !camera.ExcludeTags.HasAny(gameObject.Tags)) || camera.IncludeTags.HasAny(gameObject.Tags);
+			return pass;
+		}
 		protected Renderer()
 		{
 			OnSceneTransfer += SceneTransfer;
@@ -45,11 +53,7 @@ namespace PGK2.Engine.Components
 		}
 		public void CallRender(CameraComponent camera, EngineInstance.RenderPass RenderPass)
 		{
-			if (camera == null || !camera.EnabledInHierarchy)
-				return;
-
-			if (!EnabledInHierarchy) return;
-			bool pass = (camera.IncludeTags.isEmpty && !camera.ExcludeTags.HasAny(gameObject.Tags))|| camera.IncludeTags.HasAny(gameObject.Tags);
+			var pass = CanDraw(camera);
 			if (pass)
 			{
 				Render(camera, RenderPass);

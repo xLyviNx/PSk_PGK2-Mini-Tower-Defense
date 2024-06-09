@@ -19,7 +19,10 @@ namespace PGK2.Engine.Core
 		{
 			get
 			{
-				if(Shader.EnforceTransparencyPass) return true;
+				if (Shader.EnforceTransparencyPass)
+				{
+					return true;
+				}
 				if (FloatValues.ContainsKey("material.transparency") && FloatValues["material.transparency"] < 1f)
 				{
 					return true;

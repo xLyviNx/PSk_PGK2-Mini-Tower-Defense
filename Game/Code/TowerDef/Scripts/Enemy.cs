@@ -105,7 +105,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 					if(mat!=null)
 					{
 						if (lerp)
-							mat.Vector3Values["material.diffuse"] = Vector3.Lerp(mat.Vector3Values["material.diffuse"], targetcolor, Time.deltaTime * 20f);
+							mat.Vector3Values["material.diffuse"] = Vector3.Lerp(mat.Vector3Values["material.diffuse"], targetcolor, Time.deltaTime * 30f);
 						else
 							mat.Vector3Values["material.diffuse"] = mat.Vector3Values["material.diffuse"];
 					}
@@ -118,6 +118,8 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		{
 			base.OnDestroy();
 			gameManager.SpawnedEnemies.Remove(this);
+			if (gameManager.hoveredEnemy == this)
+				gameManager.hoveredEnemy = null;
 		}
 		private void Reached()
 		{
@@ -125,7 +127,15 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		}
 		public void Damage(int dmg)
 		{
-			DamageEffect();
+			Health -= dmg;
+			if(Health<=0)
+			{
+				gameObject.Destroy();
+			}
+			else
+			{
+				DamageEffect();
+			}
 		}
 		private void InstantiateMaterials()
 		{
@@ -148,7 +158,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			Console.WriteLine("SETTING DAMAGED TO TRUE");
 			try
 			{
-				await Task.Delay(200, token);
+				await Task.Delay(120, token);
 				if (!gameObject.isDestroyed)
 				{
 					Console.WriteLine("SETTING DAMAGED TO FALSE");

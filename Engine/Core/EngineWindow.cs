@@ -1,5 +1,4 @@
-﻿using Assimp;
-using PGK2.Engine.Components;
+﻿using PGK2.Engine.Components;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -7,15 +6,10 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using PGK2.Engine.Components.Base;
 using PGK2.Engine.SceneSystem;
-using System.Reflection;
 using PGK2.TowerDef.Scripts;
-using ImGuiNET;
 using TP_IMGUI;
 using PGK2.Engine.Components.Base.Renderers;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using PGK2.Game.Code.TowerDef.Scripts;
-using System.Net.NetworkInformation;
 
 namespace PGK2.Engine.Core
 {
@@ -57,6 +51,7 @@ namespace PGK2.Engine.Core
 			lightShader = new Shader($"{EngineInstance.ENGINE_PATH}/Shaders/lightShader.vert", $"{EngineInstance.ENGINE_PATH}/Shaders/lightShader.frag");
 			OutlineShader = new Shader($"{EngineInstance.ENGINE_PATH}/Shaders/outline.vert", $"{EngineInstance.ENGINE_PATH}/Shaders/outline.frag");
 			GridShader = new Shader($"{EngineInstance.ENGINE_PATH}/Shaders/grid.vert", $"{EngineInstance.ENGINE_PATH}/Shaders/grid.frag");
+			GridShader.EnforceTransparencyPass = true;
 			_imGuiController = new ImGuiController(ClientSize.X, ClientSize.Y);
 
 
@@ -111,7 +106,14 @@ namespace PGK2.Engine.Core
 			Light light2 = lightObj2.Components.Add<Light>();
 			lightObj2.transform.Position = new Vector3(8, 0.5f, 0f);
 			light2.Diffuse = new Vector3(0.5f, 0.5f, 1f);
-			light2.Specular = new Vector3(1f, 1f, 1f);
+			light2.Specular = new Vector3(1f, 1f, 1f);		
+			
+			GameObject lightObj3 = scene.CreateSceneObject("Light 3");
+			Light light3 = lightObj3.Components.Add<Light>();
+			light3.transform.Position = new Vector3(0, 1f, 10f);
+			light3.Diffuse = new Vector3(0.6f, 0.6f, 0.6f);
+			light3.Specular = new Vector3(0.6f, 0.6f, 0.6f);
+			light3.Ambient = new Vector3(0.1f, 0.1f, 0.1f);
 
 			var ai_target = scene.CreateSceneObject("ai_target");
 			ai_target.transform.Position = new(-5, 0.12f, -4.25f);
@@ -174,10 +176,7 @@ namespace PGK2.Engine.Core
 
 			scene.AddAwaitingObjects();
 			SceneManager.SaveSceneToFile(scene, $"{EngineInstance.ASSETS_PATH}/Scenes/GAME.lscn");
-			foreach(var obj in scene.GameObjects)
-			{
-				Console.WriteLine(obj.name);
-			}
+
 			SceneManager.LoadScene(scene);
 		}
 		void MakeMenuScene()
@@ -247,10 +246,7 @@ namespace PGK2.Engine.Core
 
 			scene.AddAwaitingObjects();
 			SceneManager.SaveSceneToFile(scene, $"{EngineInstance.ASSETS_PATH}/Scenes/MENU.lscn");
-			foreach(var obj in scene.GameObjects)
-			{
-				Console.WriteLine(obj.name);
-			}
+
 			SceneManager.LoadScene(scene);
 		}
 		protected override void OnRenderFrame(FrameEventArgs e)
@@ -261,10 +257,10 @@ namespace PGK2.Engine.Core
 
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
-			// Upewnij się, że ustawienia OpenGL są poprawnie ustawione
-			GL.Enable(EnableCap.DepthTest);
 			GL.Enable(EnableCap.Blend);
 			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+
+			GL.Enable(EnableCap.DepthTest);
 
 			if (Mouse.framesSinceLastMove > 0)
 				Mouse.Delta = Vector2.Zero;
@@ -294,18 +290,12 @@ namespace PGK2.Engine.Core
 					{
 						r.CallRender(activeCamera, EngineInstance.RenderPass.Opaque);
 					}
+					List<ModelRenderer> onlyModelsList = SceneManager.ActiveScene.Renderers
+						.OfType<ModelRenderer>()
+						.ToList();
+					onlyModelsList.Sort(new RendererComparer(activeCamera.transform.Position));
 
-					SceneManager.ActiveScene.Renderers.Sort((r1, r2) =>
-					{
-						float distance1 = (r1.gameObject.transform.Position - activeCamera.transform.Position).LengthSquared;
-						float distance2 = (r2.gameObject.transform.Position - activeCamera.transform.Position).LengthSquared;
-						return distance2.CompareTo(distance1);
-					});
-
-					foreach (Renderer r in SceneManager.ActiveScene.Renderers)
-					{
-						r.CallRender(activeCamera, EngineInstance.RenderPass.Transparent);
-					}
+					TransparentPass();
 
 					foreach (Renderer r in SceneManager.ActiveScene.Renderers)
 					{
@@ -313,11 +303,11 @@ namespace PGK2.Engine.Core
 					}
 				}
 
-				Console.WriteLine("UI DRAW CALLS");
+				//Console.WriteLine("UI DRAW CALLS");
 				foreach (UI_Renderer uir in SceneManager.ActiveScene.UI_Renderers.OrderBy(u => u.Z_Index))
 				{
 					uir.CallDraw();
-					Console.WriteLine($" - {uir.gameObject.name}");
+					//Console.WriteLine($" - {uir.gameObject.name}");
 				}
 			}
 
@@ -327,6 +317,56 @@ namespace PGK2.Engine.Core
 			OnEndOfFrame();
 		}
 
+		private void TransparentPass()
+		{
+			List<ModelRenderer> modelRenderers = SceneManager.ActiveScene.Renderers
+						.OfType<ModelRenderer>()
+						.ToList();
+
+			List<(Mesh, int, ModelRenderer, float)> modelRendererDistances = new();
+
+			foreach (ModelRenderer modelRenderer in modelRenderers)
+			{
+				if (modelRenderer.Model == null) continue;
+				int i = 0;
+				foreach (Mesh m in modelRenderer.Model.meshes)
+				{
+					Material mat = modelRenderer.OverrideMaterials[i] != null ? modelRenderer.OverrideMaterials[i] : m.Material;
+					if (!mat.HasTransparency) continue;
+					BoundingBox bb = m.BoundingBox;
+					bb = TransformBoundingBox(bb, modelRenderer.transform.GetModelMatrix());
+					float distance = CalculateDistanceToCamera(bb, activeCamera);
+					modelRendererDistances.Add((m, i, modelRenderer, distance));
+					i++;
+				}
+			}
+			modelRendererDistances.Sort((x, y) => y.Item4.CompareTo(x.Item4));
+			foreach ((Mesh m, int i, ModelRenderer mr, float dist) in modelRendererDistances)
+			{
+				if (mr.CanDraw(activeCamera))
+				{
+					bool overrided = (mr.OverrideMaterials != null && mr.OverrideMaterials.Length >= i && mr.OverrideMaterials[i] != null);
+					Material? mat = overrided ? mr.OverrideMaterials[i] : m.Material;
+					m.Draw(mr.transform.GetModelMatrix(), activeCamera.ViewMatrix, activeCamera.ProjectionMatrix, mr.MyScene.Lights, activeCamera, overrided ? mat : null);
+				}
+			}
+		}
+
+		BoundingBox TransformBoundingBox(BoundingBox boundingBox, Matrix4 ModelMatrix)
+		{
+			Vector3 min = Vector3.TransformPosition(boundingBox.Min, ModelMatrix);
+			Vector3 max = Vector3.TransformPosition(boundingBox.Max, ModelMatrix);
+			return new BoundingBox(min, max);
+		}
+
+		// Metoda do obliczania odległości od kamery do bounding box'a
+		float CalculateDistanceToCamera(BoundingBox boundingBox, CameraComponent camera)
+		{
+			Vector3 cameraPosition = camera.gameObject.transform.Position;
+			Vector3 center = (boundingBox.Max + boundingBox.Min) / 2.0f;
+			Vector3 toCenter = center - cameraPosition;
+			return toCenter.LengthFast;
+		}
 		protected virtual void OnEndOfFrame()
 		{
 			EndOfFrame?.Invoke(this, EventArgs.Empty);

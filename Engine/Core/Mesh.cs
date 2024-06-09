@@ -39,14 +39,35 @@ namespace PGK2.Engine.Core
 			}
 		}
 		public Material Material;
+		public BoundingBox BoundingBox;
+
 		public Mesh(List<MeshVertex> vertices, List<uint> indices, List<Texture> textures, Material mat)
 		{
 			this.vertices = vertices;
 			this.indices = indices;
 			this.textures = textures;
 			Material = mat;
-			//Console.WriteLine($"INIT MESH: {vertices.Count}, {indices.Count}, {textures.Count}");
+
 			setupMesh();
+			BoundingBox = CalculateBoundingBox();
+
+		}
+
+		public BoundingBox CalculateBoundingBox()
+		{
+			if (vertices.Count == 0)
+				return null;
+
+			Vector3 min = vertices[0].Position;
+			Vector3 max = vertices[0].Position;
+
+			foreach (var vertex in vertices)
+			{
+				min = Vector3.ComponentMin(min, vertex.Position);
+				max = Vector3.ComponentMax(max, vertex.Position);
+			}
+
+			return new BoundingBox(min, max);
 		}
 		public void Draw(Matrix4 modelMatrix, Matrix4 viewMatrix, Matrix4 projectionMatrix, List<Light> Lights, CameraComponent camera, Material? overrideMaterial)
 		{

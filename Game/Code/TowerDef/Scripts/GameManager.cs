@@ -19,6 +19,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		int wave = 0;
 		[JsonIgnore] public List<Enemy> SpawnedEnemies = new();
 		[JsonIgnore]
+		int everenemies = 0;
 		public string TimeString // H:MM:SS
 		{
 			get
@@ -271,6 +272,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			{
 				if (hoveredEnemy!=null)
 				{
+					
 					EnemyHpDisplayText.Text = $"HP: {hoveredEnemy.Health}";
 				}
 				else if (!WaveEnded && _gamestarted)
@@ -306,6 +308,8 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			var rend = enemy.AddComponent<ModelRenderer>();
 			var Enemy = enemy.AddComponent<Enemy>();
 			Enemy.Health = hp;
+			Enemy.gameObject.name = $"ENEMY {everenemies}";
+			everenemies++;
 			return Enemy;
 		}
 
