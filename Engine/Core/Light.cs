@@ -14,7 +14,7 @@ namespace PGK2.Engine.Core
 		public Vector3 Specular;
 		[JsonIgnore]
 		public ModelRenderer? LightModel;
-		public bool CreateModelOnCreation = true;
+		public bool CreateModelOnCreation = false;
 		public Light()
 		{
 			MyScene.Lights.Add(this);

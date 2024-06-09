@@ -12,27 +12,30 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		public float ShootingSpeed;
 		public int Damage;
 		public float Range;
+		public float LevelRange => Range + (Level * 0.1f);
 		public int Level;
-		ModelRenderer? mymodel;
+		public ModelRenderer? mymodel;
 		GameManager? gameManager;
 		public bool IsRangeTurret;
 		float shootCooldown;
 		public Enemy? CurrentTarget;
+		Vector3 startScale;
 		public override void Awake()
 		{
 			base.Awake();
-			mymodel = GetComponent<ModelRenderer>();
 			gameManager=MyScene.FindObjectOfType<GameManager>();
 		}
 		public override void Start()
 		{
 			base.Start();
+			 startScale = transform.LocalScale;
 			shootCooldown = ShootingSpeed;
 		}
 		public override void Update()
 		{
 			base.Update();
-			transform.LocalScale = Vector3.One*( 1f + (Level * 0.1f));
+			float LevelMod = ((Level - 1) * 0.1f);
+			transform.LocalScale = startScale + Vector3.One*LevelMod;
 			if (CurrentTarget != null)
 			{
 				transform.LocalRotation = TransformComponent.LookAtRotation(transform.Position, CurrentTarget.transform.Position);
@@ -44,7 +47,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			if (CurrentTarget!=null)
 			{
 				float dist = Vector3.Distance(transform.Position, CurrentTarget.transform.Position);
-				if(CurrentTarget.gameObject.isDestroyed || dist>Range)
+				if(CurrentTarget.gameObject.isDestroyed || dist>LevelRange)
 					CurrentTarget = null;
 
 
@@ -88,14 +91,14 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		private void TargetAttack()
 		{
 			if (CurrentTarget == null) return;
-			CurrentTarget.Damage(Damage);
+			CurrentTarget.Damage(Damage + (5 * Level));
 		}
 
 		private void RangeAttack(Enemy[] enemies)
 		{
 			foreach(Enemy en in enemies)
 			{
-				en.Damage(Damage);
+				en.Damage(Damage + (5*Level));
 			}
 
 		}
@@ -108,7 +111,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			{
 				if (enemy == null) continue;
 				float dist = Vector3.Distance(enemy.transform.Position, transform.Position);
-				if (dist > Range) continue;
+				if (dist > LevelRange) continue;
 				if (dist<closestDist || closest==null || closest.gameObject.isDestroyed)
 				{
 					closestDist = dist;
@@ -126,7 +129,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 				{
 					if (enemy == null || enemy.gameObject.isDestroyed) continue;
 					float dist = Vector3.Distance(enemy.transform.Position, transform.Position);
-					if (dist > Range) continue;
+					if (dist > LevelRange) continue;
 					enemiesfound.Add(enemy);
 				}
 			}

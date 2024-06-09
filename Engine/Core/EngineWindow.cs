@@ -443,7 +443,6 @@ namespace PGK2.Engine.Core
 			return new BoundingBox(min, max);
 		}
 
-		// Metoda do obliczania odległości od kamery do bounding box'a
 		float CalculateDistanceToCamera(BoundingBox boundingBox, CameraComponent camera)
 		{
 			Vector3 cameraPosition = camera.gameObject.transform.Position;

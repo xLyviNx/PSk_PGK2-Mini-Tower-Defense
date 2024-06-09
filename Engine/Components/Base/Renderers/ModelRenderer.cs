@@ -113,7 +113,7 @@ namespace PGK2.Engine.Components
 				GL.Disable(EnableCap.DepthTest);
 
 				Vector3 Scale = transform.Scale;
-				transform.LocalScale = Scale * 1.05f;
+				transform.LocalScale = Scale * 1.07f;
 				OutlineMaterial.Use();
 				Model.Draw(transform.GetModelMatrix(), viewMatrix, projectionMatrix, new List<Light>(), camera, EngineInstance.RenderPass.Outline, OutlineMaterial, null);
 				transform.LocalScale = Scale;

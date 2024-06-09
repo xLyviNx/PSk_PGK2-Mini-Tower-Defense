@@ -92,7 +92,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			// Create the Turret Info Panel
 			var turretInfoPanel = MyScene.CreateSceneObject("TurretInfoPanel").AddComponent<UI_Panel>();
 			turretInfoPanel.UI_Alignment = UI_Renderer.Alignment.Left;
-			turretInfoPanel.Size = new(210, 150);
+			turretInfoPanel.Size = new(212, 150);
 			turretInfoPanel.Color = new(0, 0, 0, 0.7f);
 			turretInfoPanel.transform.Position = new(10, 0, 0);
 			turretInfoPanel.Pivot = new (0, 0.5f);
@@ -158,7 +158,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 				{
 					gameManager.Money-= UpgradePrice(SelectedTurret);
 					SelectedTurret.Level++;
-					SelTurretChanged();
+					SelTurretChanged(ref SelectedTurret);
 				}
 			}
 		}
@@ -230,45 +230,53 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			{
 				MouseTarget.IsActiveSelf = false;
 			}
-			RangeDisplayObject.IsActiveSelf = MouseTarget.IsActiveSelf;
-	
+			RangeDisplayObject.IsActiveSelf = MouseTarget.IsActiveSelf || SelectedTurret!=null;
+			if (SelectedTurret!=null)
+			{
+				RangeDisplayObject.transform.Position = SelectedTurret.transform.Position;
+				RangeDisplayObject.transform.LocalScale = Vector3.One * SelectedTurret.LevelRange;
+			}
 
 		}
 		private void SelectedTurretLogic()
 		{
 			Turret oldSel = SelectedTurret;
+			if (IsPlacingTurret)
+				SelectedTurret = null;
 			if (EngineWindow.instance.MouseState.IsButtonPressed(OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left))
 			{
 				TagsContainer tags = new();
 				tags.Add("turret");
 				if (UI_Renderer.CurrentHovered == null)
 				{
-
 					if (Physics.RayCast_Triangle(CameraComponent.activeCamera, Mouse.MousePosition, 300f, out var hit, tags))
 					{
-						Console.WriteLine($"SELECTING {hit.gameObject?.name}");
 						SelectedTurret = hit.gameObject.GetComponent<Turret>();
-						SelTurretChanged(oldSel);
 					}
 					else
 					{
 						SelectedTurret = null;
-						SelTurretChanged(oldSel);
 					}
 				}
 			}
+			if(oldSel!=SelectedTurret)
+				SelTurretChanged(ref oldSel);
 		}
 
-		private void SelTurretChanged(Turret old = null)
+		private void SelTurretChanged(ref Turret old)
 		{
 			TurretInfoPanel.gameObject.IsActiveSelf = SelectedTurret != null;
 			if (SelectedTurret == null) return;
-			if (old != null)
-				old.GetComponent<ModelRenderer>().OutlineColor = Color4.Transparent;
-
-			SelectedTurret.GetComponent<ModelRenderer>().OutlineColor = new(1,1,1,1);
 			LevelText.Text = $"Level: {SelectedTurret.Level}";
-			UpgradeButton.Text = $"UGPRADE (${UpgradePrice(SelectedTurret)})";
+			if (SelectedTurret.Level < 5)
+			{
+				UpgradeButton.Text = $"UGPRADE (${UpgradePrice(SelectedTurret)})";
+			}
+			else
+			{
+				UpgradeButton.Text = $"MAX LEVEL";
+			}
+
 		}
 
 		void SetMatColor(Vector3 color)
@@ -298,6 +306,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			turretObject.transform.Position = pos;
 			PlacedTurrets.Add(pos, Turret);
 			Turret.Level = 1;
+			Turret.mymodel = TurretRenderer;
 			switch (ChosenTurret)
 			{
 				case 1:

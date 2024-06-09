@@ -91,17 +91,10 @@ namespace PGK2.Engine.Core
 				mat.Shader.SetInt("numLights", lightsnum);
 				mat.Shader.SetVector3($"viewPos", camera.transform.Position);
 			}
-
 			if (mat.Shader != Exclude[0])
 			{
 				mat.Use();
 				usednormal = true;
-			}
-			if (mat.Shader == EngineWindow.OutlineShader)
-				Console.WriteLine("OUTLINE SHADER!!");
-			if (mat.Vector3Values.TryGetValue("outlinecolor", out var col))
-			{
-				Console.WriteLine($"OUTLINE: {col}");
 			}
 			GL.BindVertexArray(VAO);
 			GL.DrawElements(BeginMode.Triangles, indices.Count, DrawElementsType.UnsignedInt, 0);

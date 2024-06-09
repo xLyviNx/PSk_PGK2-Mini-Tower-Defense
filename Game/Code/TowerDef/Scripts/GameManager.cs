@@ -67,7 +67,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		[JsonIgnore] public int Money = 0;
 		[JsonIgnore] public float TakenDamageTimer;
 
-		private static readonly int TimeBeforeFirstWave = 5;
+		private static readonly int TimeBeforeFirstWave = 30;
 		UI_Panel pauseMenuPanel;
 		private void OnGameStarted()
 		{
@@ -208,7 +208,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			{
 				if(!WaveEnded && WaveTimeLeft==0 && SpawnedEnemies.Count==0)
 				{
-					if (wave < 1)
+					if (wave < 5)
 					{
 						Console.WriteLine("Wave Ended");
 						TimePassed = 0;
