@@ -7,30 +7,89 @@ using PGK2.TowerDef.Scripts;
 
 namespace PGK2.Game.Code.TowerDef.Scripts
 {
+	/**
+     * @class Turret
+     * @brief Reprezentuje wieżyczkę w grze Tower Defense.
+     */
 	public class Turret : Component
 	{
+		/// <summary>
+		/// Szybkość strzelania wieżyczki.
+		/// </summary>
 		public float ShootingSpeed;
+
+		/// <summary>
+		/// Obrażenia zadawane przez wieżyczkę.
+		/// </summary>
 		public int Damage;
+
+		/// <summary>
+		/// Zasięg ataku wieżyczki.
+		/// </summary>
 		public float Range;
+
+		/// <summary>
+		/// Obliczony zasięg ataku wieżyczki na podstawie poziomu.
+		/// </summary>
 		public float LevelRange => Range + (Level * 0.1f);
+
+		/// <summary>
+		/// Poziom wieżyczki.
+		/// </summary>
 		public int Level;
+
+		/// <summary>
+		/// Renderer modelu wieżyczki.
+		/// </summary>
 		public ModelRenderer? mymodel;
+
+		/// <summary>
+		/// Referencja do menedżera gry.
+		/// </summary>
 		GameManager? gameManager;
+
+		/// <summary>
+		/// Określa, czy wieżyczka jest wieżyczką zasięgową.
+		/// </summary>
 		public bool IsRangeTurret;
+
+		/// <summary>
+		/// Czas do kolejnego strzału.
+		/// </summary>
 		float shootCooldown;
+
+		/// <summary>
+		/// Bieżący cel wieżyczki.
+		/// </summary>
 		public Enemy? CurrentTarget;
+
+		/// <summary>
+		/// Początkowa skala transformacji wieżyczki.
+		/// </summary>
 		Vector3 startScale;
+
+		/// <summary>
+		/// Metoda wywoływana podczas aktywacji komponentu.
+		/// </summary>
 		public override void Awake()
 		{
 			base.Awake();
-			gameManager=MyScene.FindObjectOfType<GameManager>();
+			gameManager = MyScene.FindObjectOfType<GameManager>();
 		}
+
+		/// <summary>
+		/// Metoda wywoływana podczas startu gry.
+		/// </summary>
 		public override void Start()
 		{
 			base.Start();
-			 startScale = transform.LocalScale;
+			startScale = transform.LocalScale;
 			shootCooldown = ShootingSpeed;
 		}
+
+		/// <summary>
+		/// Metoda wywoływana co klatkę do aktualizacji turreta.
+		/// </summary>
 		public override void Update()
 		{
 			base.Update();
@@ -82,18 +141,25 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 				}
 			}
 		}
+		/// <summary>
+		/// Metoda wywoływana podczas zniszczenia wieżyczki.
+		/// </summary>
 		public override void OnDestroy()
 		{
 			base.OnDestroy();
 			TurretManager.instance.PlacedTurrets.Remove(transform.Position);
 		}
-
+		/// <summary>
+		/// Atak w jednego przeciwnika.
+		/// </summary>
 		private void TargetAttack()
 		{
 			if (CurrentTarget == null) return;
 			CurrentTarget.Damage(Damage + (5 * Level));
 		}
-
+		/// <summary>
+		/// Atak obszarowy.
+		/// </summary>
 		private void RangeAttack(Enemy[] enemies)
 		{
 			foreach(Enemy en in enemies)
@@ -102,6 +168,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			}
 
 		}
+		/// <summary>
+		/// Znajdź najbliższego wroga w zasięgu.
+		/// </summary>
 		private Enemy? FindClosestEnemyInRange()
 		{
 			if (gameManager == null) return null;
@@ -120,6 +189,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			}
 			return closest;
 		}
+		/// <summary>
+		/// Znajdź wszystkich wrogów w zasięgu.
+		/// </summary>
 		private Enemy[] FindEnemiesInRange()
 		{
 			List<Enemy> enemiesfound = new();

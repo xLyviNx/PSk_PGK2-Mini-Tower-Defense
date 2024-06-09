@@ -11,36 +11,157 @@ using System.Text.Json.Serialization;
 
 namespace PGK2.Game.Code.TowerDef.Scripts
 {
+	/**
+     * @class TurretManager
+     * @brief Zarządza wieżyczkami w grze Tower Defense.
+     */
 	public class TurretManager : Component
 	{
+		/// <summary>
+		/// Instancja TurretManager.
+		/// </summary>
 		public static TurretManager instance;
+
+		/// <summary>
+		/// Referencja do menedżera gry.
+		/// </summary>
 		GameManager? gameManager;
+
+		/// <summary>
+		/// Obiekt gdzie kładziemy wieżyczki.
+		/// </summary>
 		GameObject? MouseTarget;
+
+		/// <summary>
+		/// Renderer celu myszy.
+		/// </summary>
 		ModelRenderer? MouseTargetRenderer;
+
+		/// <summary>
+		/// Strefa, w której można umieszczać wieżyczki.
+		/// </summary>
 		GameObject TurretZone;
+
+		/// <summary>
+		/// Materiał dla podglądu kładzenia wieżyczki.
+		/// </summary>
 		Material PickerMaterial;
+
+		/// <summary>
+		/// Materiał siatki.
+		/// </summary>
 		Material gridMaterial;
+
+		/// <summary>
+		/// Materiał do wyświetlania zasięgu.
+		/// </summary>
 		Material ShowRangeMaterial;
+
+		/// <summary>
+		/// Tagi do wykrywania kolizji.
+		/// </summary>
 		TagsContainer raycastTags;
-		[JsonIgnore] public bool IsPlacingTurret = false;
+
+		/// <summary>
+		/// Flaga określająca, czy gracz umieszcza wieżyczkę.
+		/// </summary>
+		[JsonIgnore]
+		public bool IsPlacingTurret = false;
+
+		/// <summary>
+		/// Słownik przechowujący umieszczone wieżyczki.
+		/// Klucz: pozycja wieżyczki, Wartość: obiekt wieżyczki
+		/// </summary>
 		public Dictionary<Vector3, Turret> PlacedTurrets = new();
+
+		/// <summary>
+		/// Panel menu wieżyczek.
+		/// </summary>
 		GameObject TurretMenuPanel;
+
+		/// <summary>
+		/// Przycisk budowania wieżyczki.
+		/// </summary>
 		UI_Button BuildButton;
+
+		/// <summary>
+		/// Przycisk wyboru pierwszej wieżyczki.
+		/// </summary>
 		UI_Button Turret1Button;
+
+		/// <summary>
+		/// Przycisk wyboru drugiej wieżyczki.
+		/// </summary>
 		UI_Button Turret2Button;
+
+		/// <summary>
+		/// Przycisk wyboru trzeciej wieżyczki.
+		/// </summary>
 		UI_Button Turret3Button;
+
+		/// <summary>
+		/// Model sześcianu.
+		/// </summary>
 		Model Cube;
+
+		/// <summary>
+		/// Model sfery.
+		/// </summary>
 		Model Sphere;
+
+		/// <summary>
+		/// Model pierwszej wieżyczki.
+		/// </summary>
 		Model Turret1Model;
+
+		/// <summary>
+		/// Model drugiej wieżyczki.
+		/// </summary>
 		Model Turret2Model;
+
+		/// <summary>
+		/// Model trzeciej wieżyczki.
+		/// </summary>
 		Model Turret3Model;
+
+		/// <summary>
+		/// Numer wybranej wieżyczki do budowania.
+		/// </summary>
 		int ChosenTurret;
+
+		/// <summary>
+		/// Tablica zawierająca ceny wieżyczek. Indeks odpowiada typowi wieżyczki.
+		/// </summary>
 		public static int[] TurretPrices = { 0, 1000, 500, 800 };
+
+		/// <summary>
+		/// Obiekt wyświetlający zasięg.
+		/// </summary>
 		GameObject RangeDisplayObject;
+
+		/// <summary>
+		/// Panel informacyjny o wybranej wieżyczce.
+		/// </summary>
 		UI_Panel? TurretInfoPanel;
+
+		/// <summary>
+		/// Wybrana wieżyczka.
+		/// </summary>
 		Turret? SelectedTurret;
+
+		/// <summary>
+		/// Tekst wyświetlający poziom wieżyczki.
+		/// </summary>
 		UI_Text? LevelText;
+
+		/// <summary>
+		/// Przycisk ulepszania wybranej wieżyczki.
+		/// </summary>
 		UI_Button? UpgradeButton;
+
+		/// <summary>
+		/// Metoda wywoływana przy inicjalizacji obiektu.
+		/// </summary>
 		public override void Awake()
 		{
 			base.Awake();
@@ -87,6 +208,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			CreateTurretInfoPanel();
 
 		}
+		/// <summary>
+		/// Tworzy panel informacyjny o wieżyczce wyświetlany po naciśnięciu na nią.
+		/// </summary>
 		void CreateTurretInfoPanel()
 		{
 			// Create the Turret Info Panel
@@ -134,7 +258,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			UpgradeButton = upgradeButton;
 			LevelText = levelText;
 		}
-
+		/// <summary>
+		/// Metoda wywoływana podczas niszczenia wieżyczki.
+		/// </summary>
 		private void DestroyTurret()
 		{
 			if (SelectedTurret != null)
@@ -144,12 +270,18 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			}
 			TurretInfoPanel.gameObject.IsActiveSelf = (false);
 		}
+		/// <summary>
+		/// Metoda zwracająca cenę ulepszenia wieżyczki.
+		/// </summary>
 		int UpgradePrice(Turret turr)
 		{
 			int p = 1000;
 			p += turr.Level * 250;
 			return p;
 		}
+		/// <summary>
+		/// Metoda obsługująca ulepszanie wybranej wieżyczki.
+		/// </summary>
 		private void UpgradeSelectedTurret()
 		{
 			if (SelectedTurret.Level < 5)
@@ -162,17 +294,24 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 				}
 			}
 		}
-
+		/// <summary>
+		/// Metoda obsługująca kliknięcie na wybrany typ wieżyczki do budowania w menu.
+		/// </summary>
 		private void ClickedTurret(int v)
 		{
 			ChosenTurret = v;
 		}
+		/// <summary>
+		/// Metoda obsługująca kliknięcie na przycisk budowania wieżyczki (otwiera menu).
+		/// </summary>
 		private void ClickedBuild()
 		{
 			IsPlacingTurret = !IsPlacingTurret;
 			ChosenTurret = 0;
 		}
-
+		/// <summary>
+		/// Metoda aktualizująca logikę wieżyczki.
+		/// </summary>
 		public override void Update()
 		{
 			base.Update();
@@ -181,7 +320,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			var mouse = EngineWindow.instance.MouseState;
 			BuildButton.Text = IsPlacingTurret ? "CANCEL" : "BUILD";
 			TurretMenuPanel.IsActive = IsPlacingTurret;
-			if (ChosenTurret != 0 && IsPlacingTurret && UI_Renderer.CurrentHovered==null && !MouseLockController.isLocked && Physics.RayCast_Triangle(CameraComponent.activeCamera, Mouse.MousePosition, 200f, out var hit, raycastTags))
+			if (ChosenTurret != 0 && IsPlacingTurret && UI_Renderer.CurrentHovered==null && !MouseLockController.IsLocked && Physics.RayCast_Triangle(CameraComponent.activeCamera, Mouse.MousePosition, 200f, out var hit, raycastTags))
 			{
 				Model mdl = Cube;
 				float range = 0;
@@ -238,11 +377,13 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			}
 
 		}
+		/// <summary>
+		/// Metoda aktualizująca klikanie w wieżyczki.
+		/// </summary>
 		private void SelectedTurretLogic()
 		{
 			Turret oldSel = SelectedTurret;
-			if (IsPlacingTurret)
-				SelectedTurret = null;
+
 			if (EngineWindow.instance.MouseState.IsButtonPressed(OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left))
 			{
 				TagsContainer tags = new();
@@ -263,6 +404,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 				SelTurretChanged(ref oldSel);
 		}
 
+		/// <summary>
+		/// Metoda obsługująca aktualizację wybranej wieżyczki.
+		/// </summary>
 		private void SelTurretChanged(ref Turret old)
 		{
 			TurretInfoPanel.gameObject.IsActiveSelf = SelectedTurret != null;
@@ -278,7 +422,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			}
 
 		}
-
+		/// <summary>
+		/// Ustawia kolor materiału podglądu.
+		/// </summary>
 		void SetMatColor(Vector3 color)
 		{
 			PickerMaterial.Vector3Values["lightcolor"] = color;
@@ -287,6 +433,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 				MouseTargetRenderer.OverrideMaterials[i] = PickerMaterial;
 			}
 		}
+		/// <summary>
+		/// Umieszcza wieżyczkę na scenie.
+		/// </summary>
 		private void PlaceTurret()
 		{
 			int price = TurretPrices[ChosenTurret];
@@ -330,7 +479,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 					break;
 			}
 		}
-
+		// <summary>
+		/// Zaokrągla pozycję do siatki.
+		/// </summary>
 		private Vector3 SnapToGrid(Vector3 position, float gridSpacing)
 		{
 			return new Vector3(

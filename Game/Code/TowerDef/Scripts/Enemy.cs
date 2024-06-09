@@ -1,31 +1,87 @@
-﻿using OpenTK.Mathematics;
+﻿/**
+ * @file Enemy.cs
+ * @brief Ten plik zawiera definicję klasy Enemy.
+ */
+using OpenTK.Mathematics;
 using PGK2.Engine.Components;
-using PGK2.Engine.Components.Base;
 using PGK2.Engine.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PGK2.Game.Code.TowerDef.Scripts
 {
+	/**
+     * @class Enemy
+     * @brief Reprezentuje wroga w grze Tower Defense.
+     */
 	public class Enemy : Component
 	{
-		float LerpSpeed = 5f;
+		/// <summary>
+		 /// Prędkość interpolacji dla obrotu wroga.
+		 /// </summary>
+		private float LerpSpeed = 5f;
+
+		/// <summary>
+		/// Agent znajdowania ścieżki dla wroga.
+		/// </summary>
 		private PathFindingAgent myAgent;
+
+		/// <summary>
+		/// Renderer modelu dla wroga.
+		/// </summary>
 		private ModelRenderer myModelRenderer;
+
+		/// <summary>
+		/// Nazwa modelu wroga.
+		/// </summary>
 		public string ModelName = "enemy1.fbx";
-		bool hasreached = false;
+
+		/// <summary>
+		/// Flaga wskazująca, czy wróg osiągnął swój cel.
+		/// </summary>
+		private bool hasreached = false;
+
+		/// <summary>
+		/// Punkty zdrowia wroga.
+		/// </summary>
 		public int Health = 100;
-		GameManager? gameManager = null;
+
+		/// <summary>
+		/// Odwołanie do menedżera gry.
+		/// </summary>
+		private GameManager? gameManager = null;
+
+		/// <summary>
+		/// Flaga wskazująca, czy myszka jest nad wrogiem.
+		/// </summary>
 		public bool isHovered;
+
+		/// <summary>
+		/// Czas życia wroga.
+		/// </summary>
 		public float TimeLived;
-		bool instantiatedmaterials = false;
-		bool Damaged;
-		GameObject hitboxObject;
+
+		/// <summary>
+		/// Flaga wskazująca, czy materiały (ich kopie) na wrogu zostały zainicjowane.
+		/// </summary>
+		private bool instantiatedmaterials = false;
+
+		/// <summary>
+		/// Flaga wskazująca, czy wróg otrzymał obrażenia.
+		/// </summary>
+		private bool Damaged;
+
+		/// <summary>
+		/// Obiekt hitbox dla wroga (do raycastow myszki).
+		/// </summary>
+		private GameObject hitboxObject;
+
+		/// <summary>
+		/// Token anulowania dla efektu obrażeń.
+		/// </summary>
 		private CancellationTokenSource damageEffectCancellationTokenSource;
+
+		/// <summary>
+		/// Wywoływane, gdy obiekt zostanie aktywowany.
+		/// </summary>
 		public override void Awake()
 		{
 			base.Awake();
@@ -42,12 +98,18 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			hitboxObject.transform.LocalRotation = Vector3.Zero;
 
 		}
+		/// <summary>
+		/// Wywoływane po aktywacji obiektu.
+		/// </summary>
 		public override void Start()
 		{
 			base.Start();
 			gameManager.SpawnedEnemies.Add(this);
 			myAgent.SetTargetPosition(MyScene.FindObjectByName("ai_target").transform.Position);
 		}
+		/// <summary>
+		/// Wywoływane co klatkę, aktualizuje zachowanie wroga.
+		/// </summary>
 		public override void Update()
 		{
 			base.Update();
@@ -80,7 +142,10 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 				Reached();
 			}
 		}
-
+		/// <summary>
+		/// Aktualizuje efekt obrażeń.
+		/// </summary>
+		/// <param name="lerp">Określa, czy użyć interpolacji.</param>
 		private void DamagedUpdate(bool lerp = true)
 		{
 			if (!instantiatedmaterials) return;
@@ -104,7 +169,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 				}
 			}
 		}
-
+		/// <summary>
+		/// Wywoływane przed zniszczeniem obiektu.
+		/// </summary>
 		public override void OnDestroy()
 		{
 			base.OnDestroy();
@@ -112,10 +179,17 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			if (gameManager.hoveredEnemy == this)
 				gameManager.hoveredEnemy = null;
 		}
+		/// <summary>
+		/// Wywoływane po osiągnięciu celu przez wroga.
+		/// </summary>
 		private void Reached()
 		{
 			gameManager.EnemyReached(this);
 		}
+		/// <summary>
+		/// Zadaje obrażenia wrogowi.
+		/// </summary>
+		/// <param name="dmg">Ilość zadanych obrażeń.</param>
 		public void Damage(int dmg)
 		{
 			Health -= dmg;
@@ -129,6 +203,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 				DamageEffect();
 			}
 		}
+		/// <summary>
+		/// Inicjuje materiały w momencie zadania obrażeń jeśli jeszcze tego nie zrobiono.
+		/// </summary>
 		private void InstantiateMaterials()
 		{
 			if (instantiatedmaterials) return;
@@ -136,6 +213,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 
 			myModelRenderer.InstantiateAllMaterials();
 		}
+		/// <summary>
+		/// Wywołuje efekt obrażeń.
+		/// </summary>
 		private async void DamageEffect()
 		{
 

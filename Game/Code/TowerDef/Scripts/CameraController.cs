@@ -1,17 +1,21 @@
-﻿using Assimp;
+﻿/**
+ * @file CameraController.cs
+ * @brief Plik zawiera definicję klasy CameraController.
+ */
+
 using OpenTK.Mathematics;
-using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using PGK2.Engine.Components;
 using PGK2.Engine.Components.Base;
 using PGK2.Engine.Core;
-using PGK2.Engine.Core.Physics;
-using PGK2.Engine.SceneSystem;
 using PGK2.Game.Code.TowerDef.Scripts;
 using System.Diagnostics;
 
 namespace PGK2.TowerDef.Scripts
 {
+	/**
+	* @class CameraController
+	* @brief Zarządza zachowaniem kamery w grze.
+	*/
 	public class CameraController : Component
 	{
 		public static CameraController instance;
@@ -25,6 +29,9 @@ namespace PGK2.TowerDef.Scripts
 		Vector3 DamageColor = new(0.7f, 0.1f, 0.0f);
 		GameManager? manager;
 		public bool blockMovement;
+		/**
+         * @brief Metoda wywoływana podczas aktywacji obiektu.
+         */
 		public override void Awake()
 		{
 			base.Awake();
@@ -32,6 +39,9 @@ namespace PGK2.TowerDef.Scripts
 			manager = MyScene.FindObjectOfType<GameManager>();
 			instance = this;
 		}
+		/**
+		 * @brief Metoda wywoływana co klatkę, aktualizuje zachowanie kamery.
+		 */
 		public override void Update()
 		{
 			Debug.Assert(myCamera != null);
@@ -58,10 +68,6 @@ namespace PGK2.TowerDef.Scripts
 				}
 				TargetCameraDistance -= mouse.ScrollDelta.Y * 0.5f;
 				TargetCameraDistance = Math.Clamp(TargetCameraDistance, 3f, 25f);
-				if (mouse.IsButtonPressed(MouseButton.Left))
-				{
-					OnMouseClick(mouse.Position);
-				}
 			}
 			transform.Parent.Yaw += CameraVelocity.X;
 			transform.Parent.Pitch += CameraVelocity.Y;
@@ -74,10 +80,6 @@ namespace PGK2.TowerDef.Scripts
 			transform.LocalPosition = new(0, CameraDistance, CameraDistance);
 			var look = TransformComponent.LookAtRotation(transform.Position, transform.Parent.Position);
 			transform.Rotation = look;
-		}
-		void OnMouseClick(Vector2 mousePosition)
-		{
-			
 		}
 	}
 }

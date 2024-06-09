@@ -1,4 +1,7 @@
-﻿using OpenTK.Graphics.ES20;
+﻿/**
+ * @file GameManager.cs
+ * @brief Plik zawiera definicje klasy GameManager.
+ */
 using OpenTK.Mathematics;
 using PGK2.Engine.Components;
 using PGK2.Engine.Components.Base;
@@ -11,16 +14,50 @@ using System.Text.Json.Serialization;
 
 namespace PGK2.Game.Code.TowerDef.Scripts
 {
+	/**
+     * @class GameManager
+     * @brief Zarzadza stanem gry, falami i elementami interfejsu uzytkownika.
+     */
 	public class GameManager : Component
 	{
+		/// <summary>
+		/// Czas, który upłynął od rozpoczęcia fali.
+		/// </summary>
 		[JsonIgnore] public float TimePassed; // seconds
+		/// <summary>
+		/// Czas trwania aktualnej fali.
+		/// </summary>
 		[JsonIgnore] public float WaveTime;
+
+		/// <summary>
+		/// Pozostały czas aktualnej fali.
+		/// </summary>
 		[JsonIgnore] public float WaveTimeLeft => MathHelper.Clamp(WaveTime - TimePassed, 0, float.MaxValue);
+
+		/// <summary>
+		/// Flaga określająca, czy aktualna fala zakończyła się.
+		/// </summary>
 		bool WaveEnded = false;
+
+		/// <summary>
+		/// Numer aktualnej fali.
+		/// </summary>
 		int wave = 0;
+
+		/// <summary>
+		/// Lista przeciwników, którzy zostali zespawnowani.
+		/// </summary>
 		[JsonIgnore] public List<Enemy> SpawnedEnemies = new();
+
+		/// <summary>
+		/// Licznik zespawnowanych przeciwników.
+		/// </summary>
 		[JsonIgnore]
 		int everenemies = 0;
+
+		/// <summary>
+		/// Czas gry w postaci łańcucha znaków w formacie H:MM:SS.
+		/// </summary>
 		public string TimeString // H:MM:SS
 		{
 			get
@@ -31,14 +68,22 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 				{
 					return string.Format("{0:D}:{1:D2}:{2:D2}", (int)timeSpan.TotalHours, timeSpan.Minutes, timeSpan.Seconds);
 				}
-				else 
+				else
 				{
 					return string.Format("{0:D}:{1:D2}", timeSpan.Minutes, timeSpan.Seconds);
 				}
-			
+
 			}
 		}
+
+		/// <summary>
+		/// Flaga określająca, czy gra została rozpoczęta.
+		/// </summary>
 		private bool _gamestarted;
+
+		/// <summary>
+		/// Właściwość określająca, czy gra została rozpoczęta.
+		/// </summary>
 		[JsonIgnore]
 		public bool IsGameStarted
 		{
@@ -53,22 +98,80 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 
 			}
 		}
+
+		/// <summary>
+		/// Aktualna ilość zdrowia gracza.
+		/// </summary>
 		[JsonIgnore] public int Health;
-		public int MaxHealth=1000;
+
+		/// <summary>
+		/// Maksymalna ilość zdrowia gracza.
+		/// </summary>
+		public int MaxHealth = 1000;
+
+		/// <summary>
+		/// Pasek zdrowia gracza w interfejsie użytkownika.
+		/// </summary>
 		UI_ProgressBar? HealthBar;
+
+		/// <summary>
+		/// Tekst z czasem pozostałym do końca fali.
+		/// </summary>
 		UI_Text? TimeText;
+
+		/// <summary>
+		/// Tekst z informacją o aktualnej fali.
+		/// </summary>
 		UI_Text? WaveText;
+
+		/// <summary>
+		/// Tekst z aktualną ilością pieniędzy gracza.
+		/// </summary>
 		UI_Text? MoneyText;
 
+		/// <summary>
+		/// Kolejka przeciwników do zespawnowania w aktualnej fali.
+		/// </summary>
 		List<(float, int, float)> EnemiesQueue = new();
+
+		/// <summary>
+		/// Aktualny obiekt wskazywany przez kursor myszy.
+		/// </summary>
 		[JsonIgnore] public GameObject? CurrentMouseTarget;
+
+		/// <summary>
+		/// Tekst z informacją o zdrowiu aktualnie wybranego przeciwnika.
+		/// </summary>
 		[JsonIgnore] UI_Text? EnemyHpDisplayText;
+
+		/// <summary>
+		/// Aktualnie wybrany przeciwnik, na którym znajduje się kursor myszy.
+		/// </summary>
 		[JsonIgnore] public Enemy? hoveredEnemy;
+
+		/// <summary>
+		/// Aktualna ilość pieniędzy gracza.
+		/// </summary>
 		[JsonIgnore] public int Money = 0;
+
+		/// <summary>
+		/// Timer określający czas, przez który gracz widzi informację o otrzymanym zadaniu obrażeniu.
+		/// </summary>
 		[JsonIgnore] public float TakenDamageTimer;
 
+		/// <summary>
+		/// Czas, który musi upłynąć przed rozpoczęciem pierwszej fali.
+		/// </summary>
 		private static readonly int TimeBeforeFirstWave = 30;
+
+		/// <summary>
+		/// Panel menu pauzy.
+		/// </summary>
 		UI_Panel pauseMenuPanel;
+
+		/// <summary>
+		/// Metoda wywoływana po rozpoczęciu gry.
+		/// </summary>
 		private void OnGameStarted()
 		{
 			Health = MaxHealth;
@@ -82,6 +185,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			WaveTime = TimeBeforeFirstWave;
 			WaveEnded = true;
 		}
+		/// <summary>
+		/// Tworzy kolejkę przeciwników na podstawie numeru fali.
+		/// </summary>
 		void CreateWaveQueue()
 		{
 			EnemiesQueue.Clear();
@@ -191,6 +297,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 					return;
 			}
 		}
+		/// <summary>
+		/// Logika przebiegu fali.
+		/// </summary>
 		void WaveLogic()
 		{
 			if (!_gamestarted) return;
@@ -226,6 +335,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 				}
 			}
 		}
+		/// <summary>
+		/// Przechodzi do następnej fali gry.
+		/// </summary>
 		void NextWave()
 		{
 			WaveEnded = false;
@@ -240,6 +352,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			CreateWaveQueue();
 			Console.WriteLine($"STARTING WAVE {wave}");
 		}
+		/// <summary>
+		/// Tworzy pasek zdrowia.
+		/// </summary>
 		private void CreateHealthBar()
 		{
 			GameObject barobject = MyScene.CreateSceneObject("HEALTH BAR");
@@ -253,6 +368,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			bar.Pivot = new(0.5f, 0.5f);
 			HealthBar = bar;
 		}
+		/// <summary>
+		/// Tworzy tekst timera.
+		/// </summary>
 		private void CreateTimerText()
 		{
 
@@ -264,7 +382,10 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			text.UI_Alignment = UI_Renderer.Alignment.CenterUp;
 			text.Pivot = new(0.5f, 0);
 			TimeText = text;
-		}	
+		}
+		/// <summary>
+		/// Tworzy tekst informujący o fali.
+		/// </summary>
 		private void CreateWaveText()
 		{
 			GameObject timerText = MyScene.CreateSceneObject("WAVE TEXT");
@@ -276,6 +397,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			text.Pivot = new(0.5f, 0);
 			WaveText = text;
 		}
+		/// <summary>
+		/// Tworzy tekst informujący o ilości pieniędzy.
+		/// </summary>
 		private void CreateMoneyText()
 		{
 			GameObject texto = MyScene.CreateSceneObject("MONEY TEXT");
@@ -287,6 +411,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			text.Pivot = new(1f, 0);
 			MoneyText = text;
 		}
+		/// <summary>
+		/// Tworzy tekst informujący o zdrowiu przeciwnika.
+		/// </summary>
 		private void CreateEnemyHpText()
 		{
 			GameObject texto = MyScene.CreateSceneObject("ENEMY HP TEXT");
@@ -298,11 +425,17 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			text.Pivot = new(0.5f, 1);
 			EnemyHpDisplayText = text;
 		}
+		/// <summary>
+		/// Metoda wywoływana przy starcie obiektu.
+		/// </summary>
 		public override void Awake()
 		{
 			base.Awake();
 			CreatePauseMenu(MyScene);
 		}
+		/// <summary>
+		/// Metoda aktualizacji logiki gry.
+		/// </summary>
 		public override void Update()
 		{
 			base.Update();
@@ -356,7 +489,9 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 				}
 			}
 		}
-
+		/// <summary>
+		/// Logika odświeżania celu raycastowania.
+		/// </summary>
 		private void RaycastTargetLogic()
 		{
 			var mousePosition = Mouse.MousePosition;
@@ -368,7 +503,12 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			}else
 				CurrentMouseTarget = null;
 		}
-
+		/// <summary>
+		/// Tworzy przeciwnika.
+		/// </summary>
+		/// <param name="hp">Punkty życia przeciwnika.</param>
+		/// <param name="speed">Prędkość przeciwnika.</param>
+		/// <returns>Stworzony przeciwnik.</returns>
 		public Enemy SpawnEnemy(int hp, float speed)
 		{
 			var enemy = SceneManager.ActiveScene.CreateSceneObject("ENEMY");
@@ -383,7 +523,10 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			everenemies++;
 			return Enemy;
 		}
-
+		/// <summary>
+		/// Obsługuje sytuację, gdy przeciwnik dotrze do końca trasy.
+		/// </summary>
+		/// <param name="enemy">Przeciwnik, który dotarł do końca trasy.</param>
 		public void EnemyReached(Enemy enemy)
 		{
 			enemy.gameObject.Destroy();
@@ -394,26 +537,43 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 				GameOver();
 			}
 		}
+		/// <summary>
+		/// Obsługuje sytuację, gdy gracz zabije przeciwnika.
+		/// </summary>
+		/// <param name="enemy">Przeciwnik, który został zabity.</param>
 		public void KilledEnemy(Enemy enemy)
 		{
 			Money += (int)(3 * (MathHelper.Clamp(50f - enemy.TimeLived, 1f, 50f)));
 			enemy.gameObject.Destroy();
 		}
+		/// <summary>
+		/// Metoda wywoływana po zakończeniu gry.
+		/// </summary>
 		void GameOver()
 		{
 			var GameOver = SceneManager.LoadSceneFromFile(Menu.GameOverScene);
 			SceneManager.ChangeSceneAsync(GameOver);
-		}	
+		}
+		/// <summary>
+		/// Metoda wywoływana w przypadku zwycięstwa gracza.
+		/// </summary>
 		void Win()
 		{
 			var scene = SceneManager.LoadSceneFromFile(Menu.WinScene);
 			SceneManager.ChangeSceneAsync(scene);
 		}
+		/// <summary>
+		/// Metoda wywoływana przy starcie obiektu.
+		/// </summary>
 		public override void Start()
 		{
 			base.Start();
 			IsGameStarted = true;
 		}
+		/// <summary>
+		/// Tworzy menu pauzy.
+		/// </summary>
+		/// <param name="scene">Scena, do której dodawane jest menu pauzy.</param>
 		void CreatePauseMenu(Scene scene)
 		{
 			pauseMenuPanel = scene.CreateSceneObject("PauseMenuPanel").AddComponent<UI_Panel>();
@@ -448,7 +608,6 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			resumeButton.transform.Position = new Vector3(0, 50, 0);
 			resumeButton.OnClick += () =>
 			{
-				// Logic to unpause the game
 				Time.timeScale = 1;
 				pauseMenuPanel.gameObject.IsActiveSelf = (false);
 			};
