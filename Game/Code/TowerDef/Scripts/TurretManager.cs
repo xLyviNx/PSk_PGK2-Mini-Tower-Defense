@@ -5,6 +5,7 @@ using PGK2.Engine.Core;
 using PGK2.Engine.Core.Physics;
 using PGK2.TowerDef.Scripts;
 using System;
+using System.Text.Json.Serialization;
 
 namespace PGK2.Game.Code.TowerDef.Scripts
 {
@@ -16,6 +17,11 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		GameObject TurretZone;
 		Material gridMaterial;
 		TagsContainer raycastTags;
+		[JsonIgnore] public bool IsPlacingTurret = true;
+		Dictionary<Vector3, Turret> PlacedTurrets = new();
+		GameObject TurretMenuPanel;
+		UI_Button BuildButton;
+		int ChosenTurret;
 		public override void Awake()
 		{
 			base.Awake();
@@ -23,11 +29,11 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			raycastTags.Add("TurretRegion");
 			gameManager = MyScene.FindObjectOfType<GameManager>();
 			MouseTarget = MyScene.CreateSceneObject();
-			MouseTarget.transform.LocalScale = Vector3.One * 0.15f;
+			MouseTarget.transform.LocalScale = Vector3.One * 0.5f;
 			MouseTargetRenderer = MouseTarget.AddComponent<ModelRenderer>();
 			MouseTargetRenderer.Model = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/cube.fbx");
-			MouseTargetRenderer.InstantiateAllMaterials();
-			MouseTargetRenderer.OverrideMaterials[0].Vector3Values["material.diffuse"] = new(10, 10, 10);
+			MouseTargetRenderer.OverrideMaterials[0] = new(EngineWindow.lightShader);
+			MouseTargetRenderer.OverrideMaterials[0].Vector3Values["lightcolor"] = new(1, 1, 1);
 			TurretZone = MyScene.FindObjectByName("TurretRegion");
 			gridMaterial = new(EngineWindow.GridShader);
 			gridMaterial.FloatValues["gridWidth"] = 0.03f;
@@ -36,16 +42,45 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			//TurretZone.GetComponent<ModelRenderer>().InstantiateAllMaterials();
 			TurretZone.GetComponent<ModelRenderer>().OverrideMaterials[0] = gridMaterial;
 
+			TurretMenuPanel = MyScene.FindObjectByName("Turret Main Panel");
+			BuildButton = MyScene.FindObjectByName("TurretButton").GetComponent<UI_Button>();
+			BuildButton.OnClick += ClickedBuild;
+
 		}
+
+		private void ClickedBuild()
+		{
+			IsPlacingTurret = !IsPlacingTurret;
+			ChosenTurret = 0;
+		}
+
 		public override void Update()
 		{
 			base.Update();
-
-			if ( !MouseLockController.isLocked && Physics.RayCast_Triangle(CameraComponent.activeCamera, Mouse.MousePosition, 200f, out var hit, raycastTags))
+			TurretZone.IsActiveSelf = IsPlacingTurret;
+			var mouse = EngineWindow.instance.MouseState;
+			BuildButton.Text = IsPlacingTurret ? "CANCEL" : "BUILD";
+			TurretMenuPanel.IsActive = IsPlacingTurret;
+			if (IsPlacingTurret && UI_Renderer.CurrentHovered==null && !MouseLockController.isLocked && Physics.RayCast_Triangle(CameraComponent.activeCamera, Mouse.MousePosition, 200f, out var hit, raycastTags))
 			{
 				MouseTarget.IsActiveSelf = true;
-				MouseTarget.transform.Position = SnapToGrid(hit.Point, gridMaterial.FloatValues["gridSpacing"]);
+				Vector3 pos = SnapToGrid(hit.Point, gridMaterial.FloatValues["gridSpacing"]);
+				MouseTarget.transform.Position = pos;
 				//MouseTarget.transform.Position = hit.Point;
+				MouseTargetRenderer.OutlineColor = Color4.Black;
+				if(PlacedTurrets.ContainsKey(pos))
+				{
+					MouseTargetRenderer.OverrideMaterials[0].Vector3Values["lightcolor"] = new(1, 0, 0);
+				}
+				else
+				{
+					MouseTargetRenderer.OverrideMaterials[0].Vector3Values["lightcolor"] = new(0, 1, 0);
+					if (mouse.IsButtonPressed(OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left))
+					{
+						PlaceTurret();
+					}
+				}
+		
 			}
 			else
 			{
@@ -53,11 +88,16 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			}
 		}
 
+		private void PlaceTurret()
+		{
+			
+		}
+
 		private Vector3 SnapToGrid(Vector3 position, float gridSpacing)
 		{
 			return new Vector3(
 				MathF.Round(position.X / gridSpacing) * gridSpacing,
-				position.Y+0.05f,
+				MathF.Round(position.Y+0.25f, 2),
 				MathF.Round(position.Z / gridSpacing) * gridSpacing
 			);
 		}

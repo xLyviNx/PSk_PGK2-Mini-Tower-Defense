@@ -127,12 +127,49 @@ namespace PGK2.Engine.Core
 
 
 			var TurretPanel = scene.CreateSceneObject("Turret Main Panel").AddComponent<UI_Panel>();
-			TurretPanel.Size = new(200, 300);
+			TurretPanel.Z_Index = -1;
+			TurretPanel.Size = new(210, 200);
 			TurretPanel.UI_Alignment = UI_Renderer.Alignment.DownLeft;
 			TurretPanel.transform.Position = new(10, -10, 0);
 			TurretPanel.Color = new(0, 0, 0, 0.5f);
 			TurretPanel.Pivot = new(0, 1);
 
+
+						
+			
+			var Turret1Button = scene.CreateSceneObject("Turret1Button").AddComponent<UI_Button>();
+			Turret1Button.Text = "Area Turret ($1000)";
+			Turret1Button.UI_Alignment = UI_Renderer.Alignment.DownLeft;
+			Turret1Button.Pivot = new(0.5f, 1);
+			Turret1Button.Padding = new(30, 10);
+			
+			var Turret2Button = scene.CreateSceneObject("Turret2Button").AddComponent<UI_Button>();
+			Turret2Button.Text = "Standard Turret ($500)";
+			Turret2Button.UI_Alignment = UI_Renderer.Alignment.DownLeft;
+			Turret2Button.Pivot = new(0.5f, 1);
+			Turret2Button.Padding = new(20, 10);
+			
+			var Turret3Button = scene.CreateSceneObject("Turret3Button").AddComponent<UI_Button>();
+			Turret3Button.Text = "Short-Range Turret ($800)";
+			Turret3Button.UI_Alignment = UI_Renderer.Alignment.DownLeft;
+			Turret3Button.Pivot = new(0.5f, 1);
+			Turret3Button.Padding = new(10, 10);
+
+			Turret1Button.transform.Parent = TurretPanel.transform;
+			Turret2Button.transform.Parent = TurretPanel.transform;
+			Turret3Button.transform.Parent = TurretPanel.transform;
+
+			Turret1Button.transform.Position = new(116, -170, 0);
+			Turret2Button.transform.Position = new(116, -132, 0);
+			Turret3Button.transform.Position = new(116, -94, 0);
+
+			var PlaceTurretsButton = scene.CreateSceneObject("TurretButton").AddComponent<UI_Button>();
+			PlaceTurretsButton.Text = "BUILD";
+			PlaceTurretsButton.FontSize = 1.5f;
+			PlaceTurretsButton.UI_Alignment = UI_Renderer.Alignment.DownLeft;
+			PlaceTurretsButton.Pivot = new(0, 1);
+			PlaceTurretsButton.transform.Position = new(75, -25, 0);
+			PlaceTurretsButton.Z_Index = 1;
 			var TurretManager = scene.CreateSceneObject("Turret Manager").AddComponent<TurretManager>();
 
 			scene.AddAwaitingObjects();
@@ -276,10 +313,11 @@ namespace PGK2.Engine.Core
 					}
 				}
 
-				// Render UI components
-				foreach (UI_Renderer uir in SceneManager.ActiveScene.UI_Renderers)
+				Console.WriteLine("UI DRAW CALLS");
+				foreach (UI_Renderer uir in SceneManager.ActiveScene.UI_Renderers.OrderBy(u => u.Z_Index))
 				{
 					uir.CallDraw();
+					Console.WriteLine($" - {uir.gameObject.name}");
 				}
 			}
 

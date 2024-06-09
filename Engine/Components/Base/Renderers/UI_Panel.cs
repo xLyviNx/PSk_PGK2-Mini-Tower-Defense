@@ -17,7 +17,7 @@ public class UI_Panel : UI_Renderer
 
 		ImGui.PushStyleColor(ImGuiCol.WindowBg, Color);
 
-		ImGui.Begin($"panel_{gameObject.Id}", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoCollapse);
+		ImGui.Begin($"panel_{gameObject.Id}", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoCollapse);
 
 		// Handle click and hover events
 		if (wasClicked)

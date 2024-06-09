@@ -77,6 +77,8 @@ namespace PGK2.Engine.Components.Base
 		public event Action OnExit = delegate { };
 		public bool wasClicked = false;
 		public bool wasHovered = false;
+		public static UI_Renderer CurrentHovered;
+		public short Z_Index;
 
 		public UI_Renderer()
 		{
@@ -92,17 +94,22 @@ namespace PGK2.Engine.Components.Base
 		public virtual void Hovered()
 		{
 			OnHover.Invoke();
+			CurrentHovered = this;
 		}
 
 		public virtual void Exited()
 		{
 			OnExit.Invoke();
+			if (CurrentHovered == this)
+				CurrentHovered = null;
 		}
 
 		public override void OnDestroy()
 		{
 			if (OnSceneTransfer != null)
 				OnSceneTransfer -= SceneTransfer;
+			if (CurrentHovered == this)
+				CurrentHovered = null;
 			base.OnDestroy();
 		}
 
@@ -110,7 +117,8 @@ namespace PGK2.Engine.Components.Base
 		{
 			if (oldscene != null)
 				oldscene.UI_Renderers.Remove(this);
-
+			if (CurrentHovered == this)
+				CurrentHovered = null;
 			if (MyScene.UI_Renderers.Contains(this)) return;
 			MyScene.UI_Renderers.Add(this);
 		}
