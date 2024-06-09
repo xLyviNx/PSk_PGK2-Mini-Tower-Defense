@@ -32,8 +32,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		public override void Update()
 		{
 			base.Update();
-			var raycastTags = new TagsContainer();
-			raycastTags.Add("map");
+			transform.LocalScale = Vector3.One*( 1f + (Level * 0.1f));
 			if (CurrentTarget != null)
 			{
 				transform.LocalRotation = TransformComponent.LookAtRotation(transform.Position, CurrentTarget.transform.Position);
@@ -79,6 +78,11 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 					shootCooldown = ShootingSpeed;
 				}
 			}
+		}
+		public override void OnDestroy()
+		{
+			base.OnDestroy();
+			TurretManager.instance.PlacedTurrets.Remove(transform.Position);
 		}
 
 		private void TargetAttack()

@@ -2,6 +2,7 @@
 using OpenTK.Mathematics;
 using PGK2.Engine.Components;
 using PGK2.Engine.Components.Base;
+using PGK2.Engine.Components.Base.Renderers;
 using PGK2.Engine.Core;
 using PGK2.Engine.Core.Physics;
 using PGK2.TowerDef.Scripts;
@@ -12,6 +13,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 {
 	public class TurretManager : Component
 	{
+		public static TurretManager instance;
 		GameManager? gameManager;
 		GameObject? MouseTarget;
 		ModelRenderer? MouseTargetRenderer;
@@ -21,7 +23,7 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		Material ShowRangeMaterial;
 		TagsContainer raycastTags;
 		[JsonIgnore] public bool IsPlacingTurret = false;
-		Dictionary<Vector3, Turret> PlacedTurrets = new();
+		public Dictionary<Vector3, Turret> PlacedTurrets = new();
 		GameObject TurretMenuPanel;
 		UI_Button BuildButton;
 		UI_Button Turret1Button;
@@ -35,9 +37,14 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		int ChosenTurret;
 		public static int[] TurretPrices = { 0, 1000, 500, 800 };
 		GameObject RangeDisplayObject;
+		UI_Panel? TurretInfoPanel;
+		Turret? SelectedTurret;
+		UI_Text? LevelText;
+		UI_Button? UpgradeButton;
 		public override void Awake()
 		{
 			base.Awake();
+			instance = this;
 			Sphere = Model.LoadFromFile($"{EngineInstance.ASSETS_PATH}/Models/sphere.fbx");
 			raycastTags = new TagsContainer();
 			raycastTags.Add("TurretRegion");
@@ -76,6 +83,84 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			rdm.OverrideMaterials[0] = ShowRangeMaterial;
 			ShowRangeMaterial.FloatValues["gridWidth"] = 0.015f;
 			ShowRangeMaterial.FloatValues["gridSpacing"] = 0.15f;
+
+			CreateTurretInfoPanel();
+
+		}
+		void CreateTurretInfoPanel()
+		{
+			// Create the Turret Info Panel
+			var turretInfoPanel = MyScene.CreateSceneObject("TurretInfoPanel").AddComponent<UI_Panel>();
+			turretInfoPanel.UI_Alignment = UI_Renderer.Alignment.Left;
+			turretInfoPanel.Size = new(210, 150);
+			turretInfoPanel.Color = new(0, 0, 0, 0.7f);
+			turretInfoPanel.transform.Position = new(10, 0, 0);
+			turretInfoPanel.Pivot = new (0, 0.5f);
+			turretInfoPanel.Z_Index = 100; // Ensure it's on top of other UI elements
+			turretInfoPanel.gameObject.IsActiveSelf = (false); // Initially hidden
+
+			// Create the Level Text
+			var levelText = MyScene.CreateSceneObject("LevelText").AddComponent<UI_Text>();
+			levelText.UI_Alignment = UI_Renderer.Alignment.Left;
+			levelText.Text = "Level: 1";
+			levelText.FontSize = 1.5f;
+			levelText.transform.Parent = turretInfoPanel.transform;
+			levelText.transform.Position = new Vector3(116, 50, 0);
+			levelText.Pivot = new (0.5f, 0.5f);
+
+			// Create the Upgrade Button
+			var upgradeButton = MyScene.CreateSceneObject("UpgradeButton").AddComponent<UI_Button>();
+			upgradeButton.UI_Alignment = UI_Renderer.Alignment.Left;
+			upgradeButton.Text = "Upgrade";
+			upgradeButton.FontSize = 1.5f;
+			upgradeButton.Padding = new (20, 10);
+			upgradeButton.Pivot = new (0.5f, 0.5f);
+			upgradeButton.transform.Parent = turretInfoPanel.transform;
+			upgradeButton.transform.Position = new Vector3(116, 0, 0);
+			upgradeButton.OnClick += UpgradeSelectedTurret;
+
+			// Create the Destroy Button
+			var destroyButton = MyScene.CreateSceneObject("DestroyButton").AddComponent<UI_Button>();
+			destroyButton.UI_Alignment = UI_Renderer.Alignment.Left;
+			destroyButton.Text = "Destroy";
+			destroyButton.FontSize = 1.5f;
+			destroyButton.Padding = new (20, 10);
+			destroyButton.Pivot = new (0.5f, 0.5f);
+			destroyButton.transform.Parent = turretInfoPanel.transform;
+			destroyButton.transform.Position = new Vector3(116, -50, 0);
+			destroyButton.OnClick += DestroyTurret;
+
+			TurretInfoPanel = turretInfoPanel;
+			UpgradeButton = upgradeButton;
+			LevelText = levelText;
+		}
+
+		private void DestroyTurret()
+		{
+			if (SelectedTurret != null)
+			{
+				SelectedTurret.gameObject.Destroy();
+				SelectedTurret = null;
+			}
+			TurretInfoPanel.gameObject.IsActiveSelf = (false);
+		}
+		int UpgradePrice(Turret turr)
+		{
+			int p = 1000;
+			p += turr.Level * 250;
+			return p;
+		}
+		private void UpgradeSelectedTurret()
+		{
+			if (SelectedTurret.Level < 5)
+			{
+				if(gameManager.Money >= UpgradePrice(SelectedTurret))
+				{
+					gameManager.Money-= UpgradePrice(SelectedTurret);
+					SelectedTurret.Level++;
+					SelTurretChanged();
+				}
+			}
 		}
 
 		private void ClickedTurret(int v)
@@ -90,8 +175,8 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 
 		public override void Update()
 		{
-			Model? oldmodel = MouseTargetRenderer.Model;
 			base.Update();
+			SelectedTurretLogic();
 			TurretZone.IsActiveSelf = IsPlacingTurret;
 			var mouse = EngineWindow.instance.MouseState;
 			BuildButton.Text = IsPlacingTurret ? "CANCEL" : "BUILD";
@@ -149,6 +234,43 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 	
 
 		}
+		private void SelectedTurretLogic()
+		{
+			Turret oldSel = SelectedTurret;
+			if (EngineWindow.instance.MouseState.IsButtonPressed(OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left))
+			{
+				TagsContainer tags = new();
+				tags.Add("turret");
+				if (UI_Renderer.CurrentHovered == null)
+				{
+
+					if (Physics.RayCast_Triangle(CameraComponent.activeCamera, Mouse.MousePosition, 300f, out var hit, tags))
+					{
+						Console.WriteLine($"SELECTING {hit.gameObject?.name}");
+						SelectedTurret = hit.gameObject.GetComponent<Turret>();
+						SelTurretChanged(oldSel);
+					}
+					else
+					{
+						SelectedTurret = null;
+						SelTurretChanged(oldSel);
+					}
+				}
+			}
+		}
+
+		private void SelTurretChanged(Turret old = null)
+		{
+			TurretInfoPanel.gameObject.IsActiveSelf = SelectedTurret != null;
+			if (SelectedTurret == null) return;
+			if (old != null)
+				old.GetComponent<ModelRenderer>().OutlineColor = Color4.Transparent;
+
+			SelectedTurret.GetComponent<ModelRenderer>().OutlineColor = new(1,1,1,1);
+			LevelText.Text = $"Level: {SelectedTurret.Level}";
+			UpgradeButton.Text = $"UGPRADE (${UpgradePrice(SelectedTurret)})";
+		}
+
 		void SetMatColor(Vector3 color)
 		{
 			PickerMaterial.Vector3Values["lightcolor"] = color;
@@ -169,11 +291,13 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			}
 			gameManager.Money -= price;
 			GameObject turretObject = MyScene.CreateSceneObject("TURRET");
+			turretObject.Tags.Add("turret");
 			ModelRenderer? TurretRenderer = turretObject.AddComponent<ModelRenderer>();
 			Turret? Turret = turretObject.AddComponent<Turret>();
 			var pos = MouseTarget.transform.Position;
 			turretObject.transform.Position = pos;
 			PlacedTurrets.Add(pos, Turret);
+			Turret.Level = 1;
 			switch (ChosenTurret)
 			{
 				case 1:

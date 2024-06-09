@@ -44,14 +44,12 @@ namespace PGK2.Engine.SceneSystem
 		private async static Task UnloadSceneAsync(Scene scene)
 		{
 			UnloadScene(scene);
+			CameraComponent.activeCamera = null;
 			await EngineWindow.instance.WaitForEndOfFrame();
 		}
 
 		public async static void UnloadScene(Scene scene)
 		{
-			if(CameraComponent.activeCamera!=null && CameraComponent.activeCamera.MyScene==scene)
-				CameraComponent.activeCamera = null;
-
 			await EngineWindow.instance.WaitForEndOfFrame();
 			scene.Cameras.Clear();
 			scene.GameObjects.Clear();

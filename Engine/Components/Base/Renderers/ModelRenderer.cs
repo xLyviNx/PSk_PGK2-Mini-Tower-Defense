@@ -100,11 +100,12 @@ namespace PGK2.Engine.Components
 		protected override void RenderOutline(CameraComponent camera)
 		{
 			if (Model == null) return;
-			Matrix4 viewMatrix = camera.ViewMatrix;
-			Matrix4 projectionMatrix = camera.ProjectionMatrix;
+
 			base.RenderOutline(camera);
 			if (DrawOutline)
 			{
+				Matrix4 viewMatrix = camera.ViewMatrix;
+				Matrix4 projectionMatrix = camera.ProjectionMatrix;
 				GL.StencilFunc(StencilFunction.Notequal, 1, 0xFF);
 				GL.StencilMask(0x00);
 

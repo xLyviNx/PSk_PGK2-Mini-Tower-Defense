@@ -21,6 +21,7 @@ namespace PGK2.Engine.Components
 					_outlineMaterial = new Material(EngineWindow.OutlineShader);
 					_outlineMaterial.ColorValues["outlinecolor"] = OutlineColor;
 				}
+
 				return _outlineMaterial;
 			}
 		}

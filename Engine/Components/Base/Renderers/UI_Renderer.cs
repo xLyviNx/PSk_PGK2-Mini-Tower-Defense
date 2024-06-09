@@ -94,14 +94,11 @@ namespace PGK2.Engine.Components.Base
 		public virtual void Hovered()
 		{
 			OnHover.Invoke();
-			CurrentHovered = this;
 		}
 
 		public virtual void Exited()
 		{
 			OnExit.Invoke();
-			if (CurrentHovered == this)
-				CurrentHovered = null;
 		}
 
 		public override void OnDestroy()
@@ -135,10 +132,12 @@ namespace PGK2.Engine.Components.Base
 
 		protected virtual void HandleHoverState()
 		{
+			if (CurrentHovered == this)
+				CurrentHovered = null;
 			bool hovered = HoverOnlyWindow ? ImGui.IsWindowHovered() : ImGui.IsItemHovered();
 			if (hovered)
 			{
-
+				CurrentHovered = this;
 				if (!wasHovered)
 				{
 					Hovered();

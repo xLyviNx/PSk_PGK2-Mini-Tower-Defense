@@ -71,7 +71,7 @@ namespace PGK2.Engine.Core
 		}
 		public void Draw(Matrix4 modelMatrix, Matrix4 viewMatrix, Matrix4 projectionMatrix, List<Light> Lights, CameraComponent camera, Material? overrideMaterial)
 		{
-			Material mat = overrideMaterial ?? Material;
+			Material mat = overrideMaterial != null? overrideMaterial : Material;
 			mat.Shader.SetMatrix4("model", modelMatrix);
 			mat.Shader.SetMatrix4("view", viewMatrix);
 			mat.Shader.SetMatrix4("projection", projectionMatrix);
@@ -91,10 +91,17 @@ namespace PGK2.Engine.Core
 				mat.Shader.SetInt("numLights", lightsnum);
 				mat.Shader.SetVector3($"viewPos", camera.transform.Position);
 			}
+
 			if (mat.Shader != Exclude[0])
 			{
 				mat.Use();
 				usednormal = true;
+			}
+			if (mat.Shader == EngineWindow.OutlineShader)
+				Console.WriteLine("OUTLINE SHADER!!");
+			if (mat.Vector3Values.TryGetValue("outlinecolor", out var col))
+			{
+				Console.WriteLine($"OUTLINE: {col}");
 			}
 			GL.BindVertexArray(VAO);
 			GL.DrawElements(BeginMode.Triangles, indices.Count, DrawElementsType.UnsignedInt, 0);

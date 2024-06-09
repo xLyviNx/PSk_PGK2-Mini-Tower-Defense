@@ -33,7 +33,6 @@ namespace PGK2.Engine.Core
 			foreach (var mesh in meshes)
 			{
 				bool overrided = (RendererMaterials != null && RendererMaterials.Length >= i && RendererMaterials[i] != null);
-
 				Material? mat = overrided ? RendererMaterials[i] : mesh.Material;
 				bool transparentmat = (mesh.hasTransparentTextures || mat.HasTransparency);
 				bool Transparent = (transparentmat && RenderPass == EngineInstance.RenderPass.Transparent);
@@ -42,7 +41,7 @@ namespace PGK2.Engine.Core
 
 				if (Transparent || Opaque || Outline)
 				{
-					mesh.Draw(modelMatrix, viewMatrix, projectionMatrix, lights, camera, overrided? mat : null);
+					mesh.Draw(modelMatrix, viewMatrix, projectionMatrix, lights, camera, overrideMaterial!=null? overrideMaterial :( overrided? mat : null));
 				}
 				i++;
 			}
