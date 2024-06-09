@@ -383,22 +383,28 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 		private void SelectedTurretLogic()
 		{
 			Turret oldSel = SelectedTurret;
-
-			if (EngineWindow.instance.MouseState.IsButtonPressed(OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left))
+			if (!IsPlacingTurret)
 			{
-				TagsContainer tags = new();
-				tags.Add("turret");
-				if (UI_Renderer.CurrentHovered == null)
+				if (EngineWindow.instance.MouseState.IsButtonPressed(OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left))
 				{
-					if (Physics.RayCast_Triangle(CameraComponent.activeCamera, Mouse.MousePosition, 300f, out var hit, tags))
+					TagsContainer tags = new();
+					tags.Add("turret");
+					if (UI_Renderer.CurrentHovered == null)
 					{
-						SelectedTurret = hit.gameObject.GetComponent<Turret>();
-					}
-					else
-					{
-						SelectedTurret = null;
+						if (Physics.RayCast_Triangle(CameraComponent.activeCamera, Mouse.MousePosition, 300f, out var hit, tags))
+						{
+							SelectedTurret = hit.gameObject.GetComponent<Turret>();
+						}
+						else
+						{
+							SelectedTurret = null;
+						}
 					}
 				}
+			}
+			else
+			{
+				SelectedTurret = null;
 			}
 			if(oldSel!=SelectedTurret)
 				SelTurretChanged(ref oldSel);
