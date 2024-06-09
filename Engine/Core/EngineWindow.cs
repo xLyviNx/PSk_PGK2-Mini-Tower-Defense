@@ -379,9 +379,7 @@ namespace PGK2.Engine.Core
 					{
 						r.CallRender(activeCamera, EngineInstance.RenderPass.Opaque);
 					}
-					List<ModelRenderer> onlyModelsList = SceneManager.ActiveScene.Renderers
-						.OfType<ModelRenderer>()
-						.ToList();
+	
 					TransparentPass();
 
 					foreach (Renderer r in SceneManager.ActiveScene.Renderers)
