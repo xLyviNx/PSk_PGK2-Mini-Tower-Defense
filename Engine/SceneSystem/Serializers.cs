@@ -37,7 +37,7 @@ namespace PGK2.Engine.Serialization.Converters
 				if (reader.TokenType == JsonTokenType.PropertyName)
 				{
 					var propertyName = reader.GetString();
-					reader.Read(); // Move to the property value
+					reader.Read();
 
 					switch (propertyName)
 					{
@@ -50,7 +50,6 @@ namespace PGK2.Engine.Serialization.Converters
 						case "Z":
 							z = reader.GetSingle();
 							break;
-							// Add more cases for other properties if needed
 					}
 				}
 			}
@@ -88,7 +87,7 @@ namespace PGK2.Engine.Serialization.Converters
 				if (reader.TokenType == JsonTokenType.PropertyName)
 				{
 					var propertyName = reader.GetString();
-					reader.Read(); // Move to the property value
+					reader.Read();
 
 					switch (propertyName)
 					{
@@ -104,7 +103,6 @@ namespace PGK2.Engine.Serialization.Converters
 						case "W":
 							w = reader.GetSingle();
 							break;
-							// Add more cases for other properties if needed
 					}
 				}
 			}
@@ -156,7 +154,7 @@ namespace PGK2.Engine.Serialization.Converters
 						if (reader.TokenType == JsonTokenType.PropertyName)
 						{
 							string propertyName = reader.GetString();
-							reader.Read(); // Move to the property value
+							reader.Read();
 
 							if (propertyName == "Type")
 							{
@@ -188,7 +186,6 @@ namespace PGK2.Engine.Serialization.Converters
 							(component as Component).gameObject = DeserializeContext.CurrentContext.GameObject;
 							(component as Component).OnSceneTransfer?.Invoke(null);
 
-							// Deserialize IncludeTags and ExcludeTags if present
 							if (componentData.ContainsKey("IncludeTags"))
 							{
 								var includeTagsJson = componentData["IncludeTags"].GetRawText();
@@ -225,7 +222,6 @@ namespace PGK2.Engine.Serialization.Converters
 				writer.WritePropertyName("Data");
 				JsonSerializer.Serialize(writer, component, component.GetType(), options);
 
-				// Serialize IncludeTags if present
 				if (component is CameraComponent cameraComponent)
 				{
 					writer.WritePropertyName("IncludeTags");
@@ -266,7 +262,6 @@ namespace PGK2.Engine.Serialization.Converters
 			TagsContainer tags = new();
 			bool isActiveSelf = true;
 
-			// Create a placeholder GameObject
 			var gameObject = new GameObject("LOADING OBJECT", Guid.Empty);
 			gameObject.MyScene = DeserializeContext.CurrentContext.Scene;
 			DeserializeContext.CurrentContext.GameObject = gameObject;
@@ -280,7 +275,7 @@ namespace PGK2.Engine.Serialization.Converters
 				if (reader.TokenType == JsonTokenType.PropertyName)
 				{
 					var propertyName = reader.GetString();
-					reader.Read(); // Move to the property value
+					reader.Read();
 
 					switch (propertyName)
 					{
@@ -304,7 +299,6 @@ namespace PGK2.Engine.Serialization.Converters
 			}
 			if (components != null)
 				components.gameObject = gameObject;
-			// Update the placeholder GameObject's properties
 			gameObject.Components = components ?? new GameObjectComponents(gameObject);
 			gameObject.transform = transform;
 			gameObject.Tags = tags;
@@ -354,7 +348,6 @@ namespace PGK2.Engine.Serialization.Converters
 					break;
 				}
 
-				// Deserialize each GameObject within the array
 				var gameObject = JsonSerializer.Deserialize<GameObject>(ref reader, options);
 				gameObjects.Add(gameObject);
 			}
@@ -441,7 +434,7 @@ namespace PGK2.Engine.Serialization.Converters
 				if (reader.TokenType == JsonTokenType.PropertyName)
 				{
 					var propertyName = reader.GetString();
-					reader.Read(); // Move to the property value
+					reader.Read();
 
 					switch (propertyName)
 					{
@@ -578,8 +571,6 @@ namespace PGK2.Engine.Serialization.Converters
 
 			writer.WritePropertyName("Children");
 			JsonSerializer.Serialize(writer, value.Children, options);
-
-			// Serialize other properties if needed
 
 			writer.WriteEndObject();
 		}
