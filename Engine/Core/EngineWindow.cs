@@ -13,28 +13,93 @@ using PGK2.Game.Code.TowerDef.Scripts;
 
 namespace PGK2.Engine.Core
 {
-    public class EngineWindow : GameWindow
+	/// <summary>
+	/// Główna klasa reprezentująca okno gry i zarządzająca jej wyświetlaniem oraz logiką.
+	/// </summary>
+	public class EngineWindow : GameWindow
 	{
+		/// <summary>
+		/// Instancja okna gry.
+		/// </summary>
 		public static EngineWindow? instance;
+
+		/// <summary>
+		/// Kontroler interfejsu użytkownika ImGui.
+		/// </summary>
 		private TP_IMGUI.ImGuiController _imGuiController;
+
+		/// <summary>
+		/// Kolejka ramek.
+		/// </summary>
 		Queue<int> frameQueue = new Queue<int>();
+
+		/// <summary>
+		/// Licznik czasu w sekundach.
+		/// </summary>
 		double secTimer = 0d;
+
+		/// <summary>
+		/// Licznik klatek na sekundę.
+		/// </summary>
 		long frames = 0;
+
+		/// <summary>
+		/// Podstawowy Shader dla elementów graficznych.
+		/// </summary>
 		public static Shader shader;
+
+		/// <summary>
+		/// Shader dla światła (jeden kolor).
+		/// </summary>
 		public static Shader lightShader;
+
+		/// <summary>
+		/// Shader dla obrysu obiektów.
+		/// </summary>
 		public static Shader OutlineShader;
+
+		/// <summary>
+		/// Shader dla siatki.
+		/// </summary>
 		public static Shader GridShader;
+
+		/// <summary>
+		/// Flaga informująca o zmianie fokusu okna.
+		/// </summary>
 		private bool changedFocus;
+
+		/// <summary>
+		/// Współczynnik proporcji okna.
+		/// </summary>
 		public float aspectRatio { get; private set; }
+
+		/// <summary>
+		/// Kolejka komponentów do uruchomienia.
+		/// </summary>
 		public static Queue<Component> StartQueue = new();
+
+		/// <summary>
+		/// Zdarzenie wywoływane na końcu każdej klatki.
+		/// </summary>
 		public event EventHandler EndOfFrame;
 
-		public CameraComponent? activeCamera {get=>CameraComponent.activeCamera; }
+		/// <summary>
+		/// Aktywna kamera w grze.
+		/// </summary>
+		public CameraComponent? activeCamera { get => CameraComponent.activeCamera; }
+
+		/// <summary>
+		/// Konstruktor klasy EngineWindow.
+		/// </summary>
+		/// <param name="gws">Ustawienia okna gry.</param>
+		/// <param name="nws">Ustawienia natywne okna gry.</param>
 		public EngineWindow(GameWindowSettings gws, NativeWindowSettings nws) : base(gws,nws)
 		{
 			instance = this;
 		}
-
+		/// <summary>
+		/// Metoda wywoływana po załadowaniu okna gry.
+		/// </summary>
 		protected override void OnLoad()
 		{
 			base.OnLoad();
@@ -63,6 +128,9 @@ namespace PGK2.Engine.Core
 			//MakeMenuScene();
 
 		}
+		/// <summary>
+		/// Metoda wczytująca początkową scenę gry.
+		/// </summary>
 		void LoadStartScene()
 		{
 			var scene = SceneManager.LoadSceneFromFile($"{EngineInstance.ASSETS_PATH}/Scenes/MENU.lscn");
@@ -338,6 +406,10 @@ namespace PGK2.Engine.Core
 			SceneManager.LoadScene(scene);
 		}
 		#endregion
+		/// <summary>
+		/// Metoda wywoływana podczas renderowania klatki gry.
+		/// </summary>
+		/// <param name="e">Argument zawierający dane o klatce renderowania.</param>
 		protected override void OnRenderFrame(FrameEventArgs e)
 		{
 			base.OnRenderFrame(e);
@@ -398,7 +470,9 @@ namespace PGK2.Engine.Core
 			SwapBuffers();
 			OnEndOfFrame();
 		}
-
+		/// <summary>
+		/// Metoda wykonująca render przezroczystych obiektów podczas renderowania wraz z sortowaniem (nie jest idealne).
+		/// </summary>
 		private void TransparentPass()
 		{
 			List<ModelRenderer> modelRenderers = SceneManager.ActiveScene.Renderers
@@ -433,14 +507,24 @@ namespace PGK2.Engine.Core
 				}
 			}
 		}
-
+		/// <summary>
+		/// Metoda transformująca granice prostokątne obiektu na podstawie jego macierzy transformacji modelu.
+		/// </summary>
+		/// <param name="boundingBox">Granice prostokątne obiektu.</param>
+		/// <param name="ModelMatrix">Macierz transformacji modelu.</param>
+		/// <returns>Transformowany bounding box.</returns>
 		BoundingBox TransformBoundingBox(BoundingBox boundingBox, Matrix4 ModelMatrix)
 		{
 			Vector3 min = Vector3.TransformPosition(boundingBox.Min, ModelMatrix);
 			Vector3 max = Vector3.TransformPosition(boundingBox.Max, ModelMatrix);
 			return new BoundingBox(min, max);
 		}
-
+		/// <summary>
+		/// Metoda obliczająca odległość od obiektu do kamery w grze.
+		/// </summary>
+		/// <param name="boundingBox">Granice prostokątne obiektu.</param>
+		/// <param name="camera">Komponent kamery w grze.</param>
+		/// <returns>Odległość od obiektu do kamery.</returns>
 		float CalculateDistanceToCamera(BoundingBox boundingBox, CameraComponent camera)
 		{
 			Vector3 cameraPosition = camera.gameObject.transform.Position;
@@ -448,10 +532,17 @@ namespace PGK2.Engine.Core
 			Vector3 toCenter = center - cameraPosition;
 			return toCenter.LengthFast;
 		}
+		/// <summary>
+		/// Metoda wywoływana na końcu każdej klatki renderowania.
+		/// </summary>
 		protected virtual void OnEndOfFrame()
 		{
 			EndOfFrame?.Invoke(this, EventArgs.Empty);
 		}
+		/// <summary>
+		/// Asynchronicznie oczekuje na zakończenie klatki renderowania.
+		/// </summary>
+		/// <returns>Zadanie reprezentujące oczekiwanie na zakończenie klatki.</returns>
 		public async Task WaitForEndOfFrame()
 		{
 			var tcs = new TaskCompletionSource<bool>();
@@ -467,7 +558,11 @@ namespace PGK2.Engine.Core
 
 			await tcs.Task;
 		}
-	protected override void OnUnload()
+
+		/// <summary>
+		/// Metoda wywoływana podczas usuwania zasobów aplikacji.
+		/// </summary>
+		protected override void OnUnload()
 		{
 			base.OnUnload();
 			shader.Dispose();
@@ -485,6 +580,10 @@ namespace PGK2.Engine.Core
 			}
 			Model.LoadedModels.Clear();
 		}
+		/// <summary>
+		/// Metoda wywoływana podczas przesuwania myszy.
+		/// </summary>
+		/// <param name="e">Dane zdarzenia myszy.</param>
 		protected override void OnMouseMove(MouseMoveEventArgs e)
 		{
 			base.OnMouseMove(e);
@@ -497,6 +596,10 @@ namespace PGK2.Engine.Core
 			Mouse.MousePosition = e.Position;
 			Mouse.framesSinceLastMove = 0;
 		}
+		/// <summary>
+		/// Metoda wywoływana podczas zmiany rozmiaru okna aplikacji.
+		/// </summary>
+		/// <param name="e">Dane zdarzenia zmiany rozmiaru okna.</param>
 		protected override void OnResize(ResizeEventArgs e)
 		{
 			base.OnResize(e);
@@ -504,11 +607,19 @@ namespace PGK2.Engine.Core
 			GL.Viewport(0, 0, e.Width, e.Height);
 			_imGuiController.WindowResized(ClientSize.X, ClientSize.Y);
 		}
+		/// <summary>
+		/// Metoda wywoływana podczas zmiany stanu aktywności aplikacji.
+		/// </summary>
+		/// <param name="e">Dane zdarzenia zmiany stanu aktywności.</param>
 		protected override void OnFocusedChanged(FocusedChangedEventArgs e)
 		{
 			base.OnFocusedChanged(e);
 			changedFocus = true;
 		}
+		/// <summary>
+		/// Metoda wywoływana podczas aktualizacji klatki gry.
+		/// </summary>
+		/// <param name="e">Argumenty klatki aktualizacji.</param>
 		protected override void OnUpdateFrame(FrameEventArgs e)
 		{
 			base.OnUpdateFrame(e);
@@ -560,10 +671,6 @@ namespace PGK2.Engine.Core
 				}
 				SceneManager.ActiveScene.RemoveAwaitingObjects();
 			}
-		}
-		public bool IsPointInWindowBounds(Vector2i point)
-		{
-			return ClientRectangle.Contains(point, true);
 		}
 	}
 

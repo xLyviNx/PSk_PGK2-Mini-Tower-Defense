@@ -6,27 +6,68 @@ using System.Diagnostics;
 
 namespace PGK2.Engine.Core
 {
+	/// <summary>
+	/// Klasa reprezentująca model 3D.
+	/// </summary>
 	public class Model
 	{
+		/// <summary>
+		/// Słownik zawierający załadowane modele, gdzie kluczem jest ścieżka do pliku, a wartością instancja klasy Model.
+		/// </summary>
 		public static Dictionary<string, Model> LoadedModels = new();
+
+		/// <summary>
+		/// Ścieżka do pliku z modelem.
+		/// </summary>
 		public string Path;
+
+		/// <summary>
+		/// Pole otaczające model (bounding box).
+		/// </summary>
 		public BoundingBox ModelBoundingBox;
+
+		/// <summary>
+		/// Metoda statyczna ładująca model z pliku.
+		/// </summary>
+		/// <param name="path">Ścieżka do pliku z modelem.</param>
+		/// <returns>Instancja klasy Model reprezentująca załadowany model.</returns>
 		public static Model LoadFromFile(string path)
 		{
 			if (LoadedModels.ContainsKey(path) && LoadedModels[path] != null)
 				return LoadedModels[path];
+
 			Model model = new Model(path);
 			LoadedModels[path] = model;
 			return model;
 		}
 
+		/// <summary>
+		/// Konstruktor klasy Model inicjujący obiekt dla podanego pliku.
+		/// </summary>
+		/// <param name="path">Ścieżka do pliku z modelem.</param>
 		public Model(string path)
 		{
 			loadModel(path);
 		}
+
+		/// <summary>
+		/// Konstruktor prywatny - domyślny.
+		/// </summary>
 		internal Model()
 		{
 		}
+
+		/// <summary>
+		/// Metoda rysująca model.
+		/// </summary>
+		/// <param name="modelMatrix">Macierz modelu.</param>
+		/// <param name="viewMatrix">Macierz widoku.</param>
+		/// <param name="projectionMatrix">Macierz projekcji.</param>
+		/// <param name="lights">Kolekcja świateł w scenie.</param>
+		/// <param name="camera">Komponent kamery.</param>
+		/// <param name="RenderPass">Rodzaj renderowania (np. nieprzezroczyste, przezroczyste).</param>
+		/// <param name="overrideMaterial">Materiał zastępujący domyślny materiał modelu (opcjonalny).</param>
+		/// <param name="RendererMaterials">Tablica materiałów zastępujących domyślne (opcjonalna).</param>
 		public void Draw(Matrix4 modelMatrix, Matrix4 viewMatrix, Matrix4 projectionMatrix, List<Light> lights, CameraComponent camera, EngineInstance.RenderPass RenderPass, Material? overrideMaterial = null, Material?[]? RendererMaterials = null)
 		{
 			int i = 0;
@@ -41,15 +82,23 @@ namespace PGK2.Engine.Core
 
 				if (Transparent || Opaque || Outline)
 				{
-					mesh.Draw(modelMatrix, viewMatrix, projectionMatrix, lights, camera, overrideMaterial!=null? overrideMaterial :( overrided? mat : null));
+					mesh.Draw(modelMatrix, viewMatrix, projectionMatrix, lights, camera, overrideMaterial != null ? overrideMaterial : (overrided ? mat : null));
 				}
 				i++;
 			}
 		}
 
+		/// <summary>
+		/// Lista meshy (siatek) tworzących model.
+		/// </summary>
 		public List<Mesh> meshes = new();
+
 		private string directory;
 
+		/// <summary>
+		/// Prywatna metoda ładująca model z pliku.
+		/// </summary>
+		/// <param name="path">Ścieżka do pliku z modelem.</param>
 		private void loadModel(string path)
 		{
 			Console.WriteLine($"Loading MODEL: '{path}'");
@@ -64,8 +113,13 @@ namespace PGK2.Engine.Core
 			directory = path.Substring(0, path.LastIndexOf('/'));
 			processNode(scene.RootNode, scene);
 			Path = path;
-			
 		}
+
+		/// <summary>
+		/// Prywatna metoda przetwarzająca węzeł sceny z pliku Assimp.
+		/// </summary>
+		/// <param name="node">Węzeł sceny.</param>
+		/// <param name="scene">Scena z pliku Assimp.</param>
 		private void processNode(Assimp.Node node, in Assimp.Scene scene)
 		{
 			for (int i = 0; i < node.MeshCount; i++)
@@ -85,6 +139,10 @@ namespace PGK2.Engine.Core
 			}
 		}
 
+		/// <summary>
+		/// Prywatna metoda aktualizująca pole otaczające model (bounding box).
+		/// </summary>
+		/// <param name="meshBoundingBox">Pole otaczające pojedynczego mesha.</param>
 		private void UpdateModelBoundingBox(BoundingBox meshBoundingBox)
 		{
 			if (ModelBoundingBox == null)
@@ -96,6 +154,12 @@ namespace PGK2.Engine.Core
 			}
 		}
 
+		/// <summary>
+		/// Prywatna metoda przetwarzająca mesh z pliku Assimp.
+		/// </summary>
+		/// <param name="mesh">Mesh z pliku Assimp.</param>
+		/// <param name="scene">Scena z pliku Assimp.</param>
+		/// <returns>Przetworzony obiekt klasy Mesh.</returns>
 		private Mesh processMesh(Assimp.Mesh mesh, in Assimp.Scene scene)
 		{
 			List<MeshVertex> vertices = new();
@@ -149,12 +213,20 @@ namespace PGK2.Engine.Core
 				List<Texture> specularMaps = LoadMaterialTextures(material, TextureType.Specular, "texture_specular");
 				textures.AddRange(specularMaps);
 
-				mat = new(material);
+				mat = new Material(material);
 			}
 
 			return new Mesh(vertices, indices, textures, mat);
 		}
-		List<Texture> LoadMaterialTextures(Assimp.Material mat, TextureType type, string typeName)
+
+		/// <summary>
+		/// Prywatna metoda ładująca tekstury materiału.
+		/// </summary>
+		/// <param name="mat">Materiał z pliku Assimp.</param>
+		/// <param name="type">Typ tekstury (np. diffuse, specular).</param>
+		/// <param name="typeName">Nazwa typu tekstury używana do tworzenia ścieżki.</param>
+		/// <returns>Lista załadowanych tekstur.</returns>
+		private List<Texture> LoadMaterialTextures(Assimp.Material mat, TextureType type, string typeName)
 		{
 			List<Texture> textures = new List<Texture>();
 			for (int i = 0; i < mat.GetMaterialTextureCount(type); i++)

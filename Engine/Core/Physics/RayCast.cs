@@ -10,8 +10,20 @@ using System.Runtime.InteropServices;
 
 namespace PGK2.Engine.Core.Physics
 {
+	/// <summary>
+	/// Statyczna klasa do obsługi "fizyki" w silniku gry.
+	/// </summary>
 	public static class Physics
 	{
+		/// <summary>
+		/// Metoda wykonująca rzutowanie promienia z kamery na trójkąty.
+		/// </summary>
+		/// <param name="camera">Komponent kamery.</param>
+		/// <param name="MousePosition">Pozycja myszy na ekranie.</param>
+		/// <param name="maxDistance">Maksymalna odległość rzutowania.</param>
+		/// <param name="hitInfo">Informacje o trafieniu.</param>
+		/// <param name="tags">Kontener tagów obiektów do trafienia.</param>
+		/// <returns>Zwraca true, jeśli promień trafia w trójkąt, w przeciwnym razie false.</returns>
 		public static bool RayCast_Triangle(CameraComponent camera, Vector2 MousePosition, float maxDistance, out RayCastHit hitInfo, TagsContainer tags)
 		{
 			if(camera==null)
@@ -26,6 +38,15 @@ namespace PGK2.Engine.Core.Physics
 			return RayCast_Triangle(rayOrigin, rayDirection, maxDistance, out hitInfo, tags);
 		}
 
+		/// <summary>
+		/// Metoda wykonująca rzutowanie promienia z określonego punktu w określonym kierunku na trójkąty.
+		/// </summary>
+		/// <param name="origin">Początek promienia.</param>
+		/// <param name="direction">Kierunek promienia.</param>
+		/// <param name="maxDistance">Maksymalna odległość rzutowania.</param>
+		/// <param name="hitInfo">Informacje o trafieniu.</param>
+		/// <param name="tags">Kontener tagów obiektów do trafienia.</param>
+		/// <returns>Zwraca true, jeśli promień trafia w trójkąt, w przeciwnym razie false.</returns>
 		public static bool RayCast_Triangle(Vector3 origin, Vector3 direction, float maxDistance, out RayCastHit hitInfo, TagsContainer tags)
 		{
 			hitInfo = new RayCastHit();
@@ -66,7 +87,11 @@ namespace PGK2.Engine.Core.Physics
 
 			return hit;
 		}
-
+		/// <summary>
+		/// Pobiera wszystkie renderery modeli spełniające określone tagi.
+		/// </summary>
+		/// <param name="tags">Kontener tagów.</param>
+		/// <returns>Lista rendererów modeli.</returns>
 		private static List<ModelRenderer> GetAllRenderers(TagsContainer tags)
 		{
 			var models = new List<ModelRenderer>();
@@ -85,9 +110,21 @@ namespace PGK2.Engine.Core.Physics
 			return models;
 		}
 	}
-
+	/// <summary>
+	/// Statyczna klasa do obsługi przecięć promienia z trójkątami.
+	/// </summary>
 	public static class RayIntersections
 	{
+		/// <summary>
+		/// Metoda sprawdzająca, czy promień przecina trójkąt.
+		/// </summary>
+		/// <param name="ray">Rzutowany promień.</param>
+		/// <param name="mesh">Siatka trójkątów.</param>
+		/// <param name="triangleIndex">Indeks trójkąta w siatce.</param>
+		/// <param name="modelTransform">Transformacja modelu.</param>
+		/// <param name="distance">Odległość do punktu przecięcia.</param>
+		/// <param name="intersectionPoint">Punkt przecięcia.</param>
+		/// <returns>Zwraca true, jeśli promień przecina trójkąt, w przeciwnym razie false.</returns>
 		public static bool RayIntersectsTriangle(Ray ray, Mesh mesh, int triangleIndex, Matrix4 modelTransform, out float distance, out Vector3 intersectionPoint)
 		{
 			distance = 0.0f;
@@ -138,23 +175,48 @@ namespace PGK2.Engine.Core.Physics
 			}
 		}
 	}
-
+	/// <summary>
+	/// Klasa reprezentująca promień.
+	/// </summary>
 	public class Ray
 	{
+		/// <summary>
+		/// Punkt początkowy promienia.
+		/// </summary>
 		public Vector3 Origin { get; set; }
+		/// <summary>
+		/// Kierunek promienia.
+		/// </summary>
 		public Vector3 Direction { get; set; }
-
+		/// <summary>
+		/// Konstruktor klasy Ray.
+		/// </summary>
+		/// <param name="origin">Punkt początkowy promienia.</param>
+		/// <param name="direction">Kierunek promienia.</param>
 		public Ray(Vector3 origin, Vector3 direction)
 		{
 			Origin = origin;
 			Direction = direction.Normalized();
 		}
 
+		/// <summary>
+		/// Zwraca punkt na promieniu w określonej odległości.
+		/// </summary>
+		/// <param name="distance">Odległość od początku promienia.</param>
+		/// <returns>Punkt na promieniu.</returns>
 		public Vector3 GetPoint(float distance)
 		{
 			return Origin + Direction * distance;
 		}
-
+		/// <summary>
+		/// Tworzy promień z pozycji ekranowych.
+		/// </summary>
+		/// <param name="screenCoordinates">Pozycje na ekranie (myszki).</param>
+		/// <param name="projectionMatrix">Macierz projekcji kamery.</param>
+		/// <param name="viewMatrix">Macierz widoku kamery.</param>
+		/// <param name="screenWidth">Szerokość ekranu.</param>
+		/// <param name="screenHeight">Wysokość ekranu.</param>
+		/// <returns>Promień z pozycji ekranowych.</returns>
 		public static Ray GetRayFromScreenCoordinates(Vector2 screenCoordinates, Matrix4 projectionMatrix, Matrix4 viewMatrix, float screenWidth, float screenHeight)
 		{
 			// Convert screen coordinates to NDC
@@ -181,17 +243,44 @@ namespace PGK2.Engine.Core.Physics
 			return new Ray(rayOrigin, rayWorld);
 		}
 	}
-
+	/// <summary>
+	/// Struktura przechowująca informacje o trafieniu promienia.
+	/// </summary>
 	public struct RayCastHit
 	{
+		/// <summary>
+		/// Punkt kolizji raycasta.
+		/// </summary>
 		public Vector3 Point;
+
+		/// <summary>
+		/// Mesh w który uderzono raycastem.
+		/// </summary>
 		public Mesh Mesh;
+
+		/// <summary>
+		/// Model w który uderzono raycastem.
+		/// </summary>
 		public Model Model;
+
+		/// <summary>
+		/// Indeks trójkąta na meshu, który został uderzony.
+		/// </summary>
 		public int TriangleIndex;
+
+		/// <summary>
+		/// Odległość od punktu kolizji do początkowego punktu obliczeń (np. promienia).
+		/// </summary>
 		public float Distance;
+
+		/// <summary>
+		/// Obiekt gry, z którym nastąpiła kolizja.
+		/// </summary>
 		internal GameObject gameObject;
 	}
-
+	/// <summary>
+	/// Struktura reprezentująca trójkąt.
+	/// </summary>
 	public struct Triangle
 	{
 		public Vector3[] Vertices;
@@ -201,7 +290,12 @@ namespace PGK2.Engine.Core.Physics
 		public Vector3 PlaneUnitV;
 		public float EdgeU;
 		public float EdgeV;
-
+		/// <summary>
+		/// Konstruktor struktury Triangle.
+		/// </summary>
+		/// <param name="v0">Pierwszy wierzchołek trójkąta.</param>
+		/// <param name="v1">Drugi wierzchołek trójkąta.</param>
+		/// <param name="v2">Trzeci wierzchołek trójkąta.</param>
 		public Triangle(Vector3 v0, Vector3 v1, Vector3 v2)
 		{
 			Vertices = new Vector3[] { v0, v1, v2 };

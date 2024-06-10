@@ -1,18 +1,44 @@
-﻿using Assimp;
-using OpenTK.Graphics.OpenGL4;
+﻿using OpenTK.Graphics.OpenGL4;
 using StbImageSharp;
-using System.IO;
-using System.Numerics;
 
 namespace PGK2.Engine.Core
 {
+	/// <summary>
+	/// Struktura reprezentująca teksturę w aplikacji.
+	/// </summary>
 	public struct Texture
 	{
-		public static Dictionary<string,Texture> textures_loaded = new();
+		/// <summary>
+		/// Słownik przechowujący załadowane tekstury.
+		/// </summary>
+		public static Dictionary<string, Texture> textures_loaded = new();
+
+		/// <summary>
+		/// Identyfikator tekstury.
+		/// </summary>
 		public int id;
+
+		/// <summary>
+		/// Typ tekstury.
+		/// </summary>
 		public string type;
+
+		/// <summary>
+		/// Ścieżka do pliku tekstury.
+		/// </summary>
 		public string path;
+
+		/// <summary>
+		/// Flaga określająca, czy tekstura zawiera przezroczystość.
+		/// </summary>
 		public bool transparency;
+
+		/// <summary>
+		/// Sprawdza, czy tekstura została już załadowana.
+		/// </summary>
+		/// <param name="path">Ścieżka do pliku tekstury.</param>
+		/// <param name="texture">Znaleziony obiekt tekstury.</param>
+		/// <returns>Zwraca <c>true</c> jeśli tekstura została już załadowana, w przeciwnym razie <c>false</c>.</returns>
 		public static bool FindLoaded(string path, out Texture texture)
 		{
 			if (textures_loaded.ContainsKey(path))
@@ -23,6 +49,13 @@ namespace PGK2.Engine.Core
 			texture = new();
 			return false;
 		}
+
+		/// <summary>
+		/// Ładuje teksturę z pliku.
+		/// </summary>
+		/// <param name="path">Ścieżka do pliku tekstury.</param>
+		/// <param name="typeName">Typ tekstury.</param>
+		/// <returns>Załadowana tekstura.</returns>
 		public static Texture LoadFromFile(string path, string typeName)
 		{
 			bool exists = FindLoaded(path, out Texture texture);

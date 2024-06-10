@@ -12,15 +12,28 @@ using System.Threading.Tasks;
 
 namespace PGK2.Engine.Components
 {
+	/// <summary>
+	/// Komponent Freecam umożliwia swobodne poruszanie kamerą po scenie.
+	/// </summary>
 	public class Freecam : PGK2.Engine.Core.Component
 	{
+		/// <summary>
+		/// Czułość ruchu myszy na obroty kamery.
+		/// </summary>
+		/// 
 		float MouseSens = 3f;
-		bool movinglight;
+		/// <summary>
+		/// Wywoływane na początku działania komponentu.
+		/// Ustawia początkową pozycję kamery.
+		/// </summary>
 		public override void Start()
 		{
 			base.Start();
 			transform.Position=new Vector3(0,0,-1.5f);
 		}
+		/// <summary>
+		/// Wywoływane w każdej klatce.
+		/// Obsługuje ruch kamery w oparciu o sterowanie klawiaturą i myszą.
 		public override void Update()
 		{
 			base.Update();
@@ -31,11 +44,7 @@ namespace PGK2.Engine.Components
 				{
 					Mouse.IsLocked = !Mouse.IsLocked;
 				}				
-				if (input.IsKeyPressed(Keys.D2))
-				{
-					movinglight = !movinglight;
-				}
-				TransformComponent target = movinglight ? MyScene.Lights[0].transform : transform;
+				TransformComponent target = /*movinglight ? MyScene.Lights[0].transform :*/ transform;
 				float speedmod = 1f;
 				if (input.IsKeyDown(Keys.LeftShift))
 					speedmod = 3f;

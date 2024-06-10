@@ -6,13 +6,43 @@ using PGK2.Engine.Components.Base;
 
 namespace PGK2.Engine.Core
 {
+	/// <summary>
+	/// Klasa reprezentująca pojedynczy mesh dla modelu.
+	/// </summary>
 	public class Mesh
 	{
-		private int VAO, VBO, EBO;
+		/// <summary>
+		/// Identyfikator VAO (Vertex Array Object).
+		/// </summary>
+		private int VAO;
+		/// <summary>
+		/// Identyfikator VBO (Vertex Buffer Object).
+		/// </summary>
+		private int VBO;
+		/// <summary>
+		/// Identyfikator EBO.
+		/// </summary>
+		private int EBO;
+
+		/// <summary>
+		/// Lista wierzchołków mesha.
+		/// </summary>
 		public List<MeshVertex> vertices;
+		/// <summary>
+		/// Lista indeksów tworzących trójkąty w meshu.
+		/// </summary>
 		public List<uint> indices;
+		/// <summary>
+		/// Lista tekstur przypisanych do mesha.
+		/// </summary>
 		public List<Texture> textures;
+		/// <summary>
+		/// Lista shaderów wykluczonych z uzywania swiatel, material.use dla tego mesha (np. shader obrysu).
+		/// </summary>
 		public static List<Shader> Exclude = new List<Shader>() { EngineWindow.OutlineShader, EngineWindow.lightShader, EngineWindow.GridShader };
+		/// <summary>
+		/// Właściwość informująca czy mesh posiada tekstury z przezroczystością.
+		/// </summary>
 		public bool hasTransparentTextures
 		{
 			get
@@ -30,29 +60,45 @@ namespace PGK2.Engine.Core
 				return false;
 			}
 		}
+
+		/// <summary>
+		/// Właściwość informująca czy mesh posiada przezroczystość (materiał lub tekstury).
+		/// </summary>
 		public bool hasTransparency
 		{
 			get
 			{
-				
 				return Material.HasTransparency || hasTransparentTextures;
 			}
 		}
+		/// <summary>
+		/// Domyślny materiał przypisany do mesha.
+		/// </summary>
 		public Material Material;
+		/// <summary>
+		/// Pole otaczające mesh (bounding box).
+		/// </summary>
 		public BoundingBox BoundingBox;
-
+		/// <summary>
+		/// Konstruktor inicjujący nowy mesh.
+		/// </summary>
+		/// <param name="vertices">Lista wierzchołków mesha.</param>
+		/// <param name="indices">Lista indeksów tworzących trójkąty w meshu.</param>
+		/// <param name="textures">Lista tekstur przypisanych do mesha.</param>
+		/// <param name="mat">Materiał przypisany do mesha.</param>
 		public Mesh(List<MeshVertex> vertices, List<uint> indices, List<Texture> textures, Material mat)
 		{
 			this.vertices = vertices;
 			this.indices = indices;
 			this.textures = textures;
 			Material = mat;
-
 			setupMesh();
 			BoundingBox = CalculateBoundingBox();
-
 		}
-
+		/// <summary>
+		/// Metoda obliczająca pole otaczające mesh (bounding box).
+		/// </summary>
+		/// <returns>Pole otaczające mesh (bounding box).</returns>
 		public BoundingBox CalculateBoundingBox()
 		{
 			if (vertices.Count == 0)
@@ -69,6 +115,15 @@ namespace PGK2.Engine.Core
 
 			return new BoundingBox(min, max);
 		}
+		/// <summary>
+		/// Metoda rysująca mesha.
+		/// </summary>
+		/// <param name="modelMatrix">Macierz modelu.</param>
+		/// <param name="viewMatrix">Macierz widoku.</param>
+		/// <param name="projectionMatrix">Macierz projekcji.</param>
+		/// <param name="Lights">Kolekcja świateł w scenie.</param>
+		/// <param name="camera">Komponent kamery.</param>
+		/// <param name="overrideMaterial">Materiał zastępujący domyślny materiał mesha (opcjonalny).</param>
 		public void Draw(Matrix4 modelMatrix, Matrix4 viewMatrix, Matrix4 projectionMatrix, List<Light> Lights, CameraComponent camera, Material? overrideMaterial)
 		{
 			Material mat = overrideMaterial != null? overrideMaterial : Material;
@@ -102,6 +157,9 @@ namespace PGK2.Engine.Core
 			if(usednormal)
 				mat.Unuse();
 		}
+		/// <summary>
+		/// Metoda inicjująca VAO, VBO i EBO dla mesha.
+		/// </summary>
 		void setupMesh()
 		{
 			VAO = GL.GenVertexArray();

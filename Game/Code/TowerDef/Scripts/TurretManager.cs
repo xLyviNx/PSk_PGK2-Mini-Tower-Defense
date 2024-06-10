@@ -220,8 +220,8 @@ namespace PGK2.Game.Code.TowerDef.Scripts
 			turretInfoPanel.Color = new(0, 0, 0, 0.7f);
 			turretInfoPanel.transform.Position = new(10, 0, 0);
 			turretInfoPanel.Pivot = new (0, 0.5f);
-			turretInfoPanel.Z_Index = 100; // Ensure it's on top of other UI elements
-			turretInfoPanel.gameObject.IsActiveSelf = (false); // Initially hidden
+			turretInfoPanel.Z_Index = 100;
+			turretInfoPanel.gameObject.IsActiveSelf = (false);
 
 			// Create the Level Text
 			var levelText = MyScene.CreateSceneObject("LevelText").AddComponent<UI_Text>();

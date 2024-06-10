@@ -3,6 +3,9 @@ using OpenTK.Mathematics;
 
 namespace PGK2.Engine.Core
 {
+	/// <summary>
+	/// Klasa Shadera.
+	/// </summary>
 	public class Shader : IDisposable
 	{
 		public readonly int Handle;
